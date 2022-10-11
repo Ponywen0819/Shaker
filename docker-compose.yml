@@ -1,11 +1,15 @@
 version: '3'
 services:
   web:
-    build: .
+    build: 
+      context: ./dockerfiles
+      dockerfile: django.dockerfile
     ports:
     - "8000:8000"
+    depends_on:
+      - db
     volumes:
-    - .:/code # 把當前資料夾 mount 掛載進去 container，這樣你可以直接在本地端專案資料夾改動檔案，container 裡面的檔案也會更動也不用重新 build image！
+      - .:/code
   db:
     image: mariadb
     restart: always
@@ -16,3 +20,25 @@ services:
       MYSQL_ROOT_PASSWORD: 12345678
     ports:
       - '3306:3306'
+  react:
+    build: 
+      context: ./dockerfiles
+      dockerfile: react.dockerfile
+    volumes:
+      - ./Shaker/static/React:/run/src
+      - ./Shaker/static/js:/run/result
+    stdin_open: true
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+
+    
+  tailwindcss:
+    build: 
+      context: ./dockerfiles
+      dockerfile: tailwindcss.dockerfile
+    volumes:
+      - ./Shaker/static/js:/run/src
+      - ./Shaker/static/css:/run/result
+    stdin_open: true
+    environment:
+      - CHOKIDAR_USEPOLLING=true
