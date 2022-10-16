@@ -19,6 +19,7 @@ from .view import view
 
 urlpatterns = [
     # path('admin/', admin.site.urls),
-    path('', view.index, name='index'),
-    path('login',view.getLoginPage)
+    path('', view.getIndexPage),
+    path('login',view.getLoginPage),
+    path('index',view.getIndexPage)
 ]

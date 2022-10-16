@@ -6,3 +6,6 @@ def index(request):
 
 def getLoginPage(request):
     return render(request, "login.html")
+
+def getIndexPage(request):
+    return render(request, "index.html")
