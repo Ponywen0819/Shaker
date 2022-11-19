@@ -2,12 +2,11 @@ a,p{
     color: white;
 }
 
-.fixed_pos{
+.toolbar{
     position: absolute;
     top: 0;
     left: 0;
     width: 100vw;
-    /* background-color: rgb(255, 111, 0); */
     background: linear-gradient(red,rgb(255, 101, 40));
 }
 
@@ -64,7 +63,7 @@ a,p{
 }
 
 .search_bar{
-    width: 100%;
+    width: 60%;
     height: 40px;
     padding: 5px;
     background-color: white;

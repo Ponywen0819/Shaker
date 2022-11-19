@@ -1,9 +1,9 @@
 class ToolBar extends React.Component{
     render_upper(){
         let upper=(
-            <div className=" upper_conatiner">
+            <div className="upper_container">
                 <div className="upper_main nav_container">
-                    <div className="w-1/4 upper_selction">
+                    <div className="w-1/5 upper_selction">
                         <div className="upper_nobar">
                             <a className="" href="">賣家中心</a>
                         </div>
@@ -16,12 +16,12 @@ class ToolBar extends React.Component{
                             </a>
                         </div>
                     </div>
-                    <div className="w-1/4 upper_selction justify-end">
+                    <div className="w-1/5 upper_selction justify-end">
                         <div className="upper_nobar">
                             <a href="">註冊</a>
                         </div>
                         <div className="upper_bar">
-                            <a className="" href="">登入</a>
+                            <a className="" href="/login">登入</a>
                         </div>
                     </div>
                 </div>
@@ -54,7 +54,7 @@ class ToolBar extends React.Component{
     }
     render(){
         let main=(
-            <div className="fixed_pos">
+            <div className="toolbar">
                 <this.render_upper></this.render_upper>
                 <this.render_lower></this.render_lower>
             </div>

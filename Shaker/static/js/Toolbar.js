@@ -20,13 +20,13 @@ var ToolBar = function (_React$Component) {
         value: function render_upper() {
             var upper = React.createElement(
                 "div",
-                { className: " upper_conatiner" },
+                { className: "upper_container" },
                 React.createElement(
                     "div",
                     { className: "upper_main nav_container" },
                     React.createElement(
                         "div",
-                        { className: "w-1/4 upper_selction" },
+                        { className: "w-1/5 upper_selction" },
                         React.createElement(
                             "div",
                             { className: "upper_nobar" },
@@ -57,7 +57,7 @@ var ToolBar = function (_React$Component) {
                     ),
                     React.createElement(
                         "div",
-                        { className: "w-1/4 upper_selction justify-end" },
+                        { className: "w-1/5 upper_selction justify-end" },
                         React.createElement(
                             "div",
                             { className: "upper_nobar" },
@@ -72,7 +72,7 @@ var ToolBar = function (_React$Component) {
                             { className: "upper_bar" },
                             React.createElement(
                                 "a",
-                                { className: "", href: "" },
+                                { className: "", href: "/login" },
                                 "\u767B\u5165"
                             )
                         )
@@ -123,7 +123,7 @@ var ToolBar = function (_React$Component) {
         value: function render() {
             var main = React.createElement(
                 "div",
-                { className: "fixed_pos" },
+                { className: "toolbar" },
                 React.createElement(this.render_upper, null),
                 React.createElement(this.render_lower, null)
             );
