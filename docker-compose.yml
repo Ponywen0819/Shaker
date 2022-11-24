@@ -1,0 +1,44 @@
+version: '3'
+services:
+  web:
+    build: 
+      context: ./dockerfiles
+      dockerfile: django.dockerfile
+    ports:
+    - "8000:8000"
+    depends_on:
+      - db
+    volumes:
+      - .:/code
+  db:
+    image: mariadb
+    restart: always
+    environment:
+      MYSQL_DATABASE: 'db'
+      MYSQL_USER: 'admin'
+      MYSQL_PASSWORD: 'admin'
+      MYSQL_ROOT_PASSWORD: 12345678
+    ports:
+      - '3306:3306'
+  react:
+    build: 
+      context: ./dockerfiles
+      dockerfile: react.dockerfile
+    volumes:
+      - ./static/reactSrc:/run/src
+      - ./static/js:/run/result
+    stdin_open: true
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+
+    
+  tailwindcss:
+    build: 
+      context: ./dockerfiles
+      dockerfile: tailwindcss.dockerfile
+    volumes:
+      - ./static/js:/run/src
+      - ./static/css:/run/result
+    stdin_open: true
+    environment:
+      - CHOKIDAR_USEPOLLING=true
