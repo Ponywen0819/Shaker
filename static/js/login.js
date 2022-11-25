@@ -10,7 +10,7 @@ function renderToolBar() {
     var main = React.createElement(
         "a",
         { className: "logo_area", href: "/" },
-        React.createElement("img", { src: "/Shaker/static/logo/Logo2.png", alt: "" })
+        React.createElement("img", { src: "/static/img/Logo2.png", alt: "" })
     );
     return main;
 }
@@ -46,7 +46,7 @@ var Login = function (_React$Component) {
                     React.createElement("input", { className: "input_main", type: "password", name: "", id: "", placeholder: "\u5BC6\u78BC" }),
                     React.createElement(
                         "a",
-                        { className: "help_text", href: "" },
+                        { className: "help_text", href: "static/reactSrc/login" },
                         "\u5FD8\u8A18\u5BC6\u78BC"
                     ),
                     React.createElement(
@@ -68,13 +68,13 @@ var Login = function (_React$Component) {
                     React.createElement(
                         "button",
                         { className: "btn auth_btn" },
-                        React.createElement("img", { src: "/Shaker/static/img/google_logo.svg", alt: "", className: "sm_logo" }),
+                        React.createElement("img", { src: "/static/img/google_logo.svg", alt: "", className: "sm_logo" }),
                         "Google"
                     ),
                     React.createElement(
                         "button",
                         { className: "btn auth_btn" },
-                        React.createElement("img", { src: "/Shaker/static/img/github_black.svg", alt: "", className: "sm_logo" }),
+                        React.createElement("img", { src: "/static/img/github_black.svg", alt: "", className: "sm_logo" }),
                         "Github"
                     ),
                     React.createElement(

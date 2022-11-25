@@ -6,11 +6,6 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-import React from "react";
-import ReactDOM from "react-dom";
-import { createRoot } from 'react-dom/client';
-import ToolBar from "./Toolbar";
-
 var Main = function (_React$Component) {
     _inherits(Main, _React$Component);
 
@@ -31,4 +26,4 @@ var Main = function (_React$Component) {
     return Main;
 }(React.Component);
 
-createRoot(document.getElementById("main")).render(React.createElement(Main, null));
+ReactDOM.createRoot(document.getElementById("main")).render(React.createElement(Main, null));

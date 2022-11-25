@@ -1,7 +1,7 @@
 function renderToolBar(){
     let main=(
-        <a className="logo_area" href="/"> 
-            <img src="/Shaker/static/logo/Logo2.png" alt="" />  
+        <a className="logo_area" href="/">
+            <img src="/static/img/Logo2.png" alt="" />
         </a>
     );
     return main
@@ -21,7 +21,7 @@ class Login extends React.Component{
                     </div>
                     <input className="input_main" type="email" name="" id="" placeholder="帳號"/>
                     <input className="input_main" type="password" name="" id="" placeholder="密碼"/>
-                    <a className="help_text" href="">忘記密碼</a>
+                    <a className="help_text" href="static/reactSrc/login">忘記密碼</a>
                     <button className="login_btn btn">登入</button>
                     <div className="or_area">
                         <div className="or_bar"></div>
@@ -29,11 +29,11 @@ class Login extends React.Component{
                         <div className="or_bar"></div>
                     </div>
                     <button className="btn auth_btn"> 
-                        <img src="/Shaker/static/img/google_logo.svg" alt="" className="sm_logo"/> 
+                        <img src="/static/img/google_logo.svg" alt="" className="sm_logo"/>
                         Google
                     </button>
                     <button className="btn auth_btn">
-                        <img src="/Shaker/static/img/github_black.svg" alt="" className="sm_logo"/> 
+                        <img src="/static/img/github_black.svg" alt="" className="sm_logo"/>
                         Github
                     </button>
                     <div className="flex justify-center">

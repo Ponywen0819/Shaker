@@ -47,6 +47,7 @@
 .input_bar{
     width: 100%;
     border: 1px solid gray;
+    padding: 2px 8px;
     border-radius: 2px;
 }
 

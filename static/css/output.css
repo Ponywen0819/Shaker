@@ -513,6 +513,10 @@ video {
   --tw-backdrop-sepia:  ;
 }
 
+.static {
+  position: static;
+}
+
 .flex {
   display: flex;
 }
@@ -521,12 +525,20 @@ video {
   width: 20%;
 }
 
+.flex-col {
+  flex-direction: column;
+}
+
 .justify-end {
   justify-content: flex-end;
 }
 
 .justify-center {
   justify-content: center;
+}
+
+.p-2 {
+  padding: 0.5rem;
 }
 
 .text-2xl {

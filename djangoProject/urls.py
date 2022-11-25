@@ -14,7 +14,14 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import include, path
+from shaker import views
+
 
 urlpatterns = [
+    path('', views.get_index_page),
+    path('index', views.get_index_page),
+    path('login', views.get_login_page),
+    path('register', views.get_register_page),
+    path('user/', include('Users.urls'))
 ]

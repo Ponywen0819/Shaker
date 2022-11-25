@@ -1,6 +1,6 @@
-class ToolBar extends Component{
+class ToolBar extends React.Component{
     render_upper(){
-        let upper=(
+        return (
             <div className="upper_container">
                 <div className="upper_main nav_container">
                     <div className="w-1/5 upper_selction">
@@ -22,38 +22,36 @@ class ToolBar extends Component{
                 </div>
             </div>
         )
-        return upper
+
     }
     render_lower(){
-        let lower=(
+        return (
             <div className=" lower_container">
                 <div className="nav_container lower_main">  
                     <div className="w-1/5">
-                        <img src="" alt="" />
+                        <img src="static/reactSrc/Toolbar" alt="" />
                     </div>
                     <div className="search_bar">
                         <input type="text" name="" id="" className="search_text"/>
                         <button className="search_btn">
-                            <img src="/Shaker/static/img/search.svg" alt=""  className=""/>
+                            <img src="/static/img/search.svg" alt=""  className=""/>
                         </button>
                     </div>
                     <div className="cart_aera">
                         <a  className="cart_link" href="">
-                            <img src="/Shaker/static/img/cart.svg" alt="" className="cart_icon"/>
+                            <img src="/static/img/cart.svg" alt="" className="cart_icon"/>
                         </a>
                     </div>
                 </div>
             </div>
         )
-        return lower
     }
     render(){
-        let main=(
+        return(
             <div className="toolbar">
                 <this.render_upper></this.render_upper>
                 <this.render_lower></this.render_lower>
             </div>
         )
-        return main
     }
 }

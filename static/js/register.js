@@ -4,7 +4,7 @@ function Render_logo() {
     return React.createElement(
         "a",
         { href: "/index", className: "logo_area" },
-        React.createElement("img", { src: "/Shaker/static/logo/logo2.png", alt: "" })
+        React.createElement("img", { src: "/static/img/logo2.png", alt: "" })
     );
 }
 
@@ -24,7 +24,7 @@ function MainInterface() {
 
     function showInterface() {
         if (state == 0) {
-            return [React.createElement("input", { className: "input_bar", type: "email", name: "", id: "", placeholder: "E-mail" }), React.createElement(
+            return [React.createElement("input", { className: "input_bar p-2", type: "email", name: "", id: "", placeholder: "E-mail" }), React.createElement(
                 "button",
                 { className: "btn login_btn", onClick: function onClick() {
                         return toState(true);
@@ -32,7 +32,7 @@ function MainInterface() {
                 "\u4E0B\u4E00\u6B65"
             )];
         } else {
-            var content = [React.createElement("input", { className: "input_bar", type: "email", name: "", id: "", placeholder: "E-mail" }), React.createElement("input", { className: "input_bar", type: "email", name: "", id: "", placeholder: "Password" }), React.createElement(
+            var content = [React.createElement("input", { className: "input_bar p-2", type: "email", name: "", id: "", placeholder: "E-mail" }), React.createElement("input", { className: "input_bar p-2", type: "email", name: "", id: "", placeholder: "Password" }), React.createElement(
                 "button",
                 { className: "btn login_btn", onClick: function onClick() {
                         return toState(false);
@@ -77,18 +77,18 @@ function MainInterface() {
             React.createElement(
                 "button",
                 { className: "btn auth_btn" },
-                React.createElement("img", { src: "/Shaker/static/img/google_logo.svg", alt: "", className: "sm_logo" }),
+                React.createElement("img", { src: "/static/img/google_logo.svg", alt: "", className: "sm_logo" }),
                 "Google"
             ),
             React.createElement(
                 "button",
                 { className: "btn auth_btn" },
-                React.createElement("img", { src: "/Shaker/static/img/github_black.svg", alt: "", className: "sm_logo" }),
+                React.createElement("img", { src: "/static/img/github_black.svg", alt: "", className: "sm_logo" }),
                 "Github"
             ),
             React.createElement(
                 "div",
-                { className: "flex justify-center" },
+                { className: "flex justify-center flex-col" },
                 React.createElement(
                     "p",
                     null,

@@ -1,7 +1,7 @@
 function Render_logo(){
     return (
         <a href="/index" className="logo_area">
-            <img src="/Shaker/static/logo/logo2.png" alt="" />
+            <img src="/static/img/logo2.png" alt="" />
         </a>
     )
 }
@@ -21,13 +21,15 @@ function MainInterface(){
 
     function showInterface(){
         if(state == 0){
-            return [<input className="input_bar" type="email" name="" id="" placeholder="E-mail"/>,
-            <button className="btn login_btn" onClick={()=> toState(true)}>下一步</button>]
+            return [
+                <input className="input_bar p-2" type="email" name="" id="" placeholder="E-mail"/>,
+                <button className="btn login_btn" onClick={()=> toState(true)}>下一步</button>
+            ]
         }
         else{
             let content = [
-                <input className="input_bar" type="email" name="" id="" placeholder="E-mail"/>,
-                <input className="input_bar" type="email" name="" id="" placeholder="Password"/>,
+                <input className="input_bar p-2" type="email" name="" id="" placeholder="E-mail"/>,
+                <input className="input_bar p-2" type="email" name="" id="" placeholder="Password"/>,
                 <button className="btn login_btn" onClick={() =>toState(false)}>上一步</button>,
                 <button className="btn login_btn" >註冊</button>
             ]
@@ -48,14 +50,14 @@ function MainInterface(){
                         <div className="or_bar"></div>
                     </div>
                     <button className="btn auth_btn"> 
-                        <img src="/Shaker/static/img/google_logo.svg" alt="" className="sm_logo"/> 
+                        <img src="/static/img/google_logo.svg" alt="" className="sm_logo"/>
                         Google
                     </button>
                     <button className="btn auth_btn">
-                        <img src="/Shaker/static/img/github_black.svg" alt="" className="sm_logo"/> 
+                        <img src="/static/img/github_black.svg" alt="" className="sm_logo"/>
                         Github
                     </button>
-                    <div className="flex justify-center">
+                    <div className="flex justify-center flex-col">
                         <p>已經有帳號了嗎?</p>
                         <a className="text-[cadetblue]" href="/login">登入</a>
                     </div>

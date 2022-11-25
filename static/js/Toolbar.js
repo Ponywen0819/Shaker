@@ -6,8 +6,8 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var ToolBar = function (_Component) {
-    _inherits(ToolBar, _Component);
+var ToolBar = function (_React$Component) {
+    _inherits(ToolBar, _React$Component);
 
     function ToolBar() {
         _classCallCheck(this, ToolBar);
@@ -18,7 +18,7 @@ var ToolBar = function (_Component) {
     _createClass(ToolBar, [{
         key: "render_upper",
         value: function render_upper() {
-            var upper = React.createElement(
+            return React.createElement(
                 "div",
                 { className: "upper_container" },
                 React.createElement(
@@ -61,12 +61,11 @@ var ToolBar = function (_Component) {
                     )
                 )
             );
-            return upper;
         }
     }, {
         key: "render_lower",
         value: function render_lower() {
-            var lower = React.createElement(
+            return React.createElement(
                 "div",
                 { className: " lower_container" },
                 React.createElement(
@@ -75,7 +74,7 @@ var ToolBar = function (_Component) {
                     React.createElement(
                         "div",
                         { className: "w-1/5" },
-                        React.createElement("img", { src: "", alt: "" })
+                        React.createElement("img", { src: "static/reactSrc/Toolbar", alt: "" })
                     ),
                     React.createElement(
                         "div",
@@ -84,7 +83,7 @@ var ToolBar = function (_Component) {
                         React.createElement(
                             "button",
                             { className: "search_btn" },
-                            React.createElement("img", { src: "/Shaker/static/img/search.svg", alt: "", className: "" })
+                            React.createElement("img", { src: "/static/img/search.svg", alt: "", className: "" })
                         )
                     ),
                     React.createElement(
@@ -93,25 +92,23 @@ var ToolBar = function (_Component) {
                         React.createElement(
                             "a",
                             { className: "cart_link", href: "" },
-                            React.createElement("img", { src: "/Shaker/static/img/cart.svg", alt: "", className: "cart_icon" })
+                            React.createElement("img", { src: "/static/img/cart.svg", alt: "", className: "cart_icon" })
                         )
                     )
                 )
             );
-            return lower;
         }
     }, {
         key: "render",
         value: function render() {
-            var main = React.createElement(
+            return React.createElement(
                 "div",
                 { className: "toolbar" },
                 React.createElement(this.render_upper, null),
                 React.createElement(this.render_lower, null)
             );
-            return main;
         }
     }]);
 
     return ToolBar;
-}(Component);
+}(React.Component);
