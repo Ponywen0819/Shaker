@@ -5,7 +5,7 @@ class ToolBar extends React.Component{
                 <div className="upper_main nav_container">
                     <div className="w-1/5 upper_selction">
                         <div className="upper_nobar">
-                            <a className="" href="">賣家中心</a>
+                            <a className="Toolbat_text" href="">賣家中心</a>
                         </div>
                         {/* <div className="upper_bar">
                             <p className="">聯絡我們</p>
@@ -13,10 +13,10 @@ class ToolBar extends React.Component{
                     </div>
                     <div className="w-1/5 upper_selction justify-end">
                         <div className="upper_nobar">
-                            <a href="/register">註冊</a>
+                            <a className="Toolbat_text" href="/register">註冊</a>
                         </div>
                         <div className="upper_bar">
-                            <a className="" href="/login">登入</a>
+                            <a className="Toolbat_text" href="/login">登入</a>
                         </div>
                     </div>
                 </div>
@@ -29,7 +29,7 @@ class ToolBar extends React.Component{
             <div className=" lower_container">
                 <div className="nav_container lower_main">  
                     <div className="w-1/5">
-                        <img src="static/reactSrc/Toolbar" alt="" />
+                        <img src="/static/img/logo2.png" alt="" />
                     </div>
                     <div className="search_bar">
                         <input type="text" name="" id="" className="search_text"/>
@@ -48,10 +48,10 @@ class ToolBar extends React.Component{
     }
     render(){
         return(
-            <div className="toolbar">
+            <nav className="toolbar">
                 <this.render_upper></this.render_upper>
                 <this.render_lower></this.render_lower>
-            </div>
+            </nav>
         )
     }
 }

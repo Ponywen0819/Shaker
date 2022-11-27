@@ -1,0 +1,45 @@
+
+.side_bar{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-right: auto;
+}
+
+.info_area{
+    /*height: 50px;*/
+    width: auto;
+    display: flex;
+    padding: 10px;
+    border-bottom: 1px solid rgba(0, 0, 0, 25%);
+}
+
+.user_img{
+    height: 50px;
+    border-radius: 50%;
+    padding: 5px 0px;
+    margin-right: 10px;
+}
+
+.user_name{
+    font-weight: bolder;
+
+}
+
+.edit_btn{
+    color: #9ca3af;
+    display: flex;
+    gap: 5px;
+    font-size: small;
+}
+
+
+.nowon_bar{
+    color: orange;
+}
+
+.normal_bar{
+    padding: 0px 10px;
+    display: flex;
+    gap: 10px;
+}

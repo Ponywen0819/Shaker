@@ -32,7 +32,7 @@ var ToolBar = function (_React$Component) {
                             { className: "upper_nobar" },
                             React.createElement(
                                 "a",
-                                { className: "", href: "" },
+                                { className: "Toolbat_text", href: "" },
                                 "\u8CE3\u5BB6\u4E2D\u5FC3"
                             )
                         )
@@ -45,7 +45,7 @@ var ToolBar = function (_React$Component) {
                             { className: "upper_nobar" },
                             React.createElement(
                                 "a",
-                                { href: "/register" },
+                                { className: "Toolbat_text", href: "/register" },
                                 "\u8A3B\u518A"
                             )
                         ),
@@ -54,7 +54,7 @@ var ToolBar = function (_React$Component) {
                             { className: "upper_bar" },
                             React.createElement(
                                 "a",
-                                { className: "", href: "/login" },
+                                { className: "Toolbat_text", href: "/login" },
                                 "\u767B\u5165"
                             )
                         )
@@ -74,7 +74,7 @@ var ToolBar = function (_React$Component) {
                     React.createElement(
                         "div",
                         { className: "w-1/5" },
-                        React.createElement("img", { src: "static/reactSrc/Toolbar", alt: "" })
+                        React.createElement("img", { src: "/static/img/logo2.png", alt: "" })
                     ),
                     React.createElement(
                         "div",
@@ -102,7 +102,7 @@ var ToolBar = function (_React$Component) {
         key: "render",
         value: function render() {
             return React.createElement(
-                "div",
+                "nav",
                 { className: "toolbar" },
                 React.createElement(this.render_upper, null),
                 React.createElement(this.render_lower, null)

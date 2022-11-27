@@ -1,11 +1,4 @@
-a,p{
-    color: white;
-}
-
 .toolbar{
-    position: absolute;
-    top: 0;
-    left: 0;
     width: 100vw;
     background: linear-gradient(red,rgb(255, 101, 40));
 }
@@ -104,4 +97,8 @@ a,p{
     color: white;
     width: inherit;
     height: inherit;
+}
+
+.Toolbat_text{
+    color: white;
 }
