@@ -22,8 +22,6 @@ const Interface = () => {
         img: "/static/img/logo1.png"
     })
 
-
-
     return(
         <div className="intercafe">
             <div className="interface_title">

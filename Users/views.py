@@ -25,12 +25,12 @@ def get_password_page(request):
         "css": [
             'css/Toolbar.css',
             'css/UserInfo.css',
-            'css/profile.css'
+            'css/password.css'
         ],
         "script": [
             'js/Toolbar.js',
             'js/UserInfo.js',
-            'js/profile.js'
+            'js/password.js'
         ]
     }
     return render(request, 'main.html', setting)
