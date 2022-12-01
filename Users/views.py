@@ -8,7 +8,8 @@ def get_profile_page(request):
         "title": "個人中心",
         "css": [
             'css/Toolbar.css',
-            'css/UserInfo.css'
+            'css/UserInfo.css',
+            'css/profile.css'
         ],
         "script": [
             'js/Toolbar.js',

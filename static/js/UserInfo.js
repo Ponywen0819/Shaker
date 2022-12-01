@@ -16,7 +16,7 @@ var UserInfo = function UserInfo() {
         if (path == '/user/profile') setselectnum([" nowon_bar", '', '']);else if (path == '/user/purchase') setselectnum(['', " nowon_bar", '']);else setselectnum(['', '', "nowon_bar"]);
     }, []);
     var main = React.createElement(
-        'div',
+        'aside',
         { className: 'side_bar' },
         React.createElement(
             'div',

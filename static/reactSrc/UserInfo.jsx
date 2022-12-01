@@ -9,7 +9,7 @@ const UserInfo = ()=>{
         else setselectnum(['','',"nowon_bar"]);
     }, [])
     let main= (
-        <div className="side_bar">
+        <aside className="side_bar">
             <div className="info_area">
                 <img className="user_img" src="/static/img/logo1.png"/>
                 <div>
@@ -32,7 +32,7 @@ const UserInfo = ()=>{
                 <img src="/static/img/ticket-detailed.svg"></img>
                 <p>我的優惠券</p>
             </a>
-        </div>
+        </aside>
     )
     return main
 }
