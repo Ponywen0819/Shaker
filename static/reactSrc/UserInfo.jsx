@@ -1,14 +1,50 @@
+const Navbutton = ({img, url, title,activate})=>(
+    <a  className={`header ${activate? 'now_on':''}`} href={url}>
+        {img? (<img src= {`/static/img/${img}`} ></img>): ''}
+        <p>{title}</p>
+    </a>
+)
+
+const Standerbar = ({title,url,items,img})=>{
+
+    const isOpened = (items? items.some((i)=> (i.url == window.location.pathname)) : false);
+
+    return (
+        <div className={`normal_bar`} >
+            <Navbutton
+                title={title}
+                url={url}
+                img={img}
+                activate={items? false:(window.location.pathname==url)}>
+            </Navbutton>
+            {isOpened &&
+                <div className={`submenu`}>
+                    {items ? items.map(subItem => (
+                        <Navbutton title={subItem.title} url={subItem.url}
+                                   activate={window.location.pathname == subItem.url}></Navbutton>
+                    )) : ''}
+                </div>
+            }
+        </div>
+    )
+}
+
 const UserInfo = ()=>{
     const [username, setusername] = React.useState("Unknow");
-    const [selectnum, setselectnum] = React.useState(['','','']);
+    React.useEffect(() => {}, [])
+    const obj = [
+        { title: '我的帳戶',
+            url: '/user/account/profile',
+            img: 'person-square.svg',
+            item: [
+                {title: "更改個人資訊",url: '/user/account/profile'},
+                {title: "更改密碼", url: '/user/account/password'}
+            ]},
+        { title: '購買清單', url: '/user/purchase', img: 'card-list.svg'},
+        { title: '我的優惠券', url: '/user/coupon', img: 'ticket-detailed.svg'}
+    ]
 
-    React.useEffect(() => {
-       const path = window.location.pathname
-        if(path == '/user/profile') setselectnum([" nowon_bar",'','']);
-        else if(path == '/user/purchase')setselectnum([''," nowon_bar",'']);
-        else setselectnum(['','',"nowon_bar"]);
-    }, [])
-    let main= (
+    return (
         <aside className="side_bar">
             <div className="info_area">
                 <img className="user_img" src="/static/img/logo1.png"/>
@@ -20,19 +56,15 @@ const UserInfo = ()=>{
                     </a>
                 </div>
             </div>
-            <a className={"normal_bar " + selectnum[0]} href="/user/profile">
-                <img src="/static/img/person-square.svg"></img>
-                <p>我的帳戶</p>
-            </a>
-            <a className={"normal_bar " + selectnum[1]} href="/user/purchase">
-                <img src="/static/img/card-list.svg"></img>
-                <p>購買清單</p>
-            </a>
-            <a className={"normal_bar " + selectnum[2]} href="/user/coupon">
-                <img src="/static/img/ticket-detailed.svg"></img>
-                <p>我的優惠券</p>
-            </a>
+            {obj.map(i=>(
+                <Standerbar
+                    title={i.title}
+                    url={i.url}
+                    type={i.type}
+                    img={i.img}
+                    items={i.item}>
+                </Standerbar>
+            ))}
         </aside>
     )
-    return main
 }

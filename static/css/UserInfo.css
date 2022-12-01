@@ -34,12 +34,20 @@
 }
 
 
-.nowon_bar{
+.now_on{
     color: orange;
 }
 
 .normal_bar{
     padding: 0px 10px;
+}
+
+.header{
     display: flex;
     gap: 10px;
+    margin-bottom: 10px;
+}
+
+.submenu{
+    padding-left: 30px
 }
