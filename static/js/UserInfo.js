@@ -76,7 +76,7 @@ var UserInfo = function UserInfo() {
                 ),
                 React.createElement(
                     'a',
-                    { className: 'edit_btn', href: '' },
+                    { className: 'edit_btn', href: '/user/account/profile' },
                     React.createElement('img', { src: '/static/img/pencil.svg' }),
                     React.createElement(
                         'p',

@@ -50,7 +50,7 @@ const UserInfo = ()=>{
                 <img className="user_img" src="/static/img/logo1.png"/>
                 <div>
                     <p className="user_name">{ username }</p>
-                    <a className="edit_btn" href="">
+                    <a className="edit_btn" href="/user/account/profile">
                         <img src="/static/img/pencil.svg"></img>
                         <p>修改個人資訊</p>
                     </a>

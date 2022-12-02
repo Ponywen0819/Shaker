@@ -4,3 +4,5 @@
 node_modules/
 
 shaker/__pycache__/
+
+Users/__pycache__/

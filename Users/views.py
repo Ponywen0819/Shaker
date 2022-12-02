@@ -40,12 +40,13 @@ def get_purchase_page(request):
         "title": "個人中心",
         "css": [
             'css/Toolbar.css',
-            'css/UserInfo.css'
+            'css/UserInfo.css',
+            'css/purchase.css'
         ],
         "script": [
             'js/Toolbar.js',
             'js/UserInfo.js',
-            'js/profile.js'
+            'js/purchase.js'
         ]
     }
     return render(request, 'main.html', setting)
@@ -61,7 +62,7 @@ def get_coupon_page(request):
         "script": [
             'js/Toolbar.js',
             'js/UserInfo.js',
-            'js/profile.js'
+            'js/coupon.js'
         ]
     }
     return render(request, 'main.html', setting)
