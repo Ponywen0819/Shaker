@@ -1,4 +1,11 @@
 from django.shortcuts import render
+from shaker.models import *
+from shaker.serializers import AccountsSerializer
+from rest_framework import viewsets
+
+class AccountsViewSet(viewsets.ModelViewSet):
+    queryset = Accounts.objects.all()
+    serializer_class = AccountsSerializer
 
 # Create your views here.
 def get_index_page(request):

@@ -16,12 +16,16 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 from shaker import views
+from rest_framework.routers import DefaultRouter
 
+router = DefaultRouter()
+router.register(r'Accounts', views.AccountsViewSet)
 
 urlpatterns = [
     path('', views.get_index_page),
     path('index', views.get_index_page),
     path('login', views.get_login_page),
     path('register', views.get_register_page),
-    path('user/', include('Users.urls'))
+    path('user/', include('Users.urls')),
+    path(r'api/', include(router.urls))
 ]
