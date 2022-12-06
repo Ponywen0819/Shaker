@@ -1,2 +1,3 @@
 django
 mysqlclient
+django_rest_framework
