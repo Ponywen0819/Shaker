@@ -8,7 +8,7 @@ def check_duplicate(request):
     # connect database
     db = MySQLdb.connect(host="localhost", user="root", passwd="", db="shaker", charset="utf8")
     cursor = db.cursor()
-    cursor.excute("SELECT account FROM account WHERE email = %s" %request.json['email'])
+    cursor.execute("SELECT account FROM account WHERE email = %s" %request.json['email'])
 
     # sucess or fail
     result = {}
