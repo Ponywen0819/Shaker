@@ -17,12 +17,36 @@ def index():
             "index.js"
         ],
         "css": [
-            "output.css",
             "Toolbar.css",
         ]
     }
     return render_template('main.html', setting=setting)
 
+@app.route('/login')
+def getLoginPage():
+    setting = {
+        "title": "登入",
+        "script": [
+            "login.js"
+        ],
+        "css": [
+            "login.css",
+        ]
+    }
+    return render_template('main.html', setting=setting)
+
+@app.route('/register')
+def getRegisterPage():
+    setting = {
+        "title": "登入",
+        "script": [
+            "register.js"
+        ],
+        "css": [
+            "register.css",
+        ]
+    }
+    return render_template('main.html', setting=setting)
 
 if __name__ == "__main__":
     app.run(debug=True)
