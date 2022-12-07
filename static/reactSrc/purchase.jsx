@@ -26,7 +26,12 @@ const Item = ({name, img, num, price})=>(
     </div>
 )
 
-const ItemList = ({state,  products, start, end})=>{
+const ItemTail = ()=>{
+
+}
+
+
+const ItemList = ({state, price,  products, start, end})=>{
     const stateName = ['已成立', '運送中', '已完成'];
     return (
         <div className={`order`}>
@@ -39,9 +44,15 @@ const ItemList = ({state,  products, start, end})=>{
                     <Item name={p.name} img={p.img} price={p.price} num={p.num}></Item>
                 ))
             }
-            <div>
-                <p>{`start time : ${start}`}</p>
-                <p>{`end time : ${end}`}</p>
+            <div className={`order_tail`}>
+                <div>
+                    <p className={`order_time`}>{`start time : ${start}`}</p>
+                    <p className={`order_time`}>{`end time : ${end}`}</p>
+                </div>
+                <div className={`order_price_area`}>
+                    <p>訂單金額:</p>
+                    <p className={`order_price`}>${price}</p>
+                </div>
             </div>
         </div>
     )
@@ -106,8 +117,12 @@ const Interface = ()=>{
     return (
         <div className={`interface`}>
             <Selection items={["全部", '已成立', '運送中', '已完成',] } state={state} handleClick={handleClick}></Selection>
-            {/*<ItemList items={items}></ItemList>*/}
-            { items.map( i =>( <ItemList state={i.state} products={i.product} start={i.start} end={i.end}></ItemList> ) ) }
+            {
+                items.map( i =>{
+                    const showing = ["全部", '已成立', '運送中', '已完成',].indexOf(state) -1;
+                    if((showing < 0)  || (showing == i.state)) return <ItemList state={i.state} price={i.price} products={i.product} start={i.start} end={i.end}></ItemList>;
+                })
+            }
         </div>
     )
 }
