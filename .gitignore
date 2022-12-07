@@ -6,3 +6,7 @@ node_modules/
 shaker/__pycache__/
 
 Users/__pycache__/
+
+apps/__pycache__/
+
+__pycache__/
