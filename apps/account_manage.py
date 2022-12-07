@@ -6,25 +6,30 @@ app = Blueprint('account_manage', __name__)
 @app.route("/check_duplicate", methods=['POST'])
 def check_duplicate(request):
     # connect database
-    db = MySQLdb.connect(host="localhost", user="root", passwd="", db="shaker", charset="utf8")
+    db = MySQLdb.connect(host="localhost", user="root", passwd="peter0830", db="shaker", charset="utf8")
     cursor = db.cursor()
-    cursor.execute("SELECT account FROM account WHERE email = %s" %request.json['email'])
+    cursor.execute("""
+        SELECT 
+            * 
+        FROM 
+            account 
+        WHERE 
+            email = %(email)s 
+        """, {
+            'email': request.json['email']
+        })
 
-    # sucess or fail
-    result = {}
-    if(cursor.fetchone() == None):
-        result = {
+    # success or fail return
+    if cursor.fetchone() == None:
+        return jsonify({
             'status': "success",
             'cause': 500
-        }
+        })
     else:
-        result = {
-            'status': "fail",
+        return jsonify({
+            'status': "failed",
             'cause': 501
-        }
-
-    # return result
-    return jsonify(result)
+        })
 
 @app.route("/register", methods=['POST'])
 def register(request):
