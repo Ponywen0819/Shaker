@@ -1,0 +1,82 @@
+.interface{
+    width: 80%;
+    padding: 20px 30px;
+}
+
+.section{
+    background-color: white;
+    display: flex;
+    margin-bottom: 50px;
+}
+
+.section_btn{
+    width: 150px;
+    height: 60px;
+    transition: border-bottom-width,color;
+}
+.selection_btn_on{
+    border-bottom: 2px solid orange;
+    color: orange;
+    font-weight: bolder;
+}
+.display_area{
+    background-color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.item{
+    padding: 0px 5px;
+    width: 50%;
+    height: 110px;
+    margin-bottom: 10px;
+}
+
+.item_info{
+    box-shadow: 0px 0px 5px 1px rgba(0, 0, 0, 0.2);
+    display: flex;
+    height: 100%;
+    border-radius: 5px;
+}
+
+.item_head{
+    width: 100px;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+}
+
+.item_head_all{
+    background-color: rgb(252, 117, 62);
+}
+
+.item_head_shop{
+    background-color: rgb(38, 204, 145);
+}
+
+.item_text_area{
+    width: calc(100% - 75px);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 10px 20px;
+}
+
+.item_name{
+    font-size: medium;
+    word-break: break-word;
+}
+
+.item_num{
+    font-size: small;
+    color: #8b8e94;
+}
+
+.item_price{
+    display: flex;
+    align-items: center;
+}

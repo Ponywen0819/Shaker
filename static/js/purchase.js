@@ -67,8 +67,11 @@ var Item = function Item(_ref3) {
     );
 };
 
+var ItemTail = function ItemTail() {};
+
 var ItemList = function ItemList(_ref4) {
     var state = _ref4.state,
+        price = _ref4.price,
         products = _ref4.products,
         start = _ref4.start,
         end = _ref4.end;
@@ -92,16 +95,35 @@ var ItemList = function ItemList(_ref4) {
         }),
         React.createElement(
             'div',
-            null,
+            { className: 'order_tail' },
             React.createElement(
-                'p',
+                'div',
                 null,
-                'start time : ' + start
+                React.createElement(
+                    'p',
+                    { className: 'order_time' },
+                    'start time : ' + start
+                ),
+                React.createElement(
+                    'p',
+                    { className: 'order_time' },
+                    'end time : ' + end
+                )
             ),
             React.createElement(
-                'p',
-                null,
-                'end time : ' + end
+                'div',
+                { className: 'order_price_area' },
+                React.createElement(
+                    'p',
+                    null,
+                    '\u8A02\u55AE\u91D1\u984D:'
+                ),
+                React.createElement(
+                    'p',
+                    { className: 'order_price' },
+                    '$',
+                    price
+                )
             )
         )
     );
@@ -162,7 +184,8 @@ var Interface = function Interface() {
         { className: 'interface' },
         React.createElement(Selection, { items: ["全部", '已成立', '運送中', '已完成'], state: state, handleClick: handleClick }),
         items.map(function (i) {
-            return React.createElement(ItemList, { state: i.state, products: i.product, start: i.start, end: i.end });
+            var showing = ["全部", '已成立', '運送中', '已完成'].indexOf(state) - 1;
+            if (showing < 0 || showing == i.state) return React.createElement(ItemList, { state: i.state, price: i.price, products: i.product, start: i.start, end: i.end });
         })
     );
 };

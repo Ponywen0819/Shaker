@@ -1,6 +1,6 @@
 function Render_logo(){
     return (
-        <a href="/index" className="logo_area">
+        <a href="/" className="logo_area">
             <img src="/static/img/logo2.png" alt="" />
         </a>
     )
