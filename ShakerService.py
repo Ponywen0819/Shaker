@@ -21,6 +21,7 @@ def get_index_page():
         ],
         "css": [
             "Toolbar.css",
+            'index.css'
         ]
     }
     return render_template('main.html', setting=setting)
