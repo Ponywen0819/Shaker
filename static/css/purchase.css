@@ -12,7 +12,7 @@
 .section_btn{
     width: 150px;
     height: 60px;
-    transition: border-bottom-width;
+    transition: border-bottom-width 1s,color 1s;
 }
 .selection_btn_on{
     border-bottom: 2px solid orange;
@@ -24,6 +24,7 @@
     background-color: white;
     margin-bottom: 30px;
     padding: 10px 20px;
+    border-radius: 5px;
 }
 
 .order_nav{
@@ -37,6 +38,26 @@
 .order_nav_title{
     font-weight: bolder;
     color: orange;
+}
+
+.order_tail{
+    display: flex;
+    justify-content: space-between;
+}
+
+.order_price_area{
+    display: flex;
+    align-items: flex-end
+}
+
+.order_price{
+    color: orange;
+    font-size: 20px;
+}
+
+.order_time{
+   font-size: 2px;
+    color: #9ca3af;
 }
 
 .item{

@@ -1,11 +1,12 @@
 .toolbar{
-    width: 100vw;
-    background: linear-gradient(red,rgb(255, 101, 40));
+    /*width: 100vw;*/
+    /*background: linear-gradient(red,rgb(255, 101, 40));*/
 }
 
 .upper_container{
     width: 100vw;
-    height: 25px;
+    height: 35px;
+    background-color: rgb(255, 101, 40);
 }
 
 .nav_container{
@@ -47,11 +48,21 @@
 
 .lower_container{
     width: 100vw;
-    height: 75px;
+    height: 65px;
+    background-color: rgb(255, 101, 40);
+}
+
+.lower_img_area{
+    height: 100%;
+}
+
+.lower_img{
+    height: 100%;
 }
 
 .lower_main{
     align-items: center;
+    padding-bottom: 5px;
 
 }
 

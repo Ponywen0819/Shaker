@@ -4,3 +4,11 @@
 node_modules/
 
 __pycache__/
+
+Users/__pycache__/
+
+apps/__pycache__/
+
+__pycache__/
+
+Shaker/

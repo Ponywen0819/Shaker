@@ -1,0 +1,32 @@
+.cart_lower{
+    width: 100vw;
+    height: 85px;
+    background-color: white;
+    padding: 10px 0px;
+}
+
+.cart_lower_container{
+    max-width: 1200px;
+    margin-right: auto;
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.cart_search_bar{
+    width: 500px;
+    border-radius: 5px;
+    border: 1px solid #fc753e;
+    height: 40px;
+    padding: 5px;
+    background-color: white;
+    align-items: center;
+    display: flex;
+}
+
+.cart_search_input{
+    width: 90%;
+    padding: 7px 5px;
+    margin: 0 10px 0 0;
+}
