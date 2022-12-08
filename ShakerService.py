@@ -121,6 +121,20 @@ def get_coupon_page():
     }
     return render_template('main.html', setting=setting)
 
+@app.route('/cart')
+def get_cart_page():
+    setting = {
+        "title": "購物車",
+        "script": [
+            'Toolbar.js',
+            "cart.js"
+        ],
+        "css": [
+            'Toolbar.css',
+            "cart.css",
+        ]
+    }
+    return render_template('main.html', setting=setting)
 
 if __name__ == "__main__":
     app.run(debug=True)

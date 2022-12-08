@@ -3,7 +3,7 @@ var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = [
 function Render_logo() {
     return React.createElement(
         "a",
-        { href: "/index", className: "logo_area" },
+        { href: "/", className: "logo_area" },
         React.createElement("img", { src: "/static/img/logo2.png", alt: "" })
     );
 }
