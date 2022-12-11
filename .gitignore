@@ -12,3 +12,5 @@ apps/__pycache__/
 __pycache__/
 
 Shaker/
+
+config.json
