@@ -1,5 +1,6 @@
 from flask import Flask, render_template, make_response, Blueprint
 from apps import account_manage
+from module.configs import configure_collection
 
 # from configs import config
 
@@ -7,6 +8,7 @@ from apps import account_manage
 
 app = Flask(__name__)
 app.register_blueprint(account_manage.app, url_prefix='/account')
+
 
 
 # app.config.from_object()
@@ -138,4 +140,5 @@ def get_cart_page():
     return render_template('main.html', setting=setting)
 
 if __name__ == "__main__":
+    app.config['config'] = configure_collection()
     app.run(debug=True)

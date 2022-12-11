@@ -3,6 +3,7 @@ import MySQLdb
 
 app = Blueprint('account_manage', __name__)
 
+
 @app.route("/check_duplicate", methods=['POST'])
 def check_duplicate(request):
     # connect database
