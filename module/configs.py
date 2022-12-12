@@ -1,6 +1,7 @@
 import json
 import os
 
+
 class configure_collection(dict):
     def __init__(self) -> None:
         self.full_file_path = os.path.join(os.getcwd(), "config.json")
@@ -8,7 +9,18 @@ class configure_collection(dict):
             with open(self.full_file_path, "r") as file:
                 self.configure = json.load(file)
         else:
-            self.configure = {'JWT_secret':'DefaultSecret', 'SSL':{"enable":"false"}}
+            self.configure = {
+                'JWT_secret': 'DefaultSecret',
+                'SSL': {
+                    "Enable": "false"
+                },
+                'SQL': {
+                    'Host': '127.0.0.1',
+                    'User': 'root',
+                    'Password': 'Skills39',
+                    'Database': 'Shaker'
+                }
+            }
             self.commit_change()
 
     def commit_change(self) -> None:
@@ -68,4 +80,3 @@ class configure_collection(dict):
 
     def __unicode__(self):
         return unicode(repr(self.configure))
-

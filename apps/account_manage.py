@@ -1,37 +1,37 @@
-from flask import Flask, render_template, request, redirect, url_for, Blueprint,jsonify
-import MySQLdb
+from flask import Flask, render_template, request, redirect, url_for, Blueprint, jsonify, current_app
+from module.configs import configure_collection
+from module.data_utils import database_utils
 
 app = Blueprint('account_manage', __name__)
 
 
 @app.route("/check_duplicate", methods=['POST'])
-def check_duplicate(request):
+def check_duplicate():
     # connect database
-    db = MySQLdb.connect(host="localhost", user="root", passwd="peter0830", db="shaker", charset="utf8")
-    cursor = db.cursor()
-    cursor.execute("""
+    db = database_utils(current_app.config['config'])
+    dbreturn = db.command_excute("""
         SELECT 
             * 
         FROM 
-            account 
+            accounts 
         WHERE 
             email = %(email)s 
         """, {
-            'email': request.json['email']
-        })
-
+        'email': request.json['email']
+    })
     # success or fail return
-    if cursor.fetchone() == None:
-        return jsonify({
-            'status': "success",
-            'cause': 500
-        })
-    else:
+    if len(dbreturn) != 0:
         return jsonify({
             'status': "failed",
             'cause': 501
         })
+    else:
+        return jsonify({
+            'status': "success",
+            'cause': 500
+        })
+
 
 @app.route("/register", methods=['POST'])
-def register(request):
+def register():
     return "ho zero"
