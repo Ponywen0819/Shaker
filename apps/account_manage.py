@@ -16,9 +16,8 @@ def check_duplicate():
             accounts 
         WHERE 
             email = %(email)s 
-        """, {
-        'email': request.json['email']
-    })
+        """, request.json
+    )
     # success or fail return
     if len(dbreturn) != 0:
         return jsonify({
@@ -34,4 +33,5 @@ def check_duplicate():
 
 @app.route("/register", methods=['POST'])
 def register():
+
     return "ho zero"
