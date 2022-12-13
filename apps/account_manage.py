@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, Blueprint,
 from module.configs import configure_collection
 from module.data_utils import database_utils
 
+
 app = Blueprint('account_manage', __name__)
 
 
@@ -33,5 +34,8 @@ def check_duplicate():
 
 @app.route("/register", methods=['POST'])
 def register():
-
     return "ho zero"
+
+@app.route("login", methods=['POSt'])
+def login():
+     pass

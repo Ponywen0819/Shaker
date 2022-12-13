@@ -19,6 +19,10 @@ class configure_collection(dict):
                     'User': 'root',
                     'Password': 'Skills39',
                     'Database': 'Shaker'
+                },
+                'Encrypt': {
+                    'PublicKeyPath': './public.pem',
+                    'PrivateKeyPath': './private.pem'
                 }
             }
             self.commit_change()
