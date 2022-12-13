@@ -142,5 +142,5 @@ def get_cart_page():
 
 if __name__ == "__main__":
     app.config['config'] = configure_collection()
-    app.config['crypto_utils'] = crypto_utils(app.config['config'])
+    app.config['crypto'] = crypto_utils(app.config['config'])
     app.run(debug=True)

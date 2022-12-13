@@ -6,8 +6,9 @@ class json_web_token_generator:
         self.secret_key = config['JWT_secret']
         pass
 
-    def generate_token(self, values : dict) -> str:
+    def generate_token(self, values: dict) -> str:
+        # print()
         return jwt.encode(values, self.secret_key, algorithm='HS256')
 
-    def get_token_detail(self, token : str) -> dict:
+    def get_token_detail(self, token: str) -> dict:
         return jwt.decode(token, self.secret_key, algorithms=['HS256'])
