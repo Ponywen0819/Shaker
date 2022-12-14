@@ -1,3 +1,5 @@
+
+
 from flask import Flask, render_template, request, redirect, url_for, Blueprint, jsonify, current_app, make_response
 from module.configs import configure_collection
 import time
@@ -22,30 +24,55 @@ def register():
             email = %(email)s 
         """, request.json
     )
+
     # success or fail return
     if len(dbreturn) != 0:
         return jsonify({
             'status': "failed",
             'cause': 501
         })
-    else:
+
+    if(len(request.json['password']) < 6):
         return jsonify({
-            'status': "success",
-            'cause': 500
+            'status': "failed",
+            'cause': 502
         })
 
+    if(len(request.json) != 5):
+        return jsonify({
+            'status': "failed",
+            'cause': 503
+        })
 
-<<<<<<< HEAD
+    request.json['password'] = hash(current_app.config['crypto'].decrypt(request.json['password']))
 
-=======
-@app.route("/register", methods=['POST'])
-def register():
-    return "ho zero"
+    db.command_excute("""
+            INSERT INTO accounts (account_id, name, email, phone, password) 
+            VALUES (%(account_id)s, %(name)s, %(email)s, %(phone)s, %(password)s)
+            """, request.json
+                      )
+    db.commit_change()
 
-@app.route("login", methods=['POSt'])
+    jwt_generator = json_web_token_generator(current_app.config['config'])
+    token = jwt_generator.generate_token({"email": request.json['email']})
+    res = make_response(json.dumps({
+        "status": "success",
+        "cause": 0
+    }))
+
+    res.set_cookie("Token", token, expires=time.time()+6*60)
+    return res
+
+
+
+
+
+
+@app.route("login", methods=['POST'])
 def login():
     auth_info = request.json
-    auth_info['password'] = current_app.config['crypto'].decrypt(auth_info['password'])
+    auth_info['password'] = hash(current_app.config['crypto'].decrypt(auth_info['password']))
+    print(auth_info['password'])
     db = database_utils(current_app.config['config'])
     dbreturn = db.command_excute("""
             SELECT 
@@ -58,7 +85,7 @@ def login():
 
     if len(dbreturn) == 1:
         jwt_generator = json_web_token_generator(current_app.config['config'])
-        token = jwt_generator.generate_token({"userId": dbreturn[0]['id']})
+        token = jwt_generator.generate_token({"email": dbreturn[0]['email']})
         res = make_response(json.dumps({
             "status": "success",
             "cause": 0
@@ -72,4 +99,4 @@ def login():
         return jsonify({"status": "fail", "cause": 1})
 
 # iJx5e0gQ9NkgVExZYV1Afke6Jf2VhXmp3HA0SvJbZr/UwMuJWh3uSEW44MuYhpyBOSTxoe/EfKE/Ie+z8i9lNchPUuBWrNLlZzQ+ddmA0ldTrzBp1QH9v6Z44I/mJ0KhtvEJF3DDp/jdRQbcLe3S9pnGPOqpAuXm87bj0chjYVsS23IOX+9TuPANfvwDWe6lB74tve9v+xhgys3d7wm8gZj5nOTnDcrSi4em8P4ZKdYH3gFmW/d8Vgqzj72xMX7eIgJrzY0MTpSlWH++xhVzuDm9rw/UVH0BSaLpZLYcCLQyPnfvtwMqCsrEXJvKJnFs45cWoJ3p8eMQaFqMf3vfGQ==
->>>>>>> FlaskShaker
+
