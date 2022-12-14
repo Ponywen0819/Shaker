@@ -1,6 +1,7 @@
 from flask import Flask, render_template, make_response, Blueprint
 from apps import account_manage
 from module.configs import configure_collection
+from module.crypto_utils import crypto_utils
 
 # from configs import config
 
@@ -141,4 +142,5 @@ def get_cart_page():
 
 if __name__ == "__main__":
     app.config['config'] = configure_collection()
+    app.config['crypto'] = crypto_utils(app.config['config'])
     app.run(debug=True)
