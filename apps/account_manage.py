@@ -5,8 +5,8 @@ from module.data_utils import database_utils
 app = Blueprint('account_manage', __name__)
 
 
-@app.route("/check_duplicate", methods=['POST'])
-def check_duplicate():
+@app.route("/register", methods=['POST'])
+def register():
     # connect database
     db = database_utils(current_app.config['config'])
     dbreturn = db.command_excute("""
@@ -32,6 +32,4 @@ def check_duplicate():
         })
 
 
-@app.route("/register", methods=['POST'])
-def register():
-    return "ho zero"
+

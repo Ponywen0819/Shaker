@@ -17,7 +17,7 @@ class configure_collection(dict):
                 'SQL': {
                     'Host': '127.0.0.1',
                     'User': 'root',
-                    'Password': 'Skills39',
+                    'Password': 'peter0830',
                     'Database': 'Shaker'
                 }
             }
