@@ -28,33 +28,33 @@ def upload_picture():
     check = False
     if(extension == "jpg" or extension == "png" or extension == "jpeg"):
         check = True
-
-    if file and check:
-        filename =  str(uuid.uuid4()) + "." + extension
-        file.save(os.path.join(current_app.config["config"]["UploadFolder"], filename))
-        db = database_utils(current_app.config['config'])
-        db.command_excute("""
-                        INSERT INTO picture (file_path) 
-                        VALUES (%(file_path)s);
-                        """, {"file_path": (current_app.config["config"]["UploadFolder"] + "/" + filename)}
-                          )
-        db.commit_change()
-        dbreturn = db.command_excute("""
-                    SELECT 
-                        id
-                    FROM 
-                        picture 
-                    WHERE 
-                        file_path = (%(file_path)s)
-                    """, {"file_path": (current_app.config["config"]["UploadFolder"] + "/" + filename)}
-        )
+    # 副檔名不對
+    if not check:
         return jsonify({
-            'id': dbreturn[0]['id'],
-            'status': "success",
-            'cause': 666
+            'status': "failed",
+            'cause': 605
         })
+    filename = str(uuid.uuid4()) + "." + extension
+    file.save(os.path.join(current_app.config["config"]["UploadFolder"], filename))
+    db = database_utils(current_app.config['config'])
+    db.command_excute("""
+                    INSERT INTO picture (file_path) 
+                    VALUES (%(file_path)s);
+                    """, {"file_path": (current_app.config["config"]["UploadFolder"] + "/" + filename)}
+                      )
+    db.commit_change()
+    dbreturn = db.command_excute("""
+                SELECT 
+                    id
+                FROM 
+                    picture 
+                WHERE 
+                    file_path = (%(file_path)s)
+                """, {"file_path": (current_app.config["config"]["UploadFolder"] + "/" + filename)}
+    )
     return jsonify({
-        'status': "跑出來了",
+        'id': dbreturn[0]['id'],
+        'status': "success",
         'cause': 666
     })
 @app.route("/upload_product", methods=["POST"])
