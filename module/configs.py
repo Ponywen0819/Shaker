@@ -23,7 +23,8 @@ class configure_collection(dict):
                 'Encrypt': {
                     'PublicKeyPath': './public.pem',
                     'PrivateKeyPath': './private.pem'
-                }
+                },
+                'UploadFolder': "./static/picture/",
             }
             self.commit_change()
 
