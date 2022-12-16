@@ -93,7 +93,6 @@ def upload_product():
             'status': 'failed',
             'cause': 602
         })
-    print(repr(request.json))
     db.command_excute("""
                 INSERT INTO product (shop_id, name, price, number, intro, category, picture_id, avgstar, status)
                 VALUES (%(shop_id)s, %(name)s, %(price)s, %(number)s, %(intro)s, %(category)s, %(picture_id)s , '0', %(status)s)
