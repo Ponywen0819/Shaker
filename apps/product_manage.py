@@ -34,7 +34,12 @@ def upload_picture():
             'status': "failed",
             'cause': 605
         })
+    ##看圖檔是否已經存在
     filename = str(uuid.uuid4()) + "." + extension
+    print(filename)
+    while(os.path.exists((current_app.config["config"]["UploadFolder"] + "/" + filename))):
+        filename = str(uuid.uuid4()) + "." + extension
+
     file.save(os.path.join(current_app.config["config"]["UploadFolder"], filename))
     db = database_utils(current_app.config['config'])
     db.command_excute("""
@@ -57,46 +62,45 @@ def upload_picture():
         'status': "success",
         'cause': 666
     })
-@app.route("/upload_product", methods=["POST"])
+@app.route("/upload_product", methods = ["POST"])
 def upload_product():
     db = database_utils(current_app.config['config'])
     dbreturn = db.command_excute("""
-        SELECT 
-            * 
-        FROM 
-            product 
-        WHERE 
-            shop_id = %(shop_id)s AND name = %(name)s 
+        SELECT
+            *
+        FROM
+            product
+        WHERE
+            shop_id = %(shop_id)s AND name = %(name)s
         """, request.json
     )
+    copyRequest = request.json
     #已有這個商品
-    if len(dbreturn) != 0 :
+    if len(dbreturn) != 0:
         return jsonify({
             'status': "failed",
-            'cause' : 601
+            'cause': 601
         })
     #商品價格不符合database標準
     # if len(request.json['price']) < 2:
     #     return jsonify({
     #         'status': 'failed',
     #         'cause': 602
-    #     })
-    #price,number轉型
-    copy_request = request.json
-    copy_request['shop_id'] = int(copy_request['shop_id'])
-    copy_request['price'] = int(copy_request['price'])
-    copy_request['number'] = int(copy_request['number'])
-    copy_request['category'] = int(copy_request['category'])
-    copy_request['status'] = int(copy_request['status'])
+    #     }
     #有條件未填
     if len(request.json) != 8:
         return jsonify({
             'status': 'failed',
             'cause': 602
         })
+    print(repr(request.json))
     db.command_excute("""
-                INSERT INTO accounts ( shop_id, name, price, number, intro, category, picture_id, avgstar , status) 
-                VALUES ( %(shop_id)d, %(name)s, %(price)d, %(number)d, %(intro)s, %(category)d, %(picture_id)d , '0' , %(status)d)
-                """, copy_request
+                INSERT INTO product (shop_id, name, price, number, intro, category, picture_id, avgstar, status)
+                VALUES (%(shop_id)s, %(name)s, %(price)s, %(number)s, %(intro)s, %(category)s, %(picture_id)s , '0', %(status)s)
+                """, request.json
                 )
     db.commit_change()
+    return jsonify({
+        'status': 'success',
+        'cause': 699
+    })
