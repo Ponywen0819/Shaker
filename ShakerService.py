@@ -11,7 +11,8 @@ from module.crypto_utils import crypto_utils
 
 app = Flask(__name__)
 app.register_blueprint(account_manage.app, url_prefix='/account')
-<<<<<<< HEAD
+app.register_blueprint(product_manage.app, url_prefix='/product')
+
 app.config['SWAGGER'] = {
         "title": "Shaker API",
         "description": "Shaker API",
@@ -20,10 +21,9 @@ app.config['SWAGGER'] = {
         "hide_top_bar": True
     }
 Swagger(app)
-=======
-app.register_blueprint(product_manage.app, url_prefix='/product')
 
->>>>>>> FlaskShaker
+
+
 
 
 # app.config.from_object()
