@@ -1,4 +1,5 @@
 from flask import Flask, render_template, make_response, Blueprint
+from flasgger import Swagger
 from apps import account_manage
 from module.configs import configure_collection
 from module.crypto_utils import crypto_utils
@@ -9,7 +10,14 @@ from module.crypto_utils import crypto_utils
 
 app = Flask(__name__)
 app.register_blueprint(account_manage.app, url_prefix='/account')
-
+app.config['SWAGGER'] = {
+        "title": "Shaker API",
+        "description": "Shaker API",
+        "version": "1.0.0",
+        "termsOfService": "",
+        "hide_top_bar": True
+    }
+Swagger(app)
 
 
 # app.config.from_object()
@@ -143,4 +151,5 @@ def get_cart_page():
 if __name__ == "__main__":
     app.config['config'] = configure_collection()
     app.config['crypto'] = crypto_utils(app.config['config'])
-    app.run(debug=True)
+
+    app.run(host="0.0.0.0", debug=True)
