@@ -2,6 +2,8 @@ from flask import Flask, render_template, make_response, Blueprint
 from flasgger import Swagger
 from apps import account_manage
 from apps import product_manage
+from apps import admin_manage
+from module.jwt_token_utils import json_web_token_generator
 from module.configs import configure_collection
 from module.crypto_utils import crypto_utils
 
@@ -12,6 +14,7 @@ from module.crypto_utils import crypto_utils
 app = Flask(__name__)
 app.register_blueprint(account_manage.app, url_prefix='/account')
 app.register_blueprint(product_manage.app, url_prefix='/product')
+app.register_blueprint(admin_manage.app, url_prefix='/admin')
 
 app.config['SWAGGER'] = {
         "title": "Shaker API",
@@ -21,10 +24,6 @@ app.config['SWAGGER'] = {
         "hide_top_bar": True
     }
 Swagger(app)
-
-
-
-
 
 # app.config.from_object()
 
@@ -156,6 +155,7 @@ def get_cart_page():
 
 if __name__ == "__main__":
     app.config['config'] = configure_collection()
+    app.config['jwt'] = json_web_token_generator(app.config['config'])
     app.config['crypto'] = crypto_utils(app.config['config'])
 
     app.run(host="0.0.0.0", debug=True)

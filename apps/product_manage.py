@@ -45,8 +45,7 @@ def upload_picture():
     db.command_excute("""
                     INSERT INTO picture (file_path) 
                     VALUES (%(file_path)s);
-                    """, {"file_path": (current_app.config["config"]["UploadFolder"] + "/" + filename)}
-                      )
+                    """, {"file_path": (current_app.config["config"]["UploadFolder"] + "/" + filename)})
     db.commit_change()
     dbreturn = db.command_excute("""
                 SELECT 
@@ -55,8 +54,7 @@ def upload_picture():
                     picture 
                 WHERE 
                     file_path = (%(file_path)s)
-                """, {"file_path": (current_app.config["config"]["UploadFolder"] + "/" + filename)}
-    )
+                """, {"file_path": (current_app.config["config"]["UploadFolder"] + "/" + filename)})
     return jsonify({
         'id': dbreturn[0]['id'],
         'status': "success",
@@ -96,8 +94,7 @@ def upload_product():
     db.command_excute("""
                 INSERT INTO product (shop_id, name, price, number, intro, category, picture_id, avgstar, status)
                 VALUES (%(shop_id)s, %(name)s, %(price)s, %(number)s, %(intro)s, %(category)s, %(picture_id)s , '0', %(status)s)
-                """, request.json
-                )
+                """, request.json)
     db.commit_change()
     return jsonify({
         'status': 'success',
