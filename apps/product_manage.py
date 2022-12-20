@@ -130,3 +130,30 @@ def modify_product():
         'status': 'success',
         'cause': 700
     })
+@app.route("/delete_product", methods = ["POST"])
+def delete_product():
+    db = database_utils(current_app.config['config'])
+    dbreturn = db.command_excute("""
+                SELECT
+                    *
+                FROM
+                    product
+                WHERE
+                    id = %(id)s
+                """, request.json)
+    print(dbreturn)
+    print(request.json)
+    # 沒有商品
+    if len(dbreturn) != 1:
+        return jsonify({
+            'status': "failed",
+            'cause': 801
+        })
+    db.command_excute("""
+                         DELETE FROM product
+                         WHERE id = %(id)s;
+                        """, request.json)
+    return jsonify({
+        'status': 'success',
+        'cause': 800
+    })
