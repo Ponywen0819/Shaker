@@ -49,12 +49,10 @@ def register():
             'status': "failed",
             'cause': 152
         })
-
-    if len(request.json) != 5:
-        return jsonify({
-            'status': "failed",
-            'cause': 153
-        })
+    require_field = ["account_id", "name", "email", "phone", "password"]
+    for need in require_field:
+        if need not in request.json.keys():
+            return jsonify({"status": "failed", "cause": 153 })
 
     account_info = request.json
 

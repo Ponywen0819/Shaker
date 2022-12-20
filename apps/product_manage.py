@@ -79,18 +79,12 @@ def upload_product():
             'status': "failed",
             'cause': 601
         })
-    #商品價格不符合database標準
-    # if len(request.json['price']) < 2:
-    #     return jsonify({
-    #         'status': 'failed',
-    #         'cause': 602
-    #     }
     #有條件未填
-    if len(request.json) != 8:
-        return jsonify({
-            'status': 'failed',
-            'cause': 602
-        })
+    require_field = ["shop_id", "name", "price", "number", "intro", "category", "picture_id", "status"]
+    for need in require_field:
+        if need not in request.json.keys():
+            return jsonify({"status": "failed", "cause": 602})
+
     db.command_excute("""
                 INSERT INTO product (shop_id, name, price, number, intro, category, picture_id, avgstar, status)
                 VALUES (%(shop_id)s, %(name)s, %(price)s, %(number)s, %(intro)s, %(category)s, %(picture_id)s , '0', %(status)s)
