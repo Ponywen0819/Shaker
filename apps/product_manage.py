@@ -72,19 +72,18 @@ def upload_product():
             shop_id = %(shop_id)s AND name = %(name)s
         """, request.json
     )
-    copyRequest = request.json
-    #已有這個商品
+    # 已有這個商品
     if len(dbreturn) != 0:
         return jsonify({
             'status': "failed",
             'cause': 601
         })
-    #有條件未填
+    # 有條件未填
     require_field = ["shop_id", "name", "price", "number", "intro", "category", "picture_id", "status"]
     for need in require_field:
         if need not in request.json.keys():
             return jsonify({"status": "failed", "cause": 602})
-
+    # 成功
     db.command_excute("""
                 INSERT INTO product (shop_id, name, price, number, intro, category, picture_id, avgstar, status)
                 VALUES (%(shop_id)s, %(name)s, %(price)s, %(number)s, %(intro)s, %(category)s, %(picture_id)s , '0', %(status)s)
@@ -93,4 +92,41 @@ def upload_product():
     return jsonify({
         'status': 'success',
         'cause': 699
+    })
+@app.route("/modify_product", methods = ["POST"])
+def modify_product():
+    # 不能更改shop_id
+    if "shop_id" in request.json.keys():
+        return jsonify({"status": "failed", "cause": 701})
+
+    db = database_utils(current_app.config['config'])
+    dbreturn = db.command_excute("""
+            SELECT
+                *
+            FROM
+                product
+            WHERE
+                id = %(id)s
+            """, request.json)
+    # 須找到商品
+    if len(dbreturn) != 1:
+        return jsonify({
+            'status': "failed",
+            'cause': 702
+        })
+    #
+    info = request.json
+    require_field = ["name", "price", "number", "intro", "category", "picture_id", "status"]
+    for modify in require_field:
+        if modify not in request.json.keys():
+            info[modify] = dbreturn[0].get(modify)
+
+    db.command_excute("""
+                     UPDATE product
+                     SET name = %(name)s, price = %(price)s, number = %(number)s, intro = %(intro)s, category = %(category)s, picture_id = %(picture_id)s, status = %(status)s
+                     WHERE id = %(id)s
+                    """, info)
+    return jsonify({
+        'status': 'success',
+        'cause': 700
     })
