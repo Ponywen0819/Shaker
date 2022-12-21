@@ -153,6 +153,22 @@ def get_cart_page():
     }
     return render_template('main.html', setting=setting)
 
+@app.route('/product')
+def get_product_page():
+    setting = {
+        "title": "商品",
+        "script": [
+            'Toolbar.js',
+            "product.js"
+        ],
+        "css": [
+            'Toolbar.css',
+            "product.css",
+        ]
+    }
+    return render_template('main.html', setting=setting)
+
+
 if __name__ == "__main__":
     app.config['config'] = configure_collection()
     app.config['jwt'] = json_web_token_generator(app.config['config'])

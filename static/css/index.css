@@ -90,7 +90,7 @@
 .discount_warp{
     display: inline-flex;
     width: 200%;
-
+    transition:  transform 500ms;
 }
 
 .discount_course{
@@ -152,18 +152,20 @@
 .dis_item_dis{
     font-size: 25px;
     font-weight: 900;
-    color: #fc753e;=
+    color: #fc753e;
 }
 
 .item_list{
+    width: 100%;
     display: flex;
     flex-wrap: wrap;
+    margin-bottom: 2rem;
 }
 
 .item_card_container{
-    width: 16.6%;
+    width: 16.666%;
     padding: 0px 7.5px;
-    position: relative;
+    /*position: relative;*/
     margin-bottom: 15px;
 }
 
