@@ -23,8 +23,6 @@ def register():
           type: string
           required: true
           default: None
-
-
     """
     # connect database
     db = database_utils(current_app.config['config'])
@@ -49,7 +47,7 @@ def register():
             'status': "failed",
             'cause': 152
         })
-    require_field = ["account_id", "name", "email", "phone", "password"]
+    require_field = ["account_id", "name", "email", "phone", "assword"]
     for need in require_field:
         if need not in request.json.keys():
             return jsonify({"status": "failed", "cause": 153 })

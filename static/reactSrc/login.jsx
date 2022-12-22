@@ -44,22 +44,11 @@ const handle_login = () =>{
             }
         })
     })
-
-    // 使用API 取得公鑰
-
-
 }
+
 
 const Login = () => {
     const mounted=React.useRef();
-
-    React.useEffect(()=>{
-        if(mounted.current===false){
-            console.log('12323')
-            mounted.current=true;
-            document.getElementById('login').addEventListener('click', (e)=>( console.log('q123') ))
-        }
-    });
 
     return [<ToolBar></ToolBar>,
             <div className="main_area">
@@ -70,7 +59,7 @@ const Login = () => {
                     <input className="input_main" type="email" name="" id={`account`} placeholder="帳號"/>
                     <input className="input_main" type="password" name=""  id={`password`} placeholder="密碼"/>
                     <a className="help_text" href="static/reactSrc/login">忘記密碼</a>
-                    <button id={`login`} className="login_btn btn" onClick={()=>(handle_login())}>登入</button>
+                    <button id={`login`} className="login_btn btn" onClick={handle_login}>登入</button>
                     <div className="or_area">s
                         <div className="or_bar"></div>
                         <div>或</div>

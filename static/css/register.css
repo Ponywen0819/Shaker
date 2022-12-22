@@ -43,6 +43,11 @@
     padding: 15px;
 }
 
+.registe_form{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
 
 .input_bar{
     width: 100%;

@@ -44,23 +44,10 @@ var handle_login = function handle_login() {
             }
         });
     });
-
-    // 使用API 取得公鑰
-
 };
 
 var Login = function Login() {
     var mounted = React.useRef();
-
-    React.useEffect(function () {
-        if (mounted.current === false) {
-            console.log('12323');
-            mounted.current = true;
-            document.getElementById('login').addEventListener('click', function (e) {
-                return console.log('q123');
-            });
-        }
-    });
 
     return [React.createElement(ToolBar, null), React.createElement(
         "div",
@@ -86,9 +73,7 @@ var Login = function Login() {
             ),
             React.createElement(
                 "button",
-                { id: "login", className: "login_btn btn", onClick: function onClick() {
-                        return handle_login();
-                    } },
+                { id: "login", className: "login_btn btn", onClick: handle_login },
                 "\u767B\u5165"
             ),
             React.createElement(
