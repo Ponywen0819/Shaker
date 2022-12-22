@@ -26,9 +26,12 @@ class crypto_utils:
         with open(self.public_key_path, "rb") as f:
             self.public_key = RSA.import_key(f.read())
 
+
         with open(self.private_key_path, "rb") as f:
             self.private_key = RSA.import_key(f.read())
 
+    def get_pubkey(self):
+        return self.public_key.export_key()
     def decrypt(self, cipher: str):
         cipher = base64.b64decode(cipher)
         decryptor = PKCS1_OAEP.new(self.private_key, SHA256, lambda x, y: pss.MGF1(x, y, SHA1))

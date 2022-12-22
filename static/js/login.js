@@ -1,105 +1,137 @@
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-function renderToolBar() {
-    var main = React.createElement(
+var ToolBar = function ToolBar() {
+    return React.createElement(
         "a",
         { className: "logo_area", href: "/" },
         React.createElement("img", { src: "/static/img/Logo2.png", alt: "" })
     );
-    return main;
-}
+};
 
-var Login = function (_React$Component) {
-    _inherits(Login, _React$Component);
+var handle_login = function handle_login() {
+    fetch('account/PublicKey', {
+        method: 'GET'
+    }).then(function (respone) {
+        if (respone.status === 200) {
+            return respone.text();
+        }
+    }).then(function (data) {
+        var account = document.getElementById("account").value;
+        var password = document.getElementById('password').value;
 
-    function Login(props) {
-        _classCallCheck(this, Login);
+        var public_key = forge.pki.publicKeyFromPem(data); //data是你去跟後端請求回來的公鑰明文
+        var encode_password = forge.util.encode64(public_key.encrypt(forge.util.encodeUtf8(password), 'RSA-OAEP', { md: forge.md.sha256.create(), mgf1: { md: forge.md.sha1.create() } }));
+        console.log('success');
 
-        return _possibleConstructorReturn(this, (Login.__proto__ || Object.getPrototypeOf(Login)).call(this, props));
-    }
+        fetch('account/Login', {
+            method: 'POST',
+            body: JSON.stringify({
+                account: account,
+                password: encode_password
+            }),
+            headers: {
+                'content-type': 'application/json'
+            }
+        }).then(function (respons) {
+            if (respons.status === 200) {
+                return respons.json();
+            }
+        }).then(function (json) {
+            if (json.status === "success") {
+                location.href = '/';
+                console.log('success');
+            } else {
+                // 登入失敗通知
+                console.log('fail');
+            }
+        });
+    });
 
-    _createClass(Login, [{
-        key: "render",
-        value: function render() {
-            var main = React.createElement(
+    // 使用API 取得公鑰
+
+};
+
+var Login = function Login() {
+    var mounted = React.useRef();
+
+    React.useEffect(function () {
+        if (mounted.current === false) {
+            console.log('12323');
+            mounted.current = true;
+            document.getElementById('login').addEventListener('click', function (e) {
+                return console.log('q123');
+            });
+        }
+    });
+
+    return [React.createElement(ToolBar, null), React.createElement(
+        "div",
+        { className: "main_area" },
+        React.createElement(
+            "div",
+            { className: "login_area" },
+            React.createElement(
                 "div",
-                { className: "main_area" },
+                null,
+                React.createElement(
+                    "h1",
+                    { className: "text-2hxl font-bold" },
+                    "\u767B\u5165"
+                )
+            ),
+            React.createElement("input", { className: "input_main", type: "email", name: "", id: "account", placeholder: "\u5E33\u865F" }),
+            React.createElement("input", { className: "input_main", type: "password", name: "", id: "password", placeholder: "\u5BC6\u78BC" }),
+            React.createElement(
+                "a",
+                { className: "help_text", href: "static/reactSrc/login" },
+                "\u5FD8\u8A18\u5BC6\u78BC"
+            ),
+            React.createElement(
+                "button",
+                { id: "login", className: "login_btn btn", onClick: function onClick() {
+                        return handle_login();
+                    } },
+                "\u767B\u5165"
+            ),
+            React.createElement(
+                "div",
+                { className: "or_area" },
+                "s",
+                React.createElement("div", { className: "or_bar" }),
                 React.createElement(
                     "div",
-                    { className: "login_area" },
-                    React.createElement(
-                        "div",
-                        null,
-                        React.createElement(
-                            "h1",
-                            { className: "text-2xl font-bold" },
-                            "\u767B\u5165"
-                        )
-                    ),
-                    React.createElement("input", { className: "input_main", type: "email", name: "", id: "", placeholder: "\u5E33\u865F" }),
-                    React.createElement("input", { className: "input_main", type: "password", name: "", id: "", placeholder: "\u5BC6\u78BC" }),
-                    React.createElement(
-                        "a",
-                        { className: "help_text", href: "static/reactSrc/login" },
-                        "\u5FD8\u8A18\u5BC6\u78BC"
-                    ),
-                    React.createElement(
-                        "button",
-                        { className: "login_btn btn" },
-                        "\u767B\u5165"
-                    ),
-                    React.createElement(
-                        "div",
-                        { className: "or_area" },
-                        React.createElement("div", { className: "or_bar" }),
-                        React.createElement(
-                            "div",
-                            null,
-                            "\u6216"
-                        ),
-                        React.createElement("div", { className: "or_bar" })
-                    ),
-                    React.createElement(
-                        "button",
-                        { className: "btn auth_btn" },
-                        React.createElement("img", { src: "/static/img/google_logo.svg", alt: "", className: "sm_logo" }),
-                        "Google"
-                    ),
-                    React.createElement(
-                        "button",
-                        { className: "btn auth_btn" },
-                        React.createElement("img", { src: "/static/img/github_black.svg", alt: "", className: "sm_logo" }),
-                        "Github"
-                    ),
-                    React.createElement(
-                        "div",
-                        { className: "flex justify-center" },
-                        React.createElement(
-                            "p",
-                            null,
-                            "\u5C1A\u672A\u64C1\u6709\u5E33\u865F?"
-                        ),
-                        React.createElement(
-                            "a",
-                            { className: "text-[cadetblue]", href: "/register" },
-                            "\u8A3B\u518A"
-                        )
-                    )
+                    null,
+                    "\u6216"
+                ),
+                React.createElement("div", { className: "or_bar" })
+            ),
+            React.createElement(
+                "button",
+                { className: "btn auth_btn" },
+                React.createElement("img", { src: "/static/img/google_logo.svg", alt: "", className: "sm_logo" }),
+                "Google"
+            ),
+            React.createElement(
+                "button",
+                { className: "btn auth_btn" },
+                React.createElement("img", { src: "/static/img/github_black.svg", alt: "", className: "sm_logo" }),
+                "Github"
+            ),
+            React.createElement(
+                "div",
+                { className: "flex justify-center" },
+                React.createElement(
+                    "p",
+                    null,
+                    "\u5C1A\u672A\u64C1\u6709\u5E33\u865F?"
+                ),
+                React.createElement(
+                    "a",
+                    { className: "text-[cadetblue]", href: "/register" },
+                    "\u8A3B\u518A"
                 )
-            );
-
-            return [renderToolBar(), main];
-        }
-    }]);
-
-    return Login;
-}(React.Component);
+            )
+        )
+    )];
+};
 
 var mont = ReactDOM.createRoot(document.getElementById("main"));
 mont.render(React.createElement(Login, null));

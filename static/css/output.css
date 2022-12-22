@@ -521,12 +521,12 @@ video {
   display: flex;
 }
 
-.w-1\/5 {
-  width: 20%;
-}
-
 .w-2\/5 {
   width: 40%;
+}
+
+.w-1\/5 {
+  width: 20%;
 }
 
 .transform {
