@@ -141,8 +141,6 @@ def delete_product():
                 WHERE
                     id = %(id)s
                 """, request.json)
-    print(dbreturn)
-    print(request.json)
     # 沒有商品
     if len(dbreturn) != 1:
         return jsonify({
@@ -157,3 +155,31 @@ def delete_product():
         'status': 'success',
         'cause': 800
     })
+@app.route("/get_product", methods = ["POST"])
+def get_product():
+    db = database_utils(current_app.config['config'])
+    dbreturn = db.command_excute("""
+                   SELECT
+                       *
+                   FROM
+                       product
+                   WHERE
+                       id = %(id)s
+                   """, request.json)
+    # 超過一筆資料或沒有任何資料
+    if len(dbreturn) != 1:
+        return jsonify({
+            'status': "failed",
+            'cause': 901
+        })
+    return jsonify({
+            'shop_id': dbreturn[0]['shop_id'],
+            'name': dbreturn[0]['name'],
+            'price': dbreturn[0]['price'],
+            'number': dbreturn[0]['number'],
+            'intro': dbreturn[0]['intro'],
+            'category': dbreturn[0]['category'],
+            'picture_id': dbreturn[0]['picture_id'],
+            'avgstar': dbreturn[0]['avgstar'],
+            'status': dbreturn[0]['status']
+        })
