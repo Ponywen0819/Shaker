@@ -46,7 +46,6 @@ def upload_picture():
                     INSERT INTO picture (file_path) 
                     VALUES (%(file_path)s);
                     """, {"file_path": (current_app.config["config"]["UploadFolder"] + "/" + filename)})
-    db.commit_change()
     dbreturn = db.command_excute("""
                 SELECT 
                     id
@@ -86,9 +85,8 @@ def upload_product():
     # 成功
     db.command_excute("""
                 INSERT INTO product (shop_id, name, price, number, intro, category, picture_id, avgstar, status)
-                VALUES (%(shop_id)s, %(name)s, %(price)s, %(number)s, %(intro)s, %(category)s, %(picture_id)s , '0', %(status)s)
+                VALUES (%(shop_id)s, %(name)s, %(price)s, %(number)s, %(intro)s, %(category)s, %(picture_id)s , 0.0, %(status)s)
                 """, request.json)
-    db.commit_change()
     return jsonify({
         'status': 'success',
         'cause': 699
@@ -183,3 +181,154 @@ def get_product():
             'avgstar': dbreturn[0]['avgstar'],
             'status': dbreturn[0]['status']
         })
+@app.route("/create_order", methods = ["POST"])
+def create_order():
+    require_field = ['owner_id', 'start_time', 'end_time', 'payment', 'status', 'free_fee', 'price', 'address', 'product_id', 'number']
+    for need in require_field:
+        if need not in request.json.keys():
+            return jsonify({"status": "failed", "cause": 1101})
+    db = database_utils(current_app.config['config'])
+    db.command_excute("""
+                       INSERT INTO `order` (owner_id, start_time, end_time, payment, status, free_fee, price, address)
+                       VALUES (%(owner_id)s, %(start_time)s, %(end_time)s, %(payment)s, %(status)s, %(free_fee)s, %(price)s, %(address)s)
+                       """, request.json)
+
+    temp = request.json
+    temp['order_id'] = db.command_excute("""SELECT LAST_INSERT_ID() AS id;""", {})[0]['id']
+    # order_detail
+    db.command_excute("""
+                          INSERT INTO order_detail (order_id, product_id, number)
+                          VALUES (%(order_id)s, %(product_id)s, %(number)s)
+                          """, temp)
+    return jsonify({
+        'status': "success",
+        'cause': 1100
+    })
+
+@app.route("/get_order", methods = ["POST"])
+def get_order():
+    require_field = ['id']
+    for need in require_field:
+        if need not in request.json.keys():
+            return jsonify({"status": "failed", "cause": 1201})
+    db = database_utils(current_app.config['config'])
+    order = db.command_excute("""
+                         SELECT
+                             *
+                         FROM
+                             `order`
+                         WHERE
+                             id = %(id)s
+                         """, request.json)
+    orderDetail = db.command_excute("""
+                             SELECT
+                                 *
+                             FROM
+                                 order_detail
+                             WHERE
+                                 order_id = %(id)s
+                             """, request.json)
+    if len(order) != 1 or len(orderDetail) != 1:
+        return jsonify({
+            'status': "failed",
+            'cause': 1202
+        })
+    return jsonify({
+        'owner_id': order[0]['owner_id'],
+        'start_time': order[0]['start_time'],
+        'end_time': order[0]['end_time'],
+        'payment': order[0]['payment'],
+        'status': order[0]['status'],
+        'free_fee': order[0]['free_fee'],
+        'price': order[0]['price'],
+        'address': order[0]['address'],
+        'product_id': orderDetail[0]['product_id'],
+        'number': orderDetail[0]['number']
+    })
+@app.route("/delete_order", methods = ["POST"])
+def delete_order():
+    require_field = ['id']
+    for need in require_field:
+        if need not in request.json.keys():
+            return jsonify({"status": "failed", "cause": 1201})
+    db = database_utils(current_app.config['config'])
+    detail = db.command_excute("""
+                         SELECT
+                             *
+                         FROM
+                             `order`
+                         WHERE
+                             id = %(id)s
+                         """, request.json)
+    # 沒有此order
+    if len(detail) == 0:
+        return jsonify({
+            'status': "failed",
+            'cause': 1301
+        })
+    db.command_excute("""
+                           DELETE FROM `order`
+                           WHERE id = %(id)s;
+                          """, request.json)
+    # db.command_excute("""
+    #                         DELETE FROM order_detail
+    #                         WHERE order_id = %(id)s;
+    #                         """, request.json)
+    return jsonify({
+            'status': "success",
+            'cause': 1300
+        })
+
+
+@app.route("/add_comment", methods = ["POST"])
+def add_comment():
+    db = database_utils(current_app.config['config'])
+    dbreturn = db.command_excute("""
+                     SELECT
+                         *
+                     FROM
+                         comment
+                     WHERE
+                         order_id = %(order_id)s
+                     """, request.json)
+    # 已經評論過
+    if len(dbreturn) != 0:
+        return jsonify({
+            'status': "failed",
+            'cause': 1001
+        })
+    require_field = ["order_id", "product_id", "star", "description", "picture", "time"]
+    for need in require_field:
+        if need not in request.json.keys():
+            return jsonify({"status": "failed", "cause": 1002})
+
+    db.command_excute("""
+                    INSERT INTO comment (order_id, product_id, star, description, picture, time)
+                    VALUES (%(order_id)s, %(product_id)s, %(star)s, %(description)s, %(picture)s, %(time)s)
+                    """, request.json)
+
+    average = db.command_excute("""
+                     SELECT
+                         AVG(star)
+                     FROM
+                         comment
+                     WHERE
+                         product_id = %(product_id)s
+                     """, request.json)
+    temp = request.json
+    temp["average"] = average[0]["AVG(star)"]
+    db.command_excute("""
+                         UPDATE product
+                         SET avgstar = %(average)s
+                         WHERE id = %(product_id)s
+                        """, temp)
+    return jsonify({
+        'status': "success",
+        'cause': 1000
+    })
+
+
+
+
+# @app.route("/get_comment", methods=["POST"])
+# def get_comment():
