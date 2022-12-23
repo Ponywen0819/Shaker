@@ -330,5 +330,26 @@ def add_comment():
 
 
 
-# @app.route("/get_comment", methods=["POST"])
-# def get_comment():
+@app.route("/get_comment", methods=["POST"])
+def get_comment():
+    require_field = ['product_id']
+    for need in require_field:
+        if need not in request.json.keys():
+            return jsonify({"status": "failed", "cause": 1401})
+    db = database_utils(current_app.config['config'])
+    comments = db.command_excute("""
+                             SELECT
+                                 *
+                             FROM
+                                 comment
+                             WHERE
+                                 product_id = %(product_id)s
+                             """, request.json)
+
+    if len(comments) == 0:
+        return jsonify({
+            'status': "no comment"
+        })
+    return jsonify(
+          comments
+    )
