@@ -134,13 +134,18 @@ def register_shop():
     for need in require_field:
         if need not in request.json.keys():
             return jsonify({"status": "failed", "cause": 201})
-    check = db.command_excute("""
+    check1 = db.command_excute("""
                                 SELECT *
                                 FROM accounts
                                 WHERE accounts.id = %(owner_id)s
                                 """, request.json)
-    # 已有商店帳號
-    if len(check) != 0:
+    check2 = db.command_excute("""
+                                    SELECT *
+                                    FROM shop
+                                    WHERE owner_id = %(owner_id)s
+                                    """, request.json)
+    # 無account或已有商店
+    if len(check1) != 1 or len(check2) != 0:
         return jsonify({
             'status': "failed",
             'cause': 202
