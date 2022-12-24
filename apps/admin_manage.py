@@ -6,10 +6,12 @@ from module.data_utils import database_utils
 
 app = Blueprint('admin_manage', __name__)
 
+
 @app.route("/Login", methods=['POST'])
 def login():
     auth_info = request.json
-    auth_info['password'] = hashlib.sha256(current_app.config['crypto'].decrypt(auth_info['password']).encode("utf-8")).hexdigest()
+    auth_info['password'] = hashlib.sha256(
+        current_app.config['crypto'].decrypt(auth_info['password']).encode("utf-8")).hexdigest()
     db = database_utils(current_app.config['config'])
     print(auth_info)
     dbreturn = db.command_excute("""
@@ -22,12 +24,13 @@ def login():
         token = current_app.config['jwt'].generate_token({"admin_id": dbreturn[0]['id']})
         res = make_response(json.dumps({"status": "success", "cause": 0}))
 
-        res.set_cookie("User_Token", token, expires=time.time()+6*60)
+        res.set_cookie("User_Token", token, expires=time.time() + 6 * 60)
         return res
     elif len(dbreturn) > 1:
         return jsonify({"status": "fail", "cause": 102})
     else:
         return jsonify({"status": "fail", "cause": 101})
+
 
 @app.route("/CreateAdmin", methods=['POST'])
 def register():
@@ -38,10 +41,11 @@ def register():
     require_field = ["name", "account", "password"]
     for need in require_field:
         if need not in request.json.keys():
-            return jsonify({"status": "failed", "cause": 153 })
+            return jsonify({"status": "failed", "cause": 153})
 
     auth_info = request.json
-    auth_info['password'] = hashlib.sha256(current_app.config['crypto'].decrypt(request.json['password']).encode("utf-8")).hexdigest()
+    auth_info['password'] = hashlib.sha256(
+        current_app.config['crypto'].decrypt(request.json['password']).encode("utf-8")).hexdigest()
 
     db = database_utils(current_app.config['config'])
     db.command_excute("""
@@ -54,4 +58,4 @@ def register():
                     VALUES (%(name)s, %(account)s, %(password)s, %(publisher_id)s);
                     """, auth_info)
 
-    return jsonify({"status": "failed", "cause": 150 })
+    return jsonify({"status": "failed", "cause": 150})

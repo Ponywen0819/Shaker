@@ -44,6 +44,7 @@ def register():
             'cause': 151
         })
 
+    # 修感
     if len(request.json['password']) < 6:
         return jsonify({
             'status': "failed",
@@ -106,12 +107,12 @@ def login():
 
 @app.route("/GetUserDetail/<user_id>", methods=["POST"])
 def get_user_detail(user_id):
-    if request.cookies.get('User_Token') == None: return "", 401
+    if request.cookies.get('User_Token') is None: return "", 401
     if not current_app.config['jwt'].check_token_valid(request.cookies.get('User_Token')):
         return "", 401
     user_info = current_app.config['jwt'].get_token_detail(request.cookies.get('User_Token'))
     print(user_info)
-    if (not user_info['admin'] == 1) and  (not user_info['user_id'] == int(user_id)):
+    if (not user_info['admin'] == 1) and (not user_info['user_id'] == int(user_id)):
         return "", 401
     db = database_utils(current_app.config['config'])
     dbreturn = db.command_excute("""
@@ -129,7 +130,43 @@ def get_user_detail(user_id):
 
     return jsonify(res)
 
+@app.route("/ChangePassword", methods=["POST"])
+def change_password():
+    token = request.cookies.get("User_Token")
+    if token is None: return "", 401
+    if not current_app.config['jwt'].check_token_valid(token):
+        return "", 401
 
+    user_info = current_app.config['jwt'].get_token_detail(token)
+
+    require_key = ["old", "new"]
+    request_json: dict = request.json
+    for key in require_key:
+        if key not in request_json.keys():
+            return "", 401
+
+    old_password = hashlib.sha256(current_app.config["crypto"].decrypt(request_json['old']).encode("utf-8")).hexdigest()
+    new_password = hashlib.sha256(current_app.config["crypto"].decrypt(request_json['new']).encode("utf-8")).hexdigest()
+
+    if old_password == new_password:
+        return jsonify({"status": "failed", "cause": 203})
+
+    db = database_utils(current_app.config['config'])
+    dbreturn = db.command_excute("""
+                                SELECT *
+                                FROM accounts
+                                WHERE accounts.id = %(user_id)s
+                                """, {"user_id": user_info["user_id"]})
+    if dbreturn == 0:
+        return jsonify({"status": "failed", "cause": 204})
+
+    db.command_excute("""
+    UPDATE accounts
+    SET password = %(new_password)s
+    WHERE accounts.id = %(user_id)s
+    """, {"user_id": user_info["user_id"], "new_password": new_password})
+
+    return jsonify({"status": "success", "cause": 200})
 
 
 
