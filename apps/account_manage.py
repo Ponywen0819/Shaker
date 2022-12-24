@@ -153,7 +153,7 @@ def register_shop():
     # 如果有附logo
     shopInfo = request.json
     if "logo" not in request.json.keys():
-        shopInfo["logo"] = None
+        shopInfo["logo"] = 1
     db.command_excute("""
                     INSERT INTO publisher 
                     VALUES(publisher_id)
