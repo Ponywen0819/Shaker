@@ -353,3 +353,83 @@ def get_comment():
     return jsonify(
           comments
     )
+@app.route("/add_productToCart", methods=["POST"])
+def add_productToCart():
+    require_field = ['owner_id', 'product_id', 'count']
+    for need in require_field:
+        if need not in request.json.keys():
+            return jsonify({"status": "failed", "cause": 1501})
+
+    db = database_utils(current_app.config['config'])
+    cartInfo = db.command_excute("""
+                                 SELECT
+                                     *
+                                 FROM
+                                     cart
+                                 WHERE
+                                     owner_id = %(owner_id)s AND product_id = %(product_id)s
+                                 """, request.json)
+    # 購物車裡面已經有此商品
+    if len(cartInfo) != 0:
+        return jsonify({
+            'status': "failed",
+            'cause': 1502
+        })
+    db.command_excute("""
+                        INSERT INTO cart (owner_id, product_id, count)
+                        VALUES (%(owner_id)s, %(product_id)s, %(count)s)
+                        """, request.json)
+
+    return jsonify({
+        'status': "success",
+        'cause': 1500
+    })
+@app.route("/get_productsToCart", methods=["POST"])
+def get_productsToCart():
+    require_field = ['owner_id']
+    for need in require_field:
+        if need not in request.json.keys():
+            return jsonify({"status": "failed", "cause": 1601})
+
+    db = database_utils(current_app.config['config'])
+    allProduct = db.command_excute("""
+                                 SELECT
+                                     *
+                                 FROM
+                                     cart
+                                 WHERE
+                                     owner_id = %(owner_id)s 
+                                 """, request.json)
+    return jsonify(
+        allProduct
+    )
+
+@app.route("/delete_productToCart", methods=["POST"])
+def delete_productToCart():
+    require_field = ['owner_id', 'product_id']
+    for need in require_field:
+        if need not in request.json.keys():
+            return jsonify({"status": "failed", "cause": 1701})
+    db = database_utils(current_app.config['config'])
+    cartProduct = db.command_excute("""
+                                     SELECT
+                                         *
+                                     FROM
+                                         cart
+                                     WHERE
+                                         owner_id = %(owner_id)s AND product_id = %(product_id)s
+                                     """, request.json)
+    #沒有此產品
+    if len(cartProduct) != 1:
+        return jsonify({
+            'status': "failed",
+            'cause': 1702
+        })
+    db.command_excute("""
+                               DELETE FROM cart
+                               WHERE owner_id = %(owner_id)s AND product_id = %(product_id)s;
+                              """, request.json)
+    return jsonify({
+        'status': "success",
+        'cause': 1700
+    })
