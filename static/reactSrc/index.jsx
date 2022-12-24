@@ -39,7 +39,6 @@ const Discount = ({items}) => {
         <div className={`discount_container`}>
             <div className={`header_container header_bar`}>
                 <p className={`discount_title`}>特價商品</p>
-                {offset}
                 <a className={`discount_link`}>看更多 ></a>
             </div>
             <div className={`discount_main`}>
@@ -116,23 +115,18 @@ const Main = ()=>{
             { no : 'a124fw', img : '/static/img/logo1.png', name : '我是商品', origin : 123, dis : 100,},
             { no : 'a124fw', img : '/static/img/logo1.png', name : '我是商品', origin : 123, dis : null,},
             { no : 'a124fw', img : '/static/img/logo1.png', name : '我是商品', origin : 123, dis : 102,},
-            { no : 'a124fw', img : '/static/img/logo1.png', name : '我是商品', origin : 123, dis : 103,},
-            { no : 'a124fw', img : '/static/img/logo1.png', name : '我是商品', origin : 123, dis : 104,},
-            { no : 'a124fw', img : '/static/img/logo1.png', name : '我是商品', origin : 123, dis : null,},
-            { no : 'a124fw', img : '/static/img/logo1.png', name : '我是商品', origin : 123, dis : 106,},
-            { no : 'a124fw', img : '/static/img/logo1.png', name : '我是商品', origin : 123, dis : 107,},
-            { no : 'a124fw', img : '/static/img/logo1.png', name : '我是商品', origin : 123, dis : 108,},
-            { no : 'a124fw', img : '/static/img/logo1.png', name : '我是商品', origin : 123, dis : 109,},
-            { no : 'a124fw', img : '/static/img/logo1.png', name : '我是商品', origin : 123, dis : 100,},
-            { no : 'a124fw', img : '/static/img/logo1.png', name : '我是商品', origin : 123, dis : null,},
             { no : 'a124fw', img : '/static/img/logo1.png', name : '我是商品', origin : 123, dis : 102,},
-            { no : 'a124fw', img : '/static/img/logo1.png', name : '我是商品', origin : 123, dis : 103,},
-            { no : 'a124fw', img : '/static/img/logo1.png', name : '我是商品', origin : 123, dis : 104,},
-            { no : 'a124fw', img : '/static/img/logo1.png', name : '我是商品', origin : 123, dis : 105,},
-            { no : 'a124fw', img : '/static/img/logo1.png', name : '我是商品', origin : 123, dis : 106,},
-            { no : 'a124fw', img : '/static/img/logo1.png', name : '我是商品', origin : 123, dis : 107,},
-            { no : 'a124fw', img : '/static/img/logo1.png', name : '我是商品', origin : 123, dis : 108,},
-            { no : 'a124fw', img : '/static/img/logo1.png', name : '我是商品', origin : 123, dis : 109,},
+            { no : 'a124fw', img : '/static/img/logo1.png', name : '我是商品', origin : 123, dis : 102,},
+            { no : 'a124fw', img : '/static/img/logo1.png', name : '我是商品', origin : 123, dis : 102,},
+            { no : 'a124fw', img : '/static/img/logo1.png', name : '我是商品', origin : 123, dis : 102,},
+            { no : 'a124fw', img : '/static/img/logo1.png', name : '我是商品', origin : 123, dis : 102,},
+            { no : 'a124fw', img : '/static/img/logo1.png', name : '我是商品', origin : 123, dis : 102,},
+            { no : 'a124fw', img : '/static/img/logo1.png', name : '我是商品', origin : 123, dis : 102,},
+            { no : 'a124fw', img : '/static/img/logo1.png', name : '我是商品', origin : 123, dis : 102,},
+            { no : 'a124fw', img : '/static/img/logo1.png', name : '我是商品', origin : 123, dis : 102,},
+            { no : 'a124fw', img : '/static/img/logo1.png', name : '我是商品', origin : 123, dis : 102,},
+
+
         ]
 
         return [

@@ -1,2 +1,6 @@
 flask
 mysqlclient
+flasgger
+PyMySQL
+PyJWT
+pycryptodome
