@@ -198,7 +198,7 @@ def register_shop():
     db.command_excute("""
                     INSERT INTO publisher 
                     VALUES(publisher_id)
-                    """, shopInfo)
+                    """, {})
     shopInfo['publisher_id'] = db.command_excute("""SELECT LAST_INSERT_ID() AS id;""", {})[0]['id']
     db.command_excute("""
                        INSERT INTO shop(owner_id, name, avgstar, intro, last_login, logo, publisher_id) 
