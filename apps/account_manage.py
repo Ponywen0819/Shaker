@@ -127,8 +127,42 @@ def get_user_detail(user_id):
 
     return jsonify(res)
 
+@app.route("register_shop", methods=['POST'])
+def register_shop():
+    db = database_utils(current_app.config['config'])
+    require_field = ["owner_id", "name", "avgstar", "intro", "last_login"]
+    for need in require_field:
+        if need not in request.json.keys():
+            return jsonify({"status": "failed", "cause": 201})
+    check = db.command_excute("""
+                                SELECT *
+                                FROM accounts
+                                WHERE accounts.id = %(owner_id)s
+                                """, request.json)
+    # 已有商店帳號
+    if len(check) != 0:
+        return jsonify({
+            'status': "failed",
+            'cause': 202
+        })
+    # 如果有附logo
+    shopInfo = request.json
+    if "logo" not in request.json.keys():
+        shopInfo["logo"] = None
+    db.command_excute("""
+                    INSERT INTO publisher 
+                    VALUES(publisher_id)
+                    """, shopInfo)
+    shopInfo['publisher_id'] = db.command_excute("""SELECT LAST_INSERT_ID() AS id;""", {})[0]['id']
+    db.command_excute("""
+                       INSERT INTO shop(owner_id, name, avgstar, intro, last_login, logo, publisher_id) 
+                       VALUES (%(owner_id)s, %(name)s, %(avgstar)s, %(intro)s, %(last_login)s, %(logo)s, %(publisher_id)s)
+                       """, shopInfo)
 
-
+    return jsonify({
+        'status': "success",
+        'cause': 200
+    })
 
 
 # iJx5e0gQ9NkgVExZYV1Afke6Jf2VhXmp3HA0SvJbZr/UwMuJWh3uSEW44MuYhpyBOSTxoe/EfKE/Ie+z8i9lNchPUuBWrNLlZzQ+ddmA0ldTrzBp1QH9v6Z44I/mJ0KhtvEJF3DDp/jdRQbcLe3S9pnGPOqpAuXm87bj0chjYVsS23IOX+9TuPANfvwDWe6lB74tve9v+xhgys3d7wm8gZj5nOTnDcrSi4em8P4ZKdYH3gFmW/d8Vgqzj72xMX7eIgJrzY0MTpSlWH++xhVzuDm9rw/UVH0BSaLpZLYcCLQyPnfvtwMqCsrEXJvKJnFs45cWoJ3p8eMQaFqMf3vfGQ==
