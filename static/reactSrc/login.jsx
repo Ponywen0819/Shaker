@@ -23,7 +23,7 @@ const handle_login = () =>{
         fetch('account/Login',{
             method: 'POST',
             body: JSON.stringify({
-                account: account,
+                email: account,
                 password: encode_password
             }),
             headers:{
@@ -34,21 +34,52 @@ const handle_login = () =>{
                 return respons.json()
             }
         }).then(function (json){
-            if(json.status === `success`){
-                location.href = '/'
-                console.log('success')
+            if(json.status === `success`) {
+                SuccessNotify("登入成功").then(()=>{
+                    location.href = '/'
+                })
             }
             else{
-                // 登入失敗通知
-                console.log('fail')
+                FailNotify("帳號密碼錯誤")
             }
         })
     })
 }
 
+const InputBox = ({id, type, show, empty})=>{
+    return (<div className={'w-full'}>
+                <input className="input_main w-full"
+                       type={type}
+                       id={id}
+                       placeholder={show}
+                       style={{border: `1px solid ${empty? 'red':'gray'}`}}
+                />
+            </div>)
+}
+
+const CheckForm = (seta, setp)=>{
+    let vaild = true
+    if(document.getElementById('account').value === ''){
+        seta(true)
+        vaild = false
+    }
+    else{
+        seta(false)
+    }
+    if(document.getElementById('password').value === ''){
+        setp(true)
+        vaild = false
+    }
+    else{
+        setp(false)
+    }
+    if(vaild)
+        handle_login()
+}
 
 const Login = () => {
-    const mounted=React.useRef();
+    const [acc_emp, setacc] = React.useState(false)
+    const [pas_emp, setpas] = React.useState(false)
 
     return [<ToolBar></ToolBar>,
             <div className="main_area">
@@ -56,11 +87,14 @@ const Login = () => {
                     <div>
                         <h1 className="text-2hxl font-bold">登入</h1>
                     </div>
-                    <input className="input_main" type="email" name="" id={`account`} placeholder="帳號"/>
-                    <input className="input_main" type="password" name=""  id={`password`} placeholder="密碼"/>
+                    <InputBox id={`account`} type={`email`} show={`帳號`} empty={acc_emp}></InputBox>
+                    <InputBox id={`password`} type={`password`} show={`密碼`} empty={pas_emp}></InputBox>
+                    {
+                        acc_emp || pas_emp? <p style={{color: 'red', 'font-size':'10px'}}>必須入帳號密碼</p>:''
+                    }
                     <a className="help_text" href="static/reactSrc/login">忘記密碼</a>
-                    <button id={`login`} className="login_btn btn" onClick={handle_login}>登入</button>
-                    <div className="or_area">s
+                    <button id={`login`} className="login_btn btn" onClick={()=>CheckForm(setacc, setpas)}>登入</button>
+                    <div className="or_area">
                         <div className="or_bar"></div>
                         <div>或</div>
                         <div className="or_bar"></div>

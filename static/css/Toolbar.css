@@ -4,7 +4,7 @@
 }
 
 .upper_container{
-    width: 100vw;
+    width: 100%;
     height: 35px;
     background-color: rgb(255, 101, 40);
 }
@@ -47,7 +47,7 @@
 }
 
 .lower_container{
-    width: 100vw;
+    width: 100%;
     height: 65px;
     background-color: rgb(255, 101, 40);
 }

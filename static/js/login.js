@@ -1,3 +1,5 @@
+var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+
 var ToolBar = function ToolBar() {
     return React.createElement(
         "a",
@@ -24,7 +26,7 @@ var handle_login = function handle_login() {
         fetch('account/Login', {
             method: 'POST',
             body: JSON.stringify({
-                account: account,
+                email: account,
                 password: encode_password
             }),
             headers: {
@@ -36,18 +38,61 @@ var handle_login = function handle_login() {
             }
         }).then(function (json) {
             if (json.status === "success") {
-                location.href = '/';
-                console.log('success');
+                SuccessNotify("登入成功").then(function () {
+                    location.href = '/';
+                });
             } else {
-                // 登入失敗通知
-                console.log('fail');
+                FailNotify("帳號密碼錯誤");
             }
         });
     });
 };
 
+var InputBox = function InputBox(_ref) {
+    var id = _ref.id,
+        type = _ref.type,
+        show = _ref.show,
+        empty = _ref.empty;
+
+    return React.createElement(
+        "div",
+        { className: 'w-full' },
+        React.createElement("input", { className: "input_main w-full",
+            type: type,
+            id: id,
+            placeholder: show,
+            style: { border: "1px solid " + (empty ? 'red' : 'gray') }
+        })
+    );
+};
+
+var CheckForm = function CheckForm(seta, setp) {
+    var vaild = true;
+    if (document.getElementById('account').value === '') {
+        seta(true);
+        vaild = false;
+    } else {
+        seta(false);
+    }
+    if (document.getElementById('password').value === '') {
+        setp(true);
+        vaild = false;
+    } else {
+        setp(false);
+    }
+    if (vaild) handle_login();
+};
+
 var Login = function Login() {
-    var mounted = React.useRef();
+    var _React$useState = React.useState(false),
+        _React$useState2 = _slicedToArray(_React$useState, 2),
+        acc_emp = _React$useState2[0],
+        setacc = _React$useState2[1];
+
+    var _React$useState3 = React.useState(false),
+        _React$useState4 = _slicedToArray(_React$useState3, 2),
+        pas_emp = _React$useState4[0],
+        setpas = _React$useState4[1];
 
     return [React.createElement(ToolBar, null), React.createElement(
         "div",
@@ -64,8 +109,13 @@ var Login = function Login() {
                     "\u767B\u5165"
                 )
             ),
-            React.createElement("input", { className: "input_main", type: "email", name: "", id: "account", placeholder: "\u5E33\u865F" }),
-            React.createElement("input", { className: "input_main", type: "password", name: "", id: "password", placeholder: "\u5BC6\u78BC" }),
+            React.createElement(InputBox, { id: "account", type: "email", show: "\u5E33\u865F", empty: acc_emp }),
+            React.createElement(InputBox, { id: "password", type: "password", show: "\u5BC6\u78BC", empty: pas_emp }),
+            acc_emp || pas_emp ? React.createElement(
+                "p",
+                { style: { color: 'red', 'font-size': '10px' } },
+                "\u5FC5\u9808\u5165\u5E33\u865F\u5BC6\u78BC"
+            ) : '',
             React.createElement(
                 "a",
                 { className: "help_text", href: "static/reactSrc/login" },
@@ -73,13 +123,14 @@ var Login = function Login() {
             ),
             React.createElement(
                 "button",
-                { id: "login", className: "login_btn btn", onClick: handle_login },
+                { id: "login", className: "login_btn btn", onClick: function onClick() {
+                        return CheckForm(setacc, setpas);
+                    } },
                 "\u767B\u5165"
             ),
             React.createElement(
                 "div",
                 { className: "or_area" },
-                "s",
                 React.createElement("div", { className: "or_bar" }),
                 React.createElement(
                     "div",

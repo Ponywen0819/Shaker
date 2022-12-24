@@ -47,7 +47,7 @@ def register():
             'status': "failed",
             'cause': 152
         })
-    require_field = ["account_id", "name", "email", "phone", "assword"]
+    require_field = ["account_id", "name", "email", "phone", "password"]
     for need in require_field:
         if need not in request.json.keys():
             return jsonify({"status": "failed", "cause": 153 })
@@ -59,7 +59,6 @@ def register():
             INSERT INTO accounts (account_id, name, email, phone, password) 
             VALUES (%(account_id)s, %(name)s, %(email)s, %(phone)s, %(password)s)
             """, account_info)
-    db.commit_change()
     user_id = db.command_excute("""SELECT LAST_INSERT_ID() AS id;""", {})[0]['id']
     token = current_app.config['jwt'].generate_token({"user_id": user_id, "admin": 0})
     res = make_response(json.dumps({
@@ -124,6 +123,7 @@ def get_user_detail(user_id):
     res["cause"] = 200
 
     return jsonify(res)
+
 @app.route("/PublicKey", methods=['GET'])
 def publickey():
     return current_app.config['crypto'].get_pubkey()

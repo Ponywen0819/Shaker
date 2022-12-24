@@ -525,8 +525,24 @@ video {
   width: 40%;
 }
 
+.w-full {
+  width: 100%;
+}
+
 .w-1\/5 {
   width: 20%;
+}
+
+.w-\[45\%\] {
+  width: 45%;
+}
+
+.w-\[12\%\] {
+  width: 12%;
+}
+
+.w-\[14\%\] {
+  width: 14%;
 }
 
 .transform {
@@ -547,6 +563,10 @@ video {
 
 .justify-center {
   justify-content: center;
+}
+
+.justify-items-center {
+  justify-items: center;
 }
 
 .border {

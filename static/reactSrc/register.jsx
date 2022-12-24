@@ -13,16 +13,16 @@ const handle_register = () => {
         }
     }).then(function (data){
         var public_key = forge.pki.publicKeyFromPem(data) //data是你去跟後端請求回來的公鑰明文
-        submit_data.password = forge.util.encode64(public_key.encrypt(forge.util.encodeUtf8(submit_data.password), 'RSA-OAEP', {md: forge.md.sha256.create(), mgf1: {md: forge.md.sha1.create()}}))
+        let encode_password = forge.util.encode64(public_key.encrypt(forge.util.encodeUtf8( document.getElementById(`password`).value), 'RSA-OAEP', {md: forge.md.sha256.create(), mgf1: {md: forge.md.sha1.create()}}))
 
         fetch('account/Register',{
             method: 'POST',
             body: JSON.stringify({
                 name: document.getElementById(`name`).value,
-                account: document.getElementById(`account`).value,
+                account_id: document.getElementById(`account`).value,
                 email: document.getElementById(`email`).value,
                 phone: document.getElementById(`phone`).value,
-                password: document.getElementById(`password`).value,
+                password: encode_password,
             }),
             headers:{
                 'content-type': 'application/json'
@@ -38,7 +38,7 @@ const handle_register = () => {
             }
             else{
                 // 登入失敗通知
-                console.log('fail')
+                console.log(json.cause)
             }
         })
     })
@@ -53,6 +53,7 @@ const check_input = ()=>{
     }
     else{
         document.getElementById(`check`).style = 'border: 1px solid red'
+        console.log('local')
     }
 }
 

@@ -48,6 +48,7 @@ def get_login_page():
     setting = {
         "title": "登入",
         "script": [
+            "notification.js",
             "login.js"
         ],
         "css": [

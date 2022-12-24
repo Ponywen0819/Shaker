@@ -1,22 +1,41 @@
-const UpperBar = ()=>(
-    <div className="upper_container">
-        <div className="upper_main nav_container">
-            <div className="w-1/5 upper_selction">
-                <div className="upper_nobar">
-                    <a className="Toolbat_text" href="">賣家中心</a>
+const testLogin = (setter)=>{
+    if(document.cookie.indexOf('User_Token=') == -1){
+        //一定沒有登入過
+
+    }
+    else{
+
+    }
+
+}
+
+
+const UpperBar = ()=>{
+    const [isLogin, setLog] = React.useState(false)
+
+    return (<div className="upper_container">
+                <div className="upper_main nav_container">
+                    <div className="w-1/5 upper_selction">
+                        <div className="upper_nobar">
+                            <a className="Toolbat_text" href="">賣家中心</a>
+                        </div>
+                    </div>
+                    {isLogin?
+                        (
+                            ''
+                        ):
+                        (<div className="w-1/5 upper_selction justify-end">
+                            <div className="upper_nobar">
+                                <a className="Toolbat_text" href="/register">註冊</a>
+                            </div>
+                            <div className="upper_bar">
+                                <a className="Toolbat_text" href="/login">登入</a>
+                            </div>
+                        </div>)
+                    }
                 </div>
-            </div>
-            <div className="w-1/5 upper_selction justify-end">
-                <div className="upper_nobar">
-                    <a className="Toolbat_text" href="/register">註冊</a>
-                </div>
-                <div className="upper_bar">
-                    <a className="Toolbat_text" href="/login">登入</a>
-                </div>
-            </div>
-        </div>
-    </div>
-)
+            </div>)
+}
 
 const LowerBar = ()=>(
     <div className=" lower_container">
