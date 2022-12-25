@@ -23,8 +23,6 @@ def register():
           type: string
           required: true
           default: None
-
-
     """
     # connect database
     db = database_utils(current_app.config['config'])
@@ -62,7 +60,6 @@ def register():
             INSERT INTO accounts (account_id, name, email, phone, password) 
             VALUES (%(account_id)s, %(name)s, %(email)s, %(phone)s, %(password)s)
             """, account_info)
-    db.commit_change()
     user_id = db.command_excute("""SELECT LAST_INSERT_ID() AS id;""", {})[0]['id']
     token = current_app.config['jwt'].generate_token({"user_id": user_id, "admin": 0})
     res = make_response(json.dumps({
