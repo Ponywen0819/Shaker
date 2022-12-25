@@ -54,7 +54,6 @@ def register():
             return jsonify({"status": "failed", "cause": 153 })
 
     account_info = request.json
-
     account_info['password'] = hashlib.sha256(current_app.config['crypto'].decrypt(request.json['password']).encode("utf-8")).hexdigest()
     db.command_excute("""
             INSERT INTO accounts (account_id, name, email, phone, password) 
@@ -160,6 +159,42 @@ def change_password():
 
     return jsonify({"status": "success", "cause": 200})
 
+@app.route("/ChangeProfile", methods=["POST"])
+def change_profile():
+    token = request.cookies.get("User_Token")
+    if token is None: return "", 301
+    if not current_app.config['jwt'].check_token_valid(token):
+        return "", 301
+
+    user_info = current_app.config['jwt'].get_token_detail(token)
+    #request不能給我這些東西
+    not_require_key = ["account_id", "password", "id"]
+    request_json: dict = request.json
+    for key in not_require_key:
+        if key in request_json.keys():
+            return "", 301
+
+    db = database_utils(current_app.config['config'])
+    dbreturn = db.command_excute("""
+                                    SELECT *
+                                    FROM accounts
+                                    WHERE accounts.id = %(user_id)s
+                                    """, {"user_id": user_info["user_id"]})
+    if dbreturn == 0:
+        return jsonify({"status": "failed", "cause": 302})
+    require_key = ["name", "email", "phone"]
+    request_json: dict = request.json
+    for key in require_key:
+        if key in request_json.keys():
+            user_info[key] = request.json[key]
+
+    db.command_excute("""
+        UPDATE accounts
+        SET name = %(name)s, %(email)s, %(phone)s
+        WHERE accounts.id = %(user_id)s
+        """, user_info)
+
+    return jsonify({"status": "success", "cause": 300})
 
 @app.route("register_shop", methods=['POST'])
 def register_shop():
