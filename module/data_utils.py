@@ -14,7 +14,7 @@ class database_utils:
         self.conn = pymysql.connect(host=self.database_host, user=self.database_User, password=self.database_Password,
                                     database=self.database_Database)
 
-    def command_excute(self, command: str, param: tuple) -> dict:
+    def command_excute(self, command: str, param: tuple = {}) -> dict:
         '''
             這個函數可以讓你使用 MySQL 的指令，並將回傳結果轉成一個 dict 回傳。
                 param:
