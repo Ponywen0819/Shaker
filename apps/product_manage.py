@@ -89,10 +89,14 @@ def upload_product():
     return jsonify({
         'cause': 0
     })
+<<<<<<< HEAD
 
 
 @app.route("/modify_product", methods=["POST"])
 @app.route("/ModufyProduct", methods = ["POST"])
+=======
+@app.route("/ModifyProduct", methods = ["POST"])
+>>>>>>> FlaskShaker
 def modify_product():
     # 不能更改shop_id
     if "shop_id" in request.json.keys():

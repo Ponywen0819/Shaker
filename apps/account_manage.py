@@ -102,6 +102,26 @@ def login():
     else:
         return jsonify({"cause": 101})
 
+@app.route("Logoff", methods=['POST'])
+def logoff():
+    require_field = request.json['require']
+    if request.cookies.get('User_Token') is None: return "", 401
+    if not current_app.config['jwt'].check_token_valid(request.cookies.get('User_Token')):
+        return "", 401
+    user_info = current_app.config['jwt'].get_token_detail(request.cookies.get('User_Token'))
+    db = database_utils(current_app.config['config'])
+    db.command_excute("""
+               UPDATE accounts
+               SET last_login = %(date)s
+               WHERE accounts.id = %(user_id)s
+               """, {"user_id": user_info['id'], "date": datetime.now().strftime("%Y/%m/%d %H:%M:%S")})
+    res = make_response(json.dumps({
+        "cause": 0
+    }))
+    res.set_cookie("User_Token", "", expires=time.time() - 1)
+    return res
+
+
 @app.route("/GetUserDetail", methods=["POST"])
 def get_user_detail():
     require_field = request.json['require']
@@ -165,6 +185,12 @@ def change_password():
     WHERE accounts.id = %(user_id)s
     """, {"user_id": user_info["user_id"], "new_password": new_password})
 
+    db.command_excute("""
+                   UPDATE accounts
+                   SET last_login = %(date)s
+                   WHERE accounts.id = %(user_id)s
+                   """, {"user_id": user_info['id'], "date": datetime.now().strftime("%Y/%m/%d %H:%M:%S")})
+
     return jsonify({"cause": 0})
 
 @app.route("/ChangeProfile", methods=["POST"])
@@ -216,6 +242,12 @@ def change_profile():
 
     print("UPDATE accounts SET " + ','.join(update_str) + " WHERE accounts.id = %(user_id)s")
     db.command_excute("UPDATE accounts SET " + ','.join(update_str) + " WHERE accounts.id = %(user_id)s", user_info)
+
+    db.command_excute("""
+                   UPDATE accounts
+                   SET last_login = %(date)s
+                   WHERE accounts.id = %(user_id)s
+                   """, {"user_id": user_info['id'], "date": datetime.now().strftime("%Y/%m/%d %H:%M:%S")})
 
     return jsonify({"cause": 0})
 
