@@ -67,7 +67,7 @@ def register():
         "cause": 150
     }))
 
-    res.set_cookie("Token", token, expires=time.time() + 6 * 60)
+    res.set_cookie("Token", token, expires=time.time() + 60 * 60)
     return res
 
 
@@ -102,7 +102,8 @@ def login():
 
 @app.route("/GetUserDetail", methods=["POST"])
 def get_user_detail():
-    if request.cookies.get('User_Token') is None: return "", 401
+    if request.cookies.get('User_Token') is None:
+        return "", 401
     if not current_app.config['jwt'].check_token_valid(request.cookies.get('User_Token')):
         return "", 401
     user_info = current_app.config['jwt'].get_token_detail(request.cookies.get('User_Token'))
@@ -122,7 +123,7 @@ def get_user_detail():
 
     return jsonify(res)
 
-@app.route("/ChangePassword", methods=["POST"])
+@app.route("/ChangePassword",  methods=["POST"])
 def change_password():
     token = request.cookies.get("User_Token")
     if token is None: return "", 401
@@ -203,6 +204,8 @@ def register_shop():
         'cause': 200
     })
 
-
+@app.route("/PublicKey", methods=['GET'])
+def publickey():
+    return current_app.config['crypto'].get_pubkey()
 
 # iJx5e0gQ9NkgVExZYV1Afke6Jf2VhXmp3HA0SvJbZr/UwMuJWh3uSEW44MuYhpyBOSTxoe/EfKE/Ie+z8i9lNchPUuBWrNLlZzQ+ddmA0ldTrzBp1QH9v6Z44I/mJ0KhtvEJF3DDp/jdRQbcLe3S9pnGPOqpAuXm87bj0chjYVsS23IOX+9TuPANfvwDWe6lB74tve9v+xhgys3d7wm8gZj5nOTnDcrSi4em8P4ZKdYH3gFmW/d8Vgqzj72xMX7eIgJrzY0MTpSlWH++xhVzuDm9rw/UVH0BSaLpZLYcCLQyPnfvtwMqCsrEXJvKJnFs45cWoJ3p8eMQaFqMf3vfGQ==

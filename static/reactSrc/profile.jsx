@@ -16,11 +16,44 @@ const InputList = ({info}) =>{
 
 const Interface = () => {
     const [userinfo,setinfo] = React.useState({
-        name: "PonyWen",
-        email: "pony076152340@gmail.com",
-        phone: "0916781375",
+        name: "",
+        email: "",
+        phone: "",
         img: "/static/img/logo1.png"
     })
+
+    const getInfo = ()=>{
+        fetch('/account/GetUserDetail',{
+            method: 'POST'
+        }).then((response)=>{
+            if(response.status == 200) {
+                return response.json()
+            }
+            else {
+                FailNotify('請先登入').then(()=>(
+                    location.href='/login'
+                ))
+            }
+        }).then((data)=>{
+            if(data.cause === 200){
+                setinfo({
+                    name: data.name,
+                    email: data.email,
+                    phone: data.phone,
+                    img: (data.img==null)? "/static/img/logo1.png":data.img
+                })
+            }
+            else {
+                FailNotify('請先登入').then(()=>(
+                    location.href='/login'
+                ))
+            }
+        })
+    }
+
+    React.useEffect(()=>{
+        getInfo()
+    },[])
 
     return(
         <div className="intercafe">

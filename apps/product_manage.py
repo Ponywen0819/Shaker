@@ -59,7 +59,9 @@ def upload_picture():
         'status': "success",
         'cause': 666
     })
-@app.route("/upload_product", methods = ["POST"])
+
+
+@app.route("/upload_product", methods=["POST"])
 def upload_product():
     db = database_utils(current_app.config['config'])
     dbreturn = db.command_excute("""
@@ -91,7 +93,9 @@ def upload_product():
         'status': 'success',
         'cause': 699
     })
-@app.route("/modify_product", methods = ["POST"])
+
+
+@app.route("/modify_product", methods=["POST"])
 def modify_product():
     # 不能更改shop_id
     if "shop_id" in request.json.keys():
@@ -128,7 +132,9 @@ def modify_product():
         'status': 'success',
         'cause': 700
     })
-@app.route("/delete_product", methods = ["POST"])
+
+
+@app.route("/delete_product", methods=["POST"])
 def delete_product():
     db = database_utils(current_app.config['config'])
     dbreturn = db.command_excute("""
@@ -153,7 +159,9 @@ def delete_product():
         'status': 'success',
         'cause': 800
     })
-@app.route("/get_product", methods = ["POST"])
+
+
+@app.route("/get_product", methods=["POST"])
 def get_product():
     db = database_utils(current_app.config['config'])
     dbreturn = db.command_excute("""
@@ -181,7 +189,9 @@ def get_product():
             'avgstar': dbreturn[0]['avgstar'],
             'status': dbreturn[0]['status']
         })
-@app.route("/create_order", methods = ["POST"])
+
+
+@app.route("/create_order", methods=["POST"])
 def create_order():
     require_field = ['owner_id', 'start_time', 'end_time', 'payment', 'status', 'free_fee', 'price', 'address', 'product_id', 'number']
     for need in require_field:
@@ -205,7 +215,8 @@ def create_order():
         'cause': 1100
     })
 
-@app.route("/get_order", methods = ["POST"])
+
+@app.route("/get_order", methods=["POST"])
 def get_order():
     require_field = ['id']
     for need in require_field:
@@ -245,7 +256,9 @@ def get_order():
         'product_id': orderDetail[0]['product_id'],
         'number': orderDetail[0]['number']
     })
-@app.route("/delete_order", methods = ["POST"])
+
+
+@app.route("/delete_order", methods=["POST"])
 def delete_order():
     require_field = ['id']
     for need in require_field:
@@ -280,7 +293,7 @@ def delete_order():
         })
 
 
-@app.route("/add_comment", methods = ["POST"])
+@app.route("/add_comment", methods=["POST"])
 def add_comment():
     db = database_utils(current_app.config['config'])
     dbreturn = db.command_excute("""
@@ -328,8 +341,6 @@ def add_comment():
     })
 
 
-
-
 @app.route("/get_comment", methods=["POST"])
 def get_comment():
     require_field = ['product_id']
@@ -353,6 +364,8 @@ def get_comment():
     return jsonify(
           comments
     )
+
+
 @app.route("/add_productToCart", methods=["POST"])
 def add_productToCart():
     require_field = ['owner_id', 'product_id', 'count']
@@ -384,6 +397,8 @@ def add_productToCart():
         'status': "success",
         'cause': 1500
     })
+
+
 @app.route("/get_productsToCart", methods=["POST"])
 def get_productsToCart():
     require_field = ['owner_id']
@@ -403,6 +418,7 @@ def get_productsToCart():
     return jsonify(
         allProduct
     )
+
 
 @app.route("/delete_productToCart", methods=["POST"])
 def delete_productToCart():

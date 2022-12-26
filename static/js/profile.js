@@ -51,14 +51,45 @@ var InputList = function InputList(_ref) {
 
 var Interface = function Interface() {
     var _React$useState = React.useState({
-        name: "PonyWen",
-        email: "pony076152340@gmail.com",
-        phone: "0916781375",
+        name: "",
+        email: "",
+        phone: "",
         img: "/static/img/logo1.png"
     }),
         _React$useState2 = _slicedToArray(_React$useState, 2),
         userinfo = _React$useState2[0],
         setinfo = _React$useState2[1];
+
+    var getInfo = function getInfo() {
+        fetch('/account/GetUserDetail', {
+            method: 'POST'
+        }).then(function (response) {
+            if (response.status == 200) {
+                return response.json();
+            } else {
+                FailNotify('請先登入').then(function () {
+                    return location.href = '/login';
+                });
+            }
+        }).then(function (data) {
+            if (data.cause === 200) {
+                setinfo({
+                    name: data.name,
+                    email: data.email,
+                    phone: data.phone,
+                    img: data.img == null ? "/static/img/logo1.png" : data.img
+                });
+            } else {
+                FailNotify('請先登入').then(function () {
+                    return location.href = '/login';
+                });
+            }
+        });
+    };
+
+    React.useEffect(function () {
+        getInfo();
+    }, []);
 
     return React.createElement(
         "div",
