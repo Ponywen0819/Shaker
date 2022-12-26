@@ -1,6 +1,7 @@
 import time
 import json
 import hashlib
+from datetime import datetime
 from flask import Flask, render_template, request, redirect, url_for, Blueprint, jsonify, current_app, make_response
 from module.configs import configure_collection
 
@@ -86,6 +87,11 @@ def login():
             """, auth_info)
 
     if len(dbreturn) == 1:
+        db.command_excute("""
+           UPDATE accounts
+           SET last_login = %(date)s
+           WHERE accounts.id = %(user_id)s
+           """, {"user_id": dbreturn[0]['id'], "date": datetime.now().strftime("%Y/%m/%d %H:%M:%S")})
         token = current_app.config['jwt'].generate_token({"user_id": dbreturn[0]['id'], "admin": 0})
         res = make_response(json.dumps({
             "status": "success",
@@ -101,6 +107,7 @@ def login():
 
 @app.route("/GetUserDetail", methods=["POST"])
 def get_user_detail():
+    require_field = request.json['require']
     if request.cookies.get('User_Token') is None: return "", 401
     if not current_app.config['jwt'].check_token_valid(request.cookies.get('User_Token')):
         return "", 401
@@ -109,13 +116,17 @@ def get_user_detail():
     dbreturn = db.command_excute("""
                                 SELECT *
                                 FROM accounts
+                                LEFT JOIN picture ON accounts.photo = picture.id
                                 WHERE accounts.id = %(user_id)s
                                 """, user_info)
 
     if len(dbreturn) == 0:
         return jsonify({"status": "failed", "cause": 202})
 
-    res = dbreturn[0]
+    res = {}
+    for require in require_field:
+        res[require] = dbreturn[0][require]
+
     res["status"] = "success"
     res["cause"] = 200
 
@@ -190,13 +201,13 @@ def change_profile():
 
     db.command_excute("""
         UPDATE accounts
-        SET name = %(name)s, %(email)s, %(phone)s
+        SET name = %(name)s, email = %(email)s, phone = %(phone)s
         WHERE accounts.id = %(user_id)s
         """, user_info)
 
     return jsonify({"status": "success", "cause": 300})
 
-@app.route("register_shop", methods=['POST'])
+@app.route("RegisterShop", methods=['POST'])
 def register_shop():
     db = database_utils(current_app.config['config'])
     require_field = ["owner_id", "name", "avgstar", "intro", "last_login"]
@@ -239,5 +250,8 @@ def register_shop():
     })
 
 
-
+# @app.route("GetAllCoupon", methods=['POST'])
+# def get_all_coupon():
+#     db = database_utils(current_app.config['config'])
+#
 # iJx5e0gQ9NkgVExZYV1Afke6Jf2VhXmp3HA0SvJbZr/UwMuJWh3uSEW44MuYhpyBOSTxoe/EfKE/Ie+z8i9lNchPUuBWrNLlZzQ+ddmA0ldTrzBp1QH9v6Z44I/mJ0KhtvEJF3DDp/jdRQbcLe3S9pnGPOqpAuXm87bj0chjYVsS23IOX+9TuPANfvwDWe6lB74tve9v+xhgys3d7wm8gZj5nOTnDcrSi4em8P4ZKdYH3gFmW/d8Vgqzj72xMX7eIgJrzY0MTpSlWH++xhVzuDm9rw/UVH0BSaLpZLYcCLQyPnfvtwMqCsrEXJvKJnFs45cWoJ3p8eMQaFqMf3vfGQ==
