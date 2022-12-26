@@ -39,20 +39,18 @@ def register():
     # success or fail return
     if len(dbreturn) != 0:
         return jsonify({
-            'status': "failed",
             'cause': 151
         })
 
     # 修感
     if len(request.json['password']) < 6:
         return jsonify({
-            'status': "failed",
             'cause': 152
         })
     require_field = ["account_id", "name", "email", "phone", "password"]
     for need in require_field:
         if need not in request.json.keys():
-            return jsonify({"status": "failed", "cause": 153 })
+            return jsonify({"cause": 153 })
 
     account_info = request.json
     account_info['password'] = hashlib.sha256(current_app.config['crypto'].decrypt(request.json['password']).encode("utf-8")).hexdigest()
@@ -63,8 +61,7 @@ def register():
     user_id = db.command_excute("""SELECT LAST_INSERT_ID() AS id;""", {})[0]['id']
     token = current_app.config['jwt'].generate_token({"user_id": user_id, "admin": 0})
     res = make_response(json.dumps({
-        "status": "success",
-        "cause": 150
+        "cause": 0
     }))
 
     res.set_cookie("Token", token, expires=time.time() + 6 * 60)
@@ -94,16 +91,15 @@ def login():
            """, {"user_id": dbreturn[0]['id'], "date": datetime.now().strftime("%Y/%m/%d %H:%M:%S")})
         token = current_app.config['jwt'].generate_token({"user_id": dbreturn[0]['id'], "admin": 0})
         res = make_response(json.dumps({
-            "status": "success",
-            "cause": 100
+            "cause": 0
         }))
 
         res.set_cookie("User_Token", token, expires=time.time() + 6 * 60)
         return res
     elif len(dbreturn) > 1:
-        return jsonify({"status": "fail", "cause": 102})
+        return jsonify({"cause": 102})
     else:
-        return jsonify({"status": "fail", "cause": 101})
+        return jsonify({"cause": 101})
 
 @app.route("/GetUserDetail", methods=["POST"])
 def get_user_detail():
@@ -121,14 +117,13 @@ def get_user_detail():
                                 """, user_info)
 
     if len(dbreturn) == 0:
-        return jsonify({"status": "failed", "cause": 202})
+        return jsonify({"cause": 202})
 
     res = {}
     for require in require_field:
         res[require] = dbreturn[0][require]
 
-    res["status"] = "success"
-    res["cause"] = 200
+    res["cause"] = 0
 
     return jsonify(res)
 
@@ -151,7 +146,7 @@ def change_password():
     new_password = hashlib.sha256(current_app.config["crypto"].decrypt(request_json['new']).encode("utf-8")).hexdigest()
 
     if old_password == new_password:
-        return jsonify({"status": "failed", "cause": 203})
+        return jsonify({"cause": 203})
 
     db = database_utils(current_app.config['config'])
     dbreturn = db.command_excute("""
@@ -160,7 +155,7 @@ def change_password():
                                 WHERE accounts.id = %(user_id)s
                                 """, {"user_id": user_info["user_id"]})
     if dbreturn == 0:
-        return jsonify({"status": "failed", "cause": 204})
+        return jsonify({"cause": 204})
 
     db.command_excute("""
     UPDATE accounts
@@ -168,7 +163,7 @@ def change_password():
     WHERE accounts.id = %(user_id)s
     """, {"user_id": user_info["user_id"], "new_password": new_password})
 
-    return jsonify({"status": "success", "cause": 200})
+    return jsonify({"cause": 0})
 
 @app.route("/ChangeProfile", methods=["POST"])
 def change_profile():
@@ -192,7 +187,7 @@ def change_profile():
                                     WHERE accounts.id = %(user_id)s
                                     """, {"user_id": user_info["user_id"]})
     if dbreturn == 0:
-        return jsonify({"status": "failed", "cause": 302})
+        return jsonify({"cause": 302})
     require_key = ["name", "email", "phone"]
     request_json: dict = request.json
     for key in require_key:
@@ -205,7 +200,7 @@ def change_profile():
         WHERE accounts.id = %(user_id)s
         """, user_info)
 
-    return jsonify({"status": "success", "cause": 300})
+    return jsonify({"cause": 0})
 
 @app.route("RegisterShop", methods=['POST'])
 def register_shop():
@@ -227,7 +222,6 @@ def register_shop():
     # 無account或已有商店
     if len(check_account) != 1 or len(check_shop) != 0:
         return jsonify({
-            'status': "failed",
             'cause': 202
         })
     # 如果有附logo
@@ -245,8 +239,7 @@ def register_shop():
                        """, shopInfo)
 
     return jsonify({
-        'status': "success",
-        'cause': 200
+        'cause': 0
     })
 
 
