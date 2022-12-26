@@ -1,117 +1,194 @@
 var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
 
-var InputList = function InputList(_ref) {
-    var info = _ref.info;
+var UserInput = function UserInput(_ref) {
+    var type = _ref.type,
+        title = _ref.title,
+        orgin = _ref.orgin;
 
-    var translate = { name: "使用者名稱", email: "電子郵件", phone: "電話號碼" };
-    var list = [];
-    var _iteratorNormalCompletion = true;
-    var _didIteratorError = false;
-    var _iteratorError = undefined;
-
-    try {
-        for (var _iterator = Object.entries(info)[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-            var _ref2 = _step.value;
-
-            var _ref3 = _slicedToArray(_ref2, 2);
-
-            var title = _ref3[0];
-            var value = _ref3[1];
-
-            if (title == "img") continue;
-            var row = React.createElement(
-                "div",
-                { className: "form_line" },
-                React.createElement(
-                    "p",
-                    { className: "form_title" },
-                    translate[title]
-                ),
-                React.createElement("input", { className: "form_input", type: "text", value: value, name: title })
-            );
-            list.push(row);
-        }
-    } catch (err) {
-        _didIteratorError = true;
-        _iteratorError = err;
-    } finally {
-        try {
-            if (!_iteratorNormalCompletion && _iterator.return) {
-                _iterator.return();
-            }
-        } finally {
-            if (_didIteratorError) {
-                throw _iteratorError;
-            }
-        }
-    }
-
-    return list;
-};
-
-var Interface = function Interface() {
-    var _React$useState = React.useState({
-        name: "PonyWen",
-        email: "pony076152340@gmail.com",
-        phone: "0916781375",
-        img: "/static/img/logo1.png"
-    }),
+    var _React$useState = React.useState(''),
         _React$useState2 = _slicedToArray(_React$useState, 2),
-        userinfo = _React$useState2[0],
-        setinfo = _React$useState2[1];
+        val = _React$useState2[0],
+        setval = _React$useState2[1];
+
+    React.useEffect(function () {
+        setval(orgin);
+    }, []);
+
+    var handle_number_input = function handle_number_input(e) {
+        setval(e.target.value.replace(/[^0-9]/, ''));
+    };
+
+    var handle_text_input = function handle_text_input(e) {
+        setval(e.target.value);
+    };
 
     return React.createElement(
-        "div",
-        { className: "intercafe" },
+        'div',
+        { className: 'form_line' },
         React.createElement(
-            "div",
-            { className: "interface_title" },
-            React.createElement(
-                "p",
-                { className: "" },
-                "\u5728\u6B64\u4FEE\u6539\u4F60\u7684\u500B\u4EBA\u8CC7\u6599"
+            'p',
+            { className: 'form_title' },
+            title
+        ),
+        React.createElement('input', { className: 'form_input',
+            type: 'text',
+            value: val,
+            name: title,
+            id: title,
+            onInput: type === 'text' ? handle_text_input : handle_number_input
+        })
+    );
+};
+
+var UserImgInput = function UserImgInput(_ref2) {
+    var orgin = _ref2.orgin;
+
+    var _React$useState3 = React.useState(orgin),
+        _React$useState4 = _slicedToArray(_React$useState3, 2),
+        img = _React$useState4[0],
+        setImg = _React$useState4[1];
+
+    var _React$useState5 = React.useState(false),
+        _React$useState6 = _slicedToArray(_React$useState5, 2),
+        img_change = _React$useState6[0],
+        setChange = _React$useState6[1];
+
+    var triggerImageChange = function triggerImageChange() {
+        var file_input = document.createElement("input");
+        file_input.type = "file";
+        file_input.accept = "image/*";
+        file_input.onchange = function (e) {
+            var image = e.target.files[0];
+            var reader = new FileReader();
+            reader.readAsDataURL(image);
+            reader.onload = function (readerEvent) {
+                var content = readerEvent.target.result;
+                console.log(content);
+                setImg(content);
+            };
+        };
+        file_input.click();
+    };
+
+    var triggerImageUpload = function triggerImageUpload() {
+        console.log('還沒寫拉哈哈');
+    };
+
+    React.useEffect(function () {
+        if (orgin !== img) {
+            setChange(true);
+        } else {
+            setChange(false);
+        }
+    }, [img]);
+
+    return React.createElement(
+        'div',
+        { className: 'img_form_container' },
+        React.createElement('img', { className: 'from_img', src: img }),
+        React.createElement(
+            'div',
+            { className: 'img_form_btn_area' },
+            img_change ? React.createElement(
+                'button',
+                { className: 'img_form_btn', onClick: triggerImageUpload },
+                '\u78BA\u8A8D\u4FEE\u6539'
+            ) : React.createElement(
+                'button',
+                { className: 'img_form_btn', onClick: triggerImageChange },
+                '\u66F4\u6539\u7167\u7247'
             )
         ),
         React.createElement(
-            "div",
-            { className: "input_area" },
+            'p',
+            { className: 'img_form_text' },
+            '\u6211\u53EA\u5403png :P'
+        )
+    );
+};
+
+var Interface = function Interface() {
+    var _React$useState7 = React.useState({
+        name: "",
+        email: "",
+        phone: "",
+        img: "/static/img/logo1.png"
+    }),
+        _React$useState8 = _slicedToArray(_React$useState7, 2),
+        userinfo = _React$useState8[0],
+        setInfo = _React$useState8[1];
+
+    var _React$useState9 = React.useState(''),
+        _React$useState10 = _slicedToArray(_React$useState9, 2),
+        user_img = _React$useState10[0],
+        setImg = _React$useState10[1];
+
+    var getInfo = function getInfo() {
+        fetch('/account/GetUserDetail', {
+            method: 'POST'
+        }).then(function (response) {
+            if (response.status === 200) {
+                return response.json();
+            } else {
+                FailNotify('請先登入').then(function () {
+                    return location.href = '/login';
+                });
+            }
+        }).then(function (data) {
+            if (data.cause === 200) {
+                setInfo({
+                    name: data.name,
+                    email: data.email,
+                    phone: data.phone,
+                    img: data.photo == null ? "/static/img/logo1.png" : data.photo
+                });
+                setImg(data.photo == null ? "/static/img/logo1.png" : data.photo);
+            } else {
+                FailNotify('請先登入').then(function () {
+                    return location.href = '/login';
+                });
+            }
+        });
+    };
+
+    React.useEffect(function () {
+        getInfo();
+        console.log(user_img);
+    }, []);
+
+    return React.createElement(
+        'div',
+        { className: 'intercafe' },
+        React.createElement(
+            'div',
+            { className: 'interface_title' },
             React.createElement(
-                "form",
-                { className: "form" },
-                React.createElement(InputList, { info: userinfo }),
+                'p',
+                { className: '' },
+                '\u5728\u6B64\u4FEE\u6539\u4F60\u7684\u500B\u4EBA\u8CC7\u6599'
+            )
+        ),
+        React.createElement(
+            'div',
+            { className: 'input_area' },
+            React.createElement(
+                'form',
+                { className: 'form' },
                 React.createElement(
-                    "div",
-                    { className: "form_submit" },
-                    React.createElement("p", { className: "form_title" }),
+                    'div',
+                    { className: 'form_submit' },
+                    React.createElement('p', { className: 'form_title' }),
                     React.createElement(
-                        "button",
-                        { className: "form_btn" },
-                        "\u78BA\u8A8D\u8B8A\u66F4"
+                        'button',
+                        { className: 'form_btn' },
+                        '\u78BA\u8A8D\u8B8A\u66F4'
                     )
                 )
             ),
             React.createElement(
-                "div",
-                { className: "img_form" },
-                React.createElement(
-                    "div",
-                    { className: "img_form_container" },
-                    React.createElement("img", { className: "from_img", src: userinfo.img }),
-                    React.createElement(
-                        "div",
-                        { className: "img_form_btn_area" },
-                        React.createElement(
-                            "button",
-                            { className: "img_form_btn" },
-                            "\u66F4\u6539\u7167\u7247"
-                        )
-                    ),
-                    React.createElement(
-                        "p",
-                        { className: "img_form_text" },
-                        "\u6211\u53EA\u5403png :P"
-                    )
-                )
+                'div',
+                { className: 'img_form' },
+                React.createElement(UserImgInput, { orgin: userinfo.img })
             )
         )
     );
@@ -119,8 +196,8 @@ var Interface = function Interface() {
 
 var Main = function Main() {
     return [React.createElement(ToolBar, null), React.createElement(
-        "div",
-        { className: "main_area" },
+        'div',
+        { className: 'main_area' },
         React.createElement(UserInfo, null),
         React.createElement(Interface, null)
     )];
