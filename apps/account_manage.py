@@ -103,7 +103,6 @@ def login():
 
 @app.route("Logoff", methods=['POST'])
 def logoff():
-    require_field = request.json['require']
     if request.cookies.get('User_Token') is None: return "", 401
     if not current_app.config['jwt'].check_token_valid(request.cookies.get('User_Token')):
         return "", 401
@@ -113,7 +112,7 @@ def logoff():
                UPDATE accounts
                SET last_login = %(date)s
                WHERE accounts.id = %(user_id)s
-               """, {"user_id": user_info['id'], "date": datetime.now().strftime("%Y/%m/%d %H:%M:%S")})
+               """, {"user_id": user_info['user_id'], "date": datetime.now().strftime("%Y/%m/%d %H:%M:%S")})
     res = make_response(json.dumps({
         "cause": 0
     }))
@@ -187,7 +186,7 @@ def change_password():
                    UPDATE accounts
                    SET last_login = %(date)s
                    WHERE accounts.id = %(user_id)s
-                   """, {"user_id": user_info['id'], "date": datetime.now().strftime("%Y/%m/%d %H:%M:%S")})
+                   """, {"user_id": user_info['user_id'], "date": datetime.now().strftime("%Y/%m/%d %H:%M:%S")})
 
     return jsonify({"cause": 0})
 
@@ -230,7 +229,7 @@ def change_profile():
                    UPDATE accounts
                    SET last_login = %(date)s
                    WHERE accounts.id = %(user_id)s
-                   """, {"user_id": user_info['id'], "date": datetime.now().strftime("%Y/%m/%d %H:%M:%S")})
+                   """, {"user_id": user_info['user_id'], "date": datetime.now().strftime("%Y/%m/%d %H:%M:%S")})
 
     return jsonify({"cause": 0})
 
