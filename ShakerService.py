@@ -165,10 +165,25 @@ def get_product_page():
         "css": [
             'Toolbar.css',
             "product.css",
+            ""
         ]
     }
     return render_template('main.html', setting=setting)
 
+@app.route('/SMCindex')
+def get_smc_page():
+    setting = {
+        "title": "賣家中心",
+        "script": [
+            'Toolbar.js',
+            "cart.js"
+        ],
+        "css": [
+            'Toolbar.css',
+            "cart.css",
+        ]
+    }
+    return render_template('main.html', setting=setting)
 
 if __name__ == "__main__":
     app.config['config'] = configure_collection()

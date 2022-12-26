@@ -61,7 +61,7 @@ const UpperBar = ()=>{
                 <div className="upper_main nav_container">
                     <div className="w-1/5 upper_selction">
                         <div className="upper_nobar">
-                            <a className="Toolbat_text" href="">賣家中心</a>
+                            <a className="Toolbat_text" href="./js/SMindex.js">賣家中心</a>
                         </div>
                     </div>
                     {isLogin?
