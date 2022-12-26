@@ -3,6 +3,7 @@ import json
 import hashlib
 from flask import Flask, render_template, request, redirect, url_for, Blueprint, jsonify, current_app, make_response
 from module.configs import configure_collection
+from module.picture_utils import get_new_pic
 
 from module.data_utils import database_utils
 
@@ -175,6 +176,7 @@ def change_profile():
         if key in request_json.keys():
             return "", 301
 
+    # 確認使用者使否存在
     db = database_utils(current_app.config['config'])
     dbreturn = db.command_excute("""
                                     SELECT *
@@ -183,19 +185,33 @@ def change_profile():
                                     """, {"user_id": user_info["user_id"]})
     if dbreturn == 0:
         return jsonify({"status": "failed", "cause": 302})
-    require_key = ["name", "email", "phone"]
+
+    # 確認使用者輸入內容
+    require_key = ["name", "email", "phone", "photo"]
     request_json: dict = request.json
+
+    update_str = []
+
+    # 檢查傳入內容
     for key in require_key:
         if key in request_json.keys():
-            user_info[key] = request.json[key]
+            # 檢查是否含有圖片檔案
+            if key == 'photo':
+                update_str.append('photo = %(photo)s')
+                # 進行圖片資料解析
+                img_id = get_new_pic(request.json[key])
+                if img_id < 0:
+                    return jsonify({"status": "fail", "cause": 401})
+                else:
+                    user_info[key] = img_id
+            else:
+                user_info[key] = request.json[key]
+                update_str.append(key + " = %(" + key + ")s")
 
-    db.command_excute("""
-        UPDATE accounts
-        SET name = %(name)s, %(email)s, %(phone)s
-        WHERE accounts.id = %(user_id)s
-        """, user_info)
+    print("UPDATE accounts SET " + ','.join(update_str) + " WHERE accounts.id = %(user_id)s")
+    db.command_excute("UPDATE accounts SET " + ','.join(update_str) + " WHERE accounts.id = %(user_id)s", user_info)
 
-    return jsonify({"status": "success", "cause": 300})
+    return jsonify({"status": 200, "cause": 200})
 
 @app.route("register_shop", methods=['POST'])
 def register_shop():

@@ -34,7 +34,7 @@ def upload_picture():
             'status': "failed",
             'cause': 605
         })
-    ##看圖檔是否已經存在
+    # 看圖檔是否已經存在
     filename = str(uuid.uuid4()) + "." + extension
     print(filename)
     while(os.path.exists((current_app.config["config"]["UploadFolder"] + "/" + filename))):
@@ -46,6 +46,7 @@ def upload_picture():
                     INSERT INTO picture (file_path) 
                     VALUES (%(file_path)s);
                     """, {"file_path": (current_app.config["config"]["UploadFolder"] + "/" + filename)})
+
     dbreturn = db.command_excute("""
                 SELECT 
                     id

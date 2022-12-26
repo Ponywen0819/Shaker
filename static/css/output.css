@@ -561,6 +561,10 @@ video {
   justify-content: center;
 }
 
+.gap-1 {
+  gap: 0.25rem;
+}
+
 .border {
   border-width: 1px;
 }

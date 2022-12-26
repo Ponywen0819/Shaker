@@ -1,33 +1,33 @@
-const UserInput = ({type, title, orgin}) =>{
+const UserInput = ({type, orgin, change, title}) =>{
     const [val, setval] = React.useState('')
-
-    React.useEffect(()=>{
-        setval(orgin)
-    },[])
 
     const handle_number_input =(e) =>{
         setval(e.target.value.replace(/[^0-9]/, ''));
+        change(e.target.name, e.target.value.replace(/[^0-9]/, ''));
+
     }
 
     const handle_text_input = (e) =>{
         setval(e.target.value);
+        change(e.target.name,e.target.value);
     }
 
+    React.useEffect(()=>{
+        setval(orgin)
+    },[orgin])
 
     return(
         <div className="form_line">
             <p className="form_title">{title}</p>
             <input className="form_input"
-                   type="text"
-                   value={val}
                    name={title}
-                   id={title}
-                   onInput={ (type === 'text')?handle_text_input:handle_number_input}
+                   type={type}
+                   value={val}
+                   onInput={(title !== 'phone')?handle_text_input:handle_number_input}
             />
         </div>
     )
 }
-
 
 const UserImgInput = ({orgin}) =>{
     const [img, setImg] = React.useState(orgin)
@@ -51,7 +51,28 @@ const UserImgInput = ({orgin}) =>{
     }
 
     const triggerImageUpload = ()=>{
-        console.log('還沒寫拉哈哈')
+        fetch('/account/ChangeProfile',{
+            body: JSON.stringify({'photo': img}),
+            headers:{
+                'content-type': 'application/json'
+            },
+            method:'POST'
+        }).then(res=>{
+            if(res.status === 200){
+                return res.json()
+            }
+            else{
+                FailNotify("上傳圖片出現錯誤")
+            }
+        }).then(data=>{
+            if(data.status !== 200){
+                FailNotify("上傳圖片出現錯誤")
+            }
+        }).then(data=>{
+            if(data.status == 200){
+                SuccessNotify("銅片上傳成功")
+            }
+        })
     }
 
     React.useEffect(()=>{
@@ -69,8 +90,13 @@ const UserImgInput = ({orgin}) =>{
             <div className="img_form_btn_area">
                 {
                     img_change?
-                        <button className="img_form_btn" onClick={triggerImageUpload}>確認修改</button>:
-                        <button className="img_form_btn" onClick={triggerImageChange}>更改照片</button>
+                        <div className={`flex flex-col gap-1`}>
+                            <button className="img_form_btn" onClick={triggerImageUpload}>確認修改</button>
+                            <button className="img_form_btn" onClick={triggerImageUpload}>取消</button>
+                        </div>:
+                        <div>
+                            <button className="img_form_btn" onClick={triggerImageChange}>更改照片</button>
+                        </div>
                 }
             </div>
             <p className="img_form_text">我只吃png :P</p>
@@ -79,14 +105,15 @@ const UserImgInput = ({orgin}) =>{
 }
 
 const Interface = () => {
-    const [userinfo,setInfo] = React.useState({
-        name: "",
-        email: "",
-        phone: "",
-        img: "/static/img/logo1.png"
-    })
+    const [userinfo,setInfo] = React.useState({name: "", email: "", phone: "", photo: ''})
 
     const [user_img, setImg] = React.useState('')
+
+    const [change, setChange] = React.useState({})
+
+    React.useEffect(()=>{
+        getInfo()
+    },[])
 
     const getInfo = ()=>{
         fetch('/account/GetUserDetail',{
@@ -106,7 +133,7 @@ const Interface = () => {
                     name: data.name,
                     email: data.email,
                     phone: data.phone,
-                    img: (data.photo == null)?"/static/img/logo1.png":data.photo
+                    photo: data.photo
                 })
                 setImg((data.photo == null)?"/static/img/logo1.png":data.photo)
             }
@@ -118,12 +145,48 @@ const Interface = () => {
         })
     }
 
-    React.useEffect(()=>{
-        getInfo()
-        console.log(user_img)
-    },[])
+    const handle_change = (name, val)=>{
+        change[name] = val
+        console.log(name, change)
+        setChange(change)
+    }
 
+    const handle_upload = ()=>{
+        let need2upload = false
+        for(i of Object.entries(change)){
+            if(userinfo[i[0]] !== i[1]){
+                need2upload = true
+            }
+        }
+        if(need2upload){
+            fetch('/account/ChangeProfile',{
+                body: JSON.stringify(change),
+                headers:{
+                    'content-type': 'application/json'
+                },
+                method:'POST'
+            }).then(res=>{
+                if(res.status === 200){
+                    return res.json()
+                }
+                else{
+                    FailNotify("資訊更新出現錯誤")
+                }
+            }).then(data=>{
+                if(data.status !== 200){
+                    FailNotify("資訊更新出現錯誤")
+                }
+                else{
+                    SuccessNotify("資料更新成功").then(()=>{location.href = location.href})
+                }
+            })
+        }
+        else{
+            SuccessNotify("資料更新成功")
+        }
+    }
 
+    const name2type = {name: 'text', email: 'email', phone: 'text'}
 
     return(
         <div className="intercafe">
@@ -131,14 +194,22 @@ const Interface = () => {
                 <p className="">在此修改你的個人資料</p>
             </div>
             <div className="input_area">
-                <form className="form">
+                <div className="form">
+                    {
+                        Object.entries(userinfo).map(i=>{
+                            console.log(i[1])
+                            if(i[0]!== 'photo'){
+                                return <UserInput orgin={i[1]} type={name2type[i[0]]} title={i[0]} change={handle_change}></UserInput>
+                            }
+                        })
+                    }
                     <div className="form_submit">
                         <p className="form_title"></p>
-                        <button className="form_btn">確認變更</button>
+                        <button className="form_btn" onClick={handle_upload}>確認變更</button>
                     </div>
-                </form>
+                </div>
                 <div className="img_form">
-                    <UserImgInput orgin={userinfo.img}></UserImgInput>
+                    <UserImgInput orgin={user_img}></UserImgInput>
                 </div>
             </div>
         </div>
@@ -146,14 +217,15 @@ const Interface = () => {
 }
 
 const Main = ()=>{
-    return [
-        <ToolBar></ToolBar>,(
-        <div className="main_area">
-            <UserInfo></UserInfo>
-            <Interface></Interface>
-        </div>)
-    ]
+    return(
+        <div>
+            <ToolBar></ToolBar>
+            <div className="main_area">
+                <UserInfo></UserInfo>
+                <Interface></Interface>
+            </div>
+        </div>
+    )
 }
-
 
 ReactDOM.createRoot(document.getElementById("main")).render(<Main></Main>)

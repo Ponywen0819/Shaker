@@ -2,25 +2,28 @@ var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = [
 
 var UserInput = function UserInput(_ref) {
     var type = _ref.type,
-        title = _ref.title,
-        orgin = _ref.orgin;
+        orgin = _ref.orgin,
+        change = _ref.change,
+        title = _ref.title;
 
     var _React$useState = React.useState(''),
         _React$useState2 = _slicedToArray(_React$useState, 2),
         val = _React$useState2[0],
         setval = _React$useState2[1];
 
-    React.useEffect(function () {
-        setval(orgin);
-    }, []);
-
     var handle_number_input = function handle_number_input(e) {
         setval(e.target.value.replace(/[^0-9]/, ''));
+        change(e.target.name, e.target.value.replace(/[^0-9]/, ''));
     };
 
     var handle_text_input = function handle_text_input(e) {
         setval(e.target.value);
+        change(e.target.name, e.target.value);
     };
+
+    React.useEffect(function () {
+        setval(orgin);
+    }, [orgin]);
 
     return React.createElement(
         'div',
@@ -31,11 +34,10 @@ var UserInput = function UserInput(_ref) {
             title
         ),
         React.createElement('input', { className: 'form_input',
-            type: 'text',
-            value: val,
             name: title,
-            id: title,
-            onInput: type === 'text' ? handle_text_input : handle_number_input
+            type: type,
+            value: val,
+            onInput: title !== 'phone' ? handle_text_input : handle_number_input
         })
     );
 };
@@ -71,7 +73,27 @@ var UserImgInput = function UserImgInput(_ref2) {
     };
 
     var triggerImageUpload = function triggerImageUpload() {
-        console.log('還沒寫拉哈哈');
+        fetch('/account/ChangeProfile', {
+            body: JSON.stringify({ 'photo': img }),
+            headers: {
+                'content-type': 'application/json'
+            },
+            method: 'POST'
+        }).then(function (res) {
+            if (res.status === 200) {
+                return res.json();
+            } else {
+                FailNotify("上傳圖片出現錯誤");
+            }
+        }).then(function (data) {
+            if (data.status !== 200) {
+                FailNotify("上傳圖片出現錯誤");
+            }
+        }).then(function (data) {
+            if (data.status == 200) {
+                SuccessNotify("銅片上傳成功");
+            }
+        });
     };
 
     React.useEffect(function () {
@@ -90,13 +112,26 @@ var UserImgInput = function UserImgInput(_ref2) {
             'div',
             { className: 'img_form_btn_area' },
             img_change ? React.createElement(
-                'button',
-                { className: 'img_form_btn', onClick: triggerImageUpload },
-                '\u78BA\u8A8D\u4FEE\u6539'
+                'div',
+                { className: 'flex flex-col gap-1' },
+                React.createElement(
+                    'button',
+                    { className: 'img_form_btn', onClick: triggerImageUpload },
+                    '\u78BA\u8A8D\u4FEE\u6539'
+                ),
+                React.createElement(
+                    'button',
+                    { className: 'img_form_btn', onClick: triggerImageUpload },
+                    '\u53D6\u6D88'
+                )
             ) : React.createElement(
-                'button',
-                { className: 'img_form_btn', onClick: triggerImageChange },
-                '\u66F4\u6539\u7167\u7247'
+                'div',
+                null,
+                React.createElement(
+                    'button',
+                    { className: 'img_form_btn', onClick: triggerImageChange },
+                    '\u66F4\u6539\u7167\u7247'
+                )
             )
         ),
         React.createElement(
@@ -108,12 +143,7 @@ var UserImgInput = function UserImgInput(_ref2) {
 };
 
 var Interface = function Interface() {
-    var _React$useState7 = React.useState({
-        name: "",
-        email: "",
-        phone: "",
-        img: "/static/img/logo1.png"
-    }),
+    var _React$useState7 = React.useState({ name: "", email: "", phone: "", photo: '' }),
         _React$useState8 = _slicedToArray(_React$useState7, 2),
         userinfo = _React$useState8[0],
         setInfo = _React$useState8[1];
@@ -122,6 +152,15 @@ var Interface = function Interface() {
         _React$useState10 = _slicedToArray(_React$useState9, 2),
         user_img = _React$useState10[0],
         setImg = _React$useState10[1];
+
+    var _React$useState11 = React.useState({}),
+        _React$useState12 = _slicedToArray(_React$useState11, 2),
+        change = _React$useState12[0],
+        setChange = _React$useState12[1];
+
+    React.useEffect(function () {
+        getInfo();
+    }, []);
 
     var getInfo = function getInfo() {
         fetch('/account/GetUserDetail', {
@@ -140,7 +179,7 @@ var Interface = function Interface() {
                     name: data.name,
                     email: data.email,
                     phone: data.phone,
-                    img: data.photo == null ? "/static/img/logo1.png" : data.photo
+                    photo: data.photo
                 });
                 setImg(data.photo == null ? "/static/img/logo1.png" : data.photo);
             } else {
@@ -151,10 +190,69 @@ var Interface = function Interface() {
         });
     };
 
-    React.useEffect(function () {
-        getInfo();
-        console.log(user_img);
-    }, []);
+    var handle_change = function handle_change(name, val) {
+        change[name] = val;
+        console.log(name, change);
+        setChange(change);
+    };
+
+    var handle_upload = function handle_upload() {
+        var need2upload = false;
+        var _iteratorNormalCompletion = true;
+        var _didIteratorError = false;
+        var _iteratorError = undefined;
+
+        try {
+            for (var _iterator = Object.entries(change)[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                i = _step.value;
+
+                if (userinfo[i[0]] !== i[1]) {
+                    need2upload = true;
+                }
+            }
+        } catch (err) {
+            _didIteratorError = true;
+            _iteratorError = err;
+        } finally {
+            try {
+                if (!_iteratorNormalCompletion && _iterator.return) {
+                    _iterator.return();
+                }
+            } finally {
+                if (_didIteratorError) {
+                    throw _iteratorError;
+                }
+            }
+        }
+
+        if (need2upload) {
+            fetch('/account/ChangeProfile', {
+                body: JSON.stringify(change),
+                headers: {
+                    'content-type': 'application/json'
+                },
+                method: 'POST'
+            }).then(function (res) {
+                if (res.status === 200) {
+                    return res.json();
+                } else {
+                    FailNotify("資訊更新出現錯誤");
+                }
+            }).then(function (data) {
+                if (data.status !== 200) {
+                    FailNotify("資訊更新出現錯誤");
+                } else {
+                    SuccessNotify("資料更新成功").then(function () {
+                        location.href = location.href;
+                    });
+                }
+            });
+        } else {
+            SuccessNotify("資料更新成功");
+        }
+    };
+
+    var name2type = { name: 'text', email: 'email', phone: 'text' };
 
     return React.createElement(
         'div',
@@ -172,15 +270,21 @@ var Interface = function Interface() {
             'div',
             { className: 'input_area' },
             React.createElement(
-                'form',
+                'div',
                 { className: 'form' },
+                Object.entries(userinfo).map(function (i) {
+                    console.log(i[1]);
+                    if (i[0] !== 'photo') {
+                        return React.createElement(UserInput, { orgin: i[1], type: name2type[i[0]], title: i[0], change: handle_change });
+                    }
+                }),
                 React.createElement(
                     'div',
                     { className: 'form_submit' },
                     React.createElement('p', { className: 'form_title' }),
                     React.createElement(
                         'button',
-                        { className: 'form_btn' },
+                        { className: 'form_btn', onClick: handle_upload },
                         '\u78BA\u8A8D\u8B8A\u66F4'
                     )
                 )
@@ -188,19 +292,24 @@ var Interface = function Interface() {
             React.createElement(
                 'div',
                 { className: 'img_form' },
-                React.createElement(UserImgInput, { orgin: userinfo.img })
+                React.createElement(UserImgInput, { orgin: user_img })
             )
         )
     );
 };
 
 var Main = function Main() {
-    return [React.createElement(ToolBar, null), React.createElement(
+    return React.createElement(
         'div',
-        { className: 'main_area' },
-        React.createElement(UserInfo, null),
-        React.createElement(Interface, null)
-    )];
+        null,
+        React.createElement(ToolBar, null),
+        React.createElement(
+            'div',
+            { className: 'main_area' },
+            React.createElement(UserInfo, null),
+            React.createElement(Interface, null)
+        )
+    );
 };
 
 ReactDOM.createRoot(document.getElementById("main")).render(React.createElement(Main, null));
