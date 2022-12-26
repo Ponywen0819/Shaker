@@ -85,7 +85,7 @@ def upload_product():
     return jsonify({
         'cause': 0
     })
-@app.route("/ModufyProduct", methods = ["POST"])
+@app.route("/ModifyProduct", methods = ["POST"])
 def modify_product():
     # 不能更改shop_id
     if "shop_id" in request.json.keys():
