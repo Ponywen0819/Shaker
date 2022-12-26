@@ -22,14 +22,14 @@ def login():
 
     if len(dbreturn) == 1:
         token = current_app.config['jwt'].generate_token({"admin_id": dbreturn[0]['id']})
-        res = make_response(json.dumps({"status": "success", "cause": 0}))
+        res = make_response(json.dumps({"cause": 0}))
 
         res.set_cookie("User_Token", token, expires=time.time() + 6 * 60)
         return res
     elif len(dbreturn) > 1:
-        return jsonify({"status": "fail", "cause": 102})
+        return jsonify({"cause": 102})
     else:
-        return jsonify({"status": "fail", "cause": 101})
+        return jsonify({"cause": 101})
 
 
 @app.route("/CreateAdmin", methods=['POST'])
@@ -41,7 +41,7 @@ def register():
     require_field = ["name", "account", "password"]
     for need in require_field:
         if need not in request.json.keys():
-            return jsonify({"status": "failed", "cause": 153})
+            return jsonify({"cause": 153})
 
     auth_info = request.json
     auth_info['password'] = hashlib.sha256(
@@ -58,4 +58,4 @@ def register():
                     VALUES (%(name)s, %(account)s, %(password)s, %(publisher_id)s);
                     """, auth_info)
 
-    return jsonify({"status": "failed", "cause": 150})
+    return jsonify({"cause": 0})

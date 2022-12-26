@@ -10,17 +10,15 @@ from module.data_utils import database_utils
 app = Blueprint('product_manage', __name__)
 
 
-@app.route("/upload_picture", methods=["POST"])
+@app.route("/UploadPicture", methods=["POST"])
 def upload_picture():
     if 'file' not in request.files:
         return jsonify({
-            'status': "failed",
             'cause': 603
         })
     file = request.files['file']
     if file.filename == '':
         return jsonify({
-            'status': "failed",
             'cause': 604
         })
 
@@ -31,7 +29,6 @@ def upload_picture():
     # 副檔名不對
     if not check:
         return jsonify({
-            'status': "failed",
             'cause': 605
         })
     # 看圖檔是否已經存在
@@ -57,12 +54,12 @@ def upload_picture():
                 """, {"file_path": (current_app.config["config"]["UploadFolder"] + "/" + filename)})
     return jsonify({
         'id': dbreturn[0]['id'],
-        'status': "success",
-        'cause': 666
+        'cause': 0
     })
 
 
 @app.route("/upload_product", methods=["POST"])
+@app.route("/UploadProduct", methods = ["POST"])
 def upload_product():
     db = database_utils(current_app.config['config'])
     dbreturn = db.command_excute("""
@@ -77,7 +74,6 @@ def upload_product():
     # 已有這個商品
     if len(dbreturn) != 0:
         return jsonify({
-            'status': "failed",
             'cause': 601
         })
     # 有條件未填
@@ -91,16 +87,16 @@ def upload_product():
                 VALUES (%(shop_id)s, %(name)s, %(price)s, %(number)s, %(intro)s, %(category)s, %(picture_id)s , 0.0, %(status)s)
                 """, request.json)
     return jsonify({
-        'status': 'success',
-        'cause': 699
+        'cause': 0
     })
 
 
 @app.route("/modify_product", methods=["POST"])
+@app.route("/ModufyProduct", methods = ["POST"])
 def modify_product():
     # 不能更改shop_id
     if "shop_id" in request.json.keys():
-        return jsonify({"status": "failed", "cause": 701})
+        return jsonify({"cause": 701})
 
     db = database_utils(current_app.config['config'])
     dbreturn = db.command_excute("""
@@ -114,7 +110,6 @@ def modify_product():
     # 須找到商品
     if len(dbreturn) != 1:
         return jsonify({
-            'status': "failed",
             'cause': 702
         })
     #
@@ -130,12 +125,12 @@ def modify_product():
                      WHERE id = %(id)s
                     """, info)
     return jsonify({
-        'status': 'success',
-        'cause': 700
+        'cause': 0
     })
 
 
 @app.route("/delete_product", methods=["POST"])
+@app.route("/DeleteProduct", methods = ["POST"])
 def delete_product():
     db = database_utils(current_app.config['config'])
     dbreturn = db.command_excute("""
@@ -149,7 +144,6 @@ def delete_product():
     # 沒有商品
     if len(dbreturn) != 1:
         return jsonify({
-            'status': "failed",
             'cause': 801
         })
     db.command_excute("""
@@ -157,12 +151,9 @@ def delete_product():
                          WHERE id = %(id)s;
                         """, request.json)
     return jsonify({
-        'status': 'success',
-        'cause': 800
+        'cause': 0
     })
-
-
-@app.route("/get_product", methods=["POST"])
+@app.route("/GetProduct", methods = ["POST"])
 def get_product():
     db = database_utils(current_app.config['config'])
     dbreturn = db.command_excute("""
@@ -176,7 +167,6 @@ def get_product():
     # 超過一筆資料或沒有任何資料
     if len(dbreturn) != 1:
         return jsonify({
-            'status': "failed",
             'cause': 901
         })
     return jsonify({
@@ -190,14 +180,12 @@ def get_product():
             'avgstar': dbreturn[0]['avgstar'],
             'status': dbreturn[0]['status']
         })
-
-
-@app.route("/create_order", methods=["POST"])
+@app.route("/CreateOrder", methods = ["POST"])
 def create_order():
     require_field = ['owner_id', 'start_time', 'end_time', 'payment', 'status', 'free_fee', 'price', 'address', 'product_id', 'number']
     for need in require_field:
         if need not in request.json.keys():
-            return jsonify({"status": "failed", "cause": 1101})
+            return jsonify({"cause": 1101})
     db = database_utils(current_app.config['config'])
     db.command_excute("""
                        INSERT INTO `order` (owner_id, start_time, end_time, payment, status, free_fee, price, address)
@@ -212,17 +200,15 @@ def create_order():
                           VALUES (%(order_id)s, %(product_id)s, %(number)s)
                           """, temp)
     return jsonify({
-        'status': "success",
-        'cause': 1100
+        'cause': 0
     })
 
-
-@app.route("/get_order", methods=["POST"])
+@app.route("/GetOrder", methods = ["POST"])
 def get_order():
     require_field = ['id']
     for need in require_field:
         if need not in request.json.keys():
-            return jsonify({"status": "failed", "cause": 1201})
+            return jsonify({"cause": 1201})
     db = database_utils(current_app.config['config'])
     order = db.command_excute("""
                          SELECT
@@ -242,7 +228,6 @@ def get_order():
                              """, request.json)
     if len(order) != 1 or len(orderDetail) != 1:
         return jsonify({
-            'status': "failed",
             'cause': 1202
         })
     return jsonify({
@@ -257,14 +242,12 @@ def get_order():
         'product_id': orderDetail[0]['product_id'],
         'number': orderDetail[0]['number']
     })
-
-
-@app.route("/delete_order", methods=["POST"])
+@app.route("/DeleteOrder", methods = ["POST"])
 def delete_order():
     require_field = ['id']
     for need in require_field:
         if need not in request.json.keys():
-            return jsonify({"status": "failed", "cause": 1201})
+            return jsonify({"cause": 1301})
     db = database_utils(current_app.config['config'])
     detail = db.command_excute("""
                          SELECT
@@ -277,8 +260,7 @@ def delete_order():
     # 沒有此order
     if len(detail) == 0:
         return jsonify({
-            'status': "failed",
-            'cause': 1301
+            'cause': 1302
         })
     db.command_excute("""
                            DELETE FROM `order`
@@ -289,12 +271,11 @@ def delete_order():
     #                         WHERE order_id = %(id)s;
     #                         """, request.json)
     return jsonify({
-            'status': "success",
-            'cause': 1300
+            'cause': 0
         })
 
 
-@app.route("/add_comment", methods=["POST"])
+@app.route("/AddComment", methods = ["POST"])
 def add_comment():
     db = database_utils(current_app.config['config'])
     dbreturn = db.command_excute("""
@@ -308,13 +289,12 @@ def add_comment():
     # 已經評論過
     if len(dbreturn) != 0:
         return jsonify({
-            'status': "failed",
             'cause': 1001
         })
     require_field = ["order_id", "product_id", "star", "description", "picture", "time"]
     for need in require_field:
         if need not in request.json.keys():
-            return jsonify({"status": "failed", "cause": 1002})
+            return jsonify({"cause": 1002})
 
     db.command_excute("""
                     INSERT INTO comment (order_id, product_id, star, description, picture, time)
@@ -337,17 +317,18 @@ def add_comment():
                          WHERE id = %(product_id)s
                         """, temp)
     return jsonify({
-        'status': "success",
-        'cause': 1000
+        'cause': 0
     })
 
 
-@app.route("/get_comment", methods=["POST"])
+
+
+@app.route("/GetComment", methods=["POST"])
 def get_comment():
     require_field = ['product_id']
     for need in require_field:
         if need not in request.json.keys():
-            return jsonify({"status": "failed", "cause": 1401})
+            return jsonify({"cause": 1401})
     db = database_utils(current_app.config['config'])
     comments = db.command_excute("""
                              SELECT
@@ -365,14 +346,12 @@ def get_comment():
     return jsonify(
           comments
     )
-
-
-@app.route("/add_productToCart", methods=["POST"])
+@app.route("/AddProductToCart", methods=["POST"])
 def add_productToCart():
     require_field = ['owner_id', 'product_id', 'count']
     for need in require_field:
         if need not in request.json.keys():
-            return jsonify({"status": "failed", "cause": 1501})
+            return jsonify({"cause": 1501})
 
     db = database_utils(current_app.config['config'])
     cartInfo = db.command_excute("""
@@ -386,7 +365,6 @@ def add_productToCart():
     # 購物車裡面已經有此商品
     if len(cartInfo) != 0:
         return jsonify({
-            'status': "failed",
             'cause': 1502
         })
     db.command_excute("""
@@ -395,17 +373,14 @@ def add_productToCart():
                         """, request.json)
 
     return jsonify({
-        'status': "success",
-        'cause': 1500
+        'cause': 0
     })
-
-
-@app.route("/get_productsToCart", methods=["POST"])
+@app.route("/GetProductsToCart", methods=["POST"])
 def get_productsToCart():
     require_field = ['owner_id']
     for need in require_field:
         if need not in request.json.keys():
-            return jsonify({"status": "failed", "cause": 1601})
+            return jsonify({"cause": 1601})
 
     db = database_utils(current_app.config['config'])
     allProduct = db.command_excute("""
@@ -420,13 +395,12 @@ def get_productsToCart():
         allProduct
     )
 
-
-@app.route("/delete_productToCart", methods=["POST"])
+@app.route("/DeleteProductToCart", methods=["POST"])
 def delete_productToCart():
     require_field = ['owner_id', 'product_id']
     for need in require_field:
         if need not in request.json.keys():
-            return jsonify({"status": "failed", "cause": 1701})
+            return jsonify({"cause": 1701})
     db = database_utils(current_app.config['config'])
     cartProduct = db.command_excute("""
                                      SELECT
@@ -439,7 +413,6 @@ def delete_productToCart():
     #沒有此產品
     if len(cartProduct) != 1:
         return jsonify({
-            'status': "failed",
             'cause': 1702
         })
     db.command_excute("""
@@ -447,6 +420,5 @@ def delete_productToCart():
                                WHERE owner_id = %(owner_id)s AND product_id = %(product_id)s;
                               """, request.json)
     return jsonify({
-        'status': "success",
-        'cause': 1700
+        'cause': 0
     })
