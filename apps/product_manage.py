@@ -102,8 +102,7 @@ def upload_product():
         return jsonify({
             'cause': 602
         })
-    # 有條件未填
-    # 成功
+    # 插入商品
     db.command_excute("""
                 INSERT INTO product (shop_id, name, price, number, intro, category, picture_id, avgstar, status)
                 VALUES (%(shop_id)s, %(name)s, %(price)s, %(number)s, %(intro)s, %(category)s, %(picture_id)s , 0.0, %(status)s)
