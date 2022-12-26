@@ -84,6 +84,9 @@
 .from_img{
     border-radius: 50%;
     width: 150px;
+    height: 150px;
+    object-fit: cover;
+    padding: 1px;
 }
 
 .img_form_text{

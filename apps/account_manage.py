@@ -92,7 +92,7 @@ def login():
             "cause": 100
         }))
 
-        res.set_cookie("User_Token", token, expires=time.time() + 6 * 60)
+        res.set_cookie("User_Token", token, expires=time.time() + 60 * 60)
         return res
     elif len(dbreturn) > 1:
         return jsonify({"status": "fail", "cause": 102})
@@ -168,7 +168,7 @@ def change_profile():
         return "", 301
 
     user_info = current_app.config['jwt'].get_token_detail(token)
-    #request不能給我這些東西
+    # request不能給我這些東西
     not_require_key = ["account_id", "password", "id"]
     request_json: dict = request.json
     for key in not_require_key:
