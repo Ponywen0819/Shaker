@@ -194,6 +194,7 @@ def change_password():
 
 @app.route("/ChangeProfile", methods=["POST"])
 def change_profile():
+
     token = request.cookies.get("User_Token")
     if token is None: return "", 301
     if not current_app.config['jwt'].check_token_valid(token):
@@ -252,28 +253,33 @@ def change_profile():
 
 @app.route("RegisterShop", methods=['POST'])
 def register_shop():
+    token = request.cookies.get("User_Token")
+    if token is None: return "", 401
+    if not current_app.config['jwt'].check_token_valid(token):
+        return "", 401
+
+    user_info = current_app.config['jwt'].get_token_detail(token)
+    print(user_info)
     db = database_utils(current_app.config['config'])
-    require_field = ["owner_id", "name", "avgstar", "intro", "last_login"]
-    for need in require_field:
-        if need not in request.json.keys():
-            return jsonify({"status": "failed", "cause": 201})
-    check_account = db.command_excute("""
-                                SELECT *
-                                FROM accounts
-                                WHERE accounts.id = %(owner_id)s
-                                """, request.json)
+    # 確認此account是否有shop
     check_shop = db.command_excute("""
-                                    SELECT *
-                                    FROM shop
-                                    WHERE owner_id = %(owner_id)s
-                                    """, request.json)
-    # 無account或已有商店
-    if len(check_account) != 1 or len(check_shop) != 0:
+                                        SELECT *
+                                        FROM shop
+                                        WHERE owner_id = %(user_id)s
+                                        """, user_info)
+    if len(check_shop) != 0:
         return jsonify({
             'cause': 202
         })
+    require_field = ["name", "intro"]
+    for need in require_field:
+        if need not in request.json.keys():
+            return jsonify({"status": "failed", "cause": 201})
+
     # 如果有附logo
     shopInfo = request.json
+    shopInfo["owner_id"] = user_info["user_id"]
+    shopInfo["time"] = datetime.now().strftime("%Y/%m/%d %H:%M:%S")
     if "logo" not in request.json.keys():
         shopInfo["logo"] = 1
     db.command_excute("""
@@ -283,7 +289,7 @@ def register_shop():
     shopInfo['publisher_id'] = db.command_excute("""SELECT LAST_INSERT_ID() AS id;""", {})[0]['id']
     db.command_excute("""
                        INSERT INTO shop(owner_id, name, avgstar, intro, last_login, logo, publisher_id) 
-                       VALUES (%(owner_id)s, %(name)s, %(avgstar)s, %(intro)s, %(last_login)s, %(logo)s, %(publisher_id)s)
+                       VALUES (%(owner_id)s, %(name)s, 0, %(intro)s, %(time)s, %(logo)s, %(publisher_id)s)
                        """, shopInfo)
 
     return jsonify({

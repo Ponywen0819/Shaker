@@ -60,6 +60,27 @@ def upload_picture():
 
 @app.route("/UploadProduct", methods = ["POST"])
 def upload_product():
+    # 確認token(account)
+    token = request.cookies.get("User_Token")
+    if token is None: return "", 601
+    if not current_app.config['jwt'].check_token_valid(token):
+        return "", 601
+    user_info = current_app.config['jwt'].get_token_detail(token)
+    db = database_utils(current_app.config['config'])
+    # 確認是否有這個shop
+    check_shop = db.command_excute("""
+        SELECT
+            *
+        FROM
+            shop
+        WHERE
+            id = %(user_id)s
+        """, user_info
+    )
+    if len(check_shop) != 0:
+        return jsonify({
+            'cause': 602
+        })
     db = database_utils(current_app.config['config'])
     dbreturn = db.command_excute("""
         SELECT
@@ -73,13 +94,13 @@ def upload_product():
     # 已有這個商品
     if len(dbreturn) != 0:
         return jsonify({
-            'cause': 601
+            'cause': 602
         })
     # 有條件未填
     require_field = ["shop_id", "name", "price", "number", "intro", "category", "picture_id", "status"]
     for need in require_field:
         if need not in request.json.keys():
-            return jsonify({"status": "failed", "cause": 602})
+            return jsonify({"status": "failed", "cause": 603})
     # 成功
     db.command_excute("""
                 INSERT INTO product (shop_id, name, price, number, intro, category, picture_id, avgstar, status)
