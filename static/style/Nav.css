@@ -1,0 +1,9 @@
+*{
+    padding: 0;
+    margin: 0 ;
+}
+div.container{
+    border: 1px solid blueviolet;
+    display: flex;
+    flex-wrap: wrap;
+}
