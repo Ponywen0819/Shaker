@@ -39,13 +39,19 @@ const UpperBar = ()=>{
     const testLogin = ()=>{
         if(document.cookie.indexOf('User_Token=') !== -1) {
             fetch('/account/GetUserDetail',{
-                method: 'POST'
+                body: JSON.stringify({
+                    require:["photo", "name"]
+                }),
+                method: 'POST',
+                headers:{
+                    'content-type': 'application/json'
+                }
             }).then((response)=>{
                 if (response.status === 200){
                     return response.json()
                 }
             }).then((data)=>{
-                if (data.cause == 200){
+                if (data.cause === 0){
                     setLog(true)
                     setinfo(data)
                 }

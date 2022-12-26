@@ -104,6 +104,7 @@ def login():
 
 @app.route("/GetUserDetail", methods=["POST"])
 def get_user_detail():
+    require_field = request.json['require']
     if request.cookies.get('User_Token') is None:
         return "", 401
     if not current_app.config['jwt'].check_token_valid(request.cookies.get('User_Token')):

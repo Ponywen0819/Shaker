@@ -111,13 +111,17 @@ const Interface = () => {
 
     const [change, setChange] = React.useState({})
 
-    React.useEffect(()=>{
-        getInfo()
-    },[])
+    React.useEffect(()=>{getInfo()},[])
 
     const getInfo = ()=>{
         fetch('/account/GetUserDetail',{
-            method: 'POST'
+            body: JSON.stringify({
+                require:["photo", "name", "email", "phone"]
+            }),
+            method: 'POST',
+            headers:{
+                'content-type': 'application/json'
+            }
         }).then((response)=>{
             if(response.status === 200) {
                 return response.json()
@@ -128,7 +132,7 @@ const Interface = () => {
                 ))
             }
         }).then((data)=>{
-            if(data.cause === 200){
+            if(data.cause === 0){
                 setInfo({
                     name: data.name,
                     email: data.email,
@@ -147,7 +151,7 @@ const Interface = () => {
 
     const handle_change = (name, val)=>{
         change[name] = val
-        console.log(name, change)
+        // console.log(name, change)
         setChange(change)
     }
 
@@ -170,11 +174,12 @@ const Interface = () => {
                     return res.json()
                 }
                 else{
-                    FailNotify("資訊更新出現錯誤")
+                    FailNotify("資訊更新出現錯誤").then(()=>{location.href = location.href})
                 }
             }).then(data=>{
-                if(data.status !== 200){
-                    FailNotify("資訊更新出現錯誤")
+                console.log(data)
+                if(data.cause !== 0){
+                    FailNotify("資訊更新出現錯誤").then(()=>{location.href = location.href})
                 }
                 else{
                     SuccessNotify("資料更新成功").then(()=>{location.href = location.href})
@@ -197,7 +202,7 @@ const Interface = () => {
                 <div className="form">
                     {
                         Object.entries(userinfo).map(i=>{
-                            console.log(i[1])
+                            // console.log(i[1])
                             if(i[0]!== 'photo'){
                                 return <UserInput orgin={i[1]} type={name2type[i[0]]} title={i[0]} change={handle_change}></UserInput>
                             }
