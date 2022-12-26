@@ -9,7 +9,7 @@ var ToolBar = function ToolBar() {
 };
 
 var handle_login = function handle_login() {
-    fetch('account/PublicKey', {
+    fetch('/account/PublicKey', {
         method: 'GET'
     }).then(function (respone) {
         if (respone.status === 200) {
@@ -23,7 +23,7 @@ var handle_login = function handle_login() {
         var encode_password = forge.util.encode64(public_key.encrypt(forge.util.encodeUtf8(password), 'RSA-OAEP', { md: forge.md.sha256.create(), mgf1: { md: forge.md.sha1.create() } }));
         console.log('success');
 
-        fetch('account/Login', {
+        fetch('/account/Login', {
             method: 'POST',
             body: JSON.stringify({
                 email: account,
@@ -37,7 +37,7 @@ var handle_login = function handle_login() {
                 return respons.json();
             }
         }).then(function (json) {
-            if (json.status === "success") {
+            if (json.cause === 0) {
                 SuccessNotify("登入成功").then(function () {
                     location.href = '/';
                 });

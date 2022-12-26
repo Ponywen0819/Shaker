@@ -4,6 +4,7 @@ import hashlib
 from datetime import datetime
 from flask import Flask, render_template, request, redirect, url_for, Blueprint, jsonify, current_app, make_response
 from module.configs import configure_collection
+from module.picture_utils import get_new_pic
 
 from module.data_utils import database_utils
 
@@ -64,7 +65,7 @@ def register():
         "cause": 0
     }))
 
-    res.set_cookie("Token", token, expires=time.time() + 6 * 60)
+    res.set_cookie("Token", token, expires=time.time() + 60 * 60)
     return res
 
 
@@ -94,7 +95,7 @@ def login():
             "cause": 0
         }))
 
-        res.set_cookie("User_Token", token, expires=time.time() + 6 * 60)
+        res.set_cookie("User_Token", token, expires=time.time() + 60 * 60)
         return res
     elif len(dbreturn) > 1:
         return jsonify({"cause": 102})
@@ -123,7 +124,8 @@ def logoff():
 @app.route("/GetUserDetail", methods=["POST"])
 def get_user_detail():
     require_field = request.json['require']
-    if request.cookies.get('User_Token') is None: return "", 401
+    if request.cookies.get('User_Token') is None:
+        return "", 401
     if not current_app.config['jwt'].check_token_valid(request.cookies.get('User_Token')):
         return "", 401
     user_info = current_app.config['jwt'].get_token_detail(request.cookies.get('User_Token'))
@@ -146,7 +148,7 @@ def get_user_detail():
 
     return jsonify(res)
 
-@app.route("/ChangePassword", methods=["POST"])
+@app.route("/ChangePassword",  methods=["POST"])
 def change_password():
     token = request.cookies.get("User_Token")
     if token is None: return "", 401
@@ -198,13 +200,14 @@ def change_profile():
         return "", 301
 
     user_info = current_app.config['jwt'].get_token_detail(token)
-    #request不能給我這些東西
+    # request不能給我這些東西
     not_require_key = ["account_id", "password", "id"]
     request_json: dict = request.json
     for key in not_require_key:
         if key in request_json.keys():
             return "", 301
 
+    # 確認使用者使否存在
     db = database_utils(current_app.config['config'])
     dbreturn = db.command_excute("""
                                     SELECT *
@@ -212,18 +215,32 @@ def change_profile():
                                     WHERE accounts.id = %(user_id)s
                                     """, {"user_id": user_info["user_id"]})
     if dbreturn == 0:
-        return jsonify({"cause": 302})
-    require_key = ["name", "email", "phone"]
+        return jsonify({"status": "failed", "cause": 302})
+
+    # 確認使用者輸入內容
+    require_key = ["name", "email", "phone", "photo"]
     request_json: dict = request.json
+
+    update_str = []
+
+    # 檢查傳入內容
     for key in require_key:
         if key in request_json.keys():
-            user_info[key] = request.json[key]
+            # 檢查是否含有圖片檔案
+            if key == 'photo':
+                update_str.append('photo = %(photo)s')
+                # 進行圖片資料解析
+                img_id = get_new_pic(request.json[key])
+                if img_id < 0:
+                    return jsonify({"status": "fail", "cause": 401})
+                else:
+                    user_info[key] = img_id
+            else:
+                user_info[key] = request.json[key]
+                update_str.append(key + " = %(" + key + ")s")
 
-    db.command_excute("""
-        UPDATE accounts
-        SET name = %(name)s, email = %(email)s, phone = %(phone)s
-        WHERE accounts.id = %(user_id)s
-        """, user_info)
+    print("UPDATE accounts SET " + ','.join(update_str) + " WHERE accounts.id = %(user_id)s")
+    db.command_excute("UPDATE accounts SET " + ','.join(update_str) + " WHERE accounts.id = %(user_id)s", user_info)
 
     db.command_excute("""
                    UPDATE accounts
@@ -273,6 +290,9 @@ def register_shop():
         'cause': 0
     })
 
+@app.route("/PublicKey", methods=['GET'])
+def publickey():
+    return current_app.config['crypto'].get_pubkey()
 
 # @app.route("GetAllCoupon", methods=['POST'])
 # def get_all_coupon():

@@ -561,6 +561,10 @@ video {
   justify-content: center;
 }
 
+.gap-1 {
+  gap: 0.25rem;
+}
+
 .border {
   border-width: 1px;
 }
@@ -590,4 +594,9 @@ video {
 .text-\[cadetblue\] {
   --tw-text-opacity: 1;
   color: rgb(95 158 160 / var(--tw-text-opacity));
+}
+
+.text-white {
+  --tw-text-opacity: 1;
+  color: rgb(255 255 255 / var(--tw-text-opacity));
 }

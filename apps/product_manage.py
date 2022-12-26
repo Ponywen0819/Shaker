@@ -31,7 +31,7 @@ def upload_picture():
         return jsonify({
             'cause': 605
         })
-    ##看圖檔是否已經存在
+    # 看圖檔是否已經存在
     filename = str(uuid.uuid4()) + "." + extension
     print(filename)
     while(os.path.exists((current_app.config["config"]["UploadFolder"] + "/" + filename))):
@@ -43,6 +43,7 @@ def upload_picture():
                     INSERT INTO picture (file_path) 
                     VALUES (%(file_path)s);
                     """, {"file_path": (current_app.config["config"]["UploadFolder"] + "/" + filename)})
+
     dbreturn = db.command_excute("""
                 SELECT 
                     id
@@ -55,6 +56,8 @@ def upload_picture():
         'id': dbreturn[0]['id'],
         'cause': 0
     })
+
+
 @app.route("/UploadProduct", methods = ["POST"])
 def upload_product():
     db = database_utils(current_app.config['config'])
@@ -85,6 +88,7 @@ def upload_product():
     return jsonify({
         'cause': 0
     })
+
 @app.route("/ModifyProduct", methods = ["POST"])
 def modify_product():
     # 不能更改shop_id
@@ -120,6 +124,9 @@ def modify_product():
     return jsonify({
         'cause': 0
     })
+
+
+
 @app.route("/DeleteProduct", methods = ["POST"])
 def delete_product():
     db = database_utils(current_app.config['config'])
