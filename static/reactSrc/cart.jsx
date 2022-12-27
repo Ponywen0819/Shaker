@@ -65,33 +65,61 @@ const Product = ({item}) =>(
 )
 
 const Order = ({products})=>{
-    return(
-        <div className={`order_container`}>
-            <Order_title shop_name={`我超棒`}></Order_title>
-            {
-                products.map(i=>(
-                    <Product item={i}></Product>
-                ))
+    const [orders, setOrder] = React.useState({})
+
+    React.useEffect(()=>{
+        let a ={}
+        for(i of products){
+            let order_keys = Object.keys(a)
+            if(order_keys.includes(i.shop.toString())){
+                console.log(a[i.shop])
+                a[i.shop].push(i)
+                console.log(a[i.shop])
             }
+            else{
+                a[i.shop] = [i]
+            }
+        }
+        setOrder(a)
+    },[])
+
+    return(
+        <div className={``}>
+            {
+                Object.entries(orders).map(order=>{
+                    return(
+                        <div className={`order_container`}>
+                            <Order_title shop_name={order[0]}></Order_title>
+                            {
+                                order[1].map(i=>(
+                                    <Product item={i}></Product>
+                                ))
+                            }
+                        </div>
+                    )
+                })
+            }
+
+
         </div>
     )
 }
 
 const Main = ()=>{
     const products = [
-        { no : 'a124fw', img : '/static/img/logo1.png', name : '我是商品', number:1,origin : 123, dis : 100,},
-        { no : 'a124fw', img : '/static/img/logo1.png', name : '我是商品', number:1,origin : 123, dis : null,},
-        { no : 'a124fw', img : '/static/img/logo1.png', name : '我是商品', number:1,origin : 123, dis : 102,},
-        { no : 'a124fw', img : '/static/img/logo1.png', name : '我是商品', number:1,origin : 123, dis : 102,},
-        { no : 'a124fw', img : '/static/img/logo1.png', name : '我是商品', number:1,origin : 123, dis : 102,},
-        { no : 'a124fw', img : '/static/img/logo1.png', name : '我是商品', number:1,origin : 123, dis : 102,},
-        { no : 'a124fw', img : '/static/img/logo1.png', name : '我是商品', number:1,origin : 123, dis : 102,},
-        { no : 'a124fw', img : '/static/img/logo1.png', name : '我是商品', number:1,origin : 123, dis : 102,},
-        { no : 'a124fw', img : '/static/img/logo1.png', name : '我是商品', number:1,origin : 123, dis : 102,},
-        { no : 'a124fw', img : '/static/img/logo1.png', name : '我是商品', number:1,origin : 123, dis : 102,},
-        { no : 'a124fw', img : '/static/img/logo1.png', name : '我是商品', number:1,origin : 123, dis : 102,},
-        { no : 'a124fw', img : '/static/img/logo1.png', name : '我是商品', number:1,origin : 123, dis : 102,},
-        { no : 'a124fw', img : '/static/img/logo1.png', name : '我是商品', number:1,origin : 123, dis : 102,}
+        { no : 'a124fw', img : '/static/img/logo1.png', name : '我是商品', number:1,origin : 123, shop : 2, },
+        { no : 'a124fw', img : '/static/img/logo1.png', name : '我是商品', number:1,origin : 123, shop : 2,},
+        { no : 'a124fw', img : '/static/img/logo1.png', name : '我是商品', number:1,origin : 123, shop : 2,},
+        { no : 'a124fw', img : '/static/img/logo1.png', name : '我是商品', number:1,origin : 123, shop : 1,},
+        { no : 'a124fw', img : '/static/img/logo1.png', name : '我是商品', number:1,origin : 123, shop : 1,},
+        { no : 'a124fw', img : '/static/img/logo1.png', name : '我是商品', number:1,origin : 123, shop : 1,},
+        { no : 'a124fw', img : '/static/img/logo1.png', name : '我是商品', number:1,origin : 123, shop : 1,},
+        { no : 'a124fw', img : '/static/img/logo1.png', name : '我是商品', number:1,origin : 123, shop : 1,},
+        { no : 'a124fw', img : '/static/img/logo1.png', name : '我是商品', number:1,origin : 123, shop : 1,},
+        { no : 'a124fw', img : '/static/img/logo1.png', name : '我是商品', number:1,origin : 123, shop : 1,},
+        { no : 'a124fw', img : '/static/img/logo1.png', name : '我是商品', number:1,origin : 123, shop : 1,},
+        { no : 'a124fw', img : '/static/img/logo1.png', name : '我是商品', number:1,origin : 123, shop : 1,},
+        { no : 'a124fw', img : '/static/img/logo1.png', name : '我是商品', number:1,origin : 123, shop : 1,}
     ]
 
     return [
