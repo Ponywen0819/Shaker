@@ -20,7 +20,8 @@ const Standerbar = ({title,url,items,img})=>{
                 <div className={`submenu`}>
                     {items ? items.map(subItem => (
                         <Navbutton title={subItem.title} url={subItem.url}
-                                activate={window.location.pathname == subItem.url}></Navbutton>)) : ''}
+                                   activate={window.location.pathname == subItem.url}></Navbutton>
+                    )) : ''}
                 </div>
             }
         </div>
