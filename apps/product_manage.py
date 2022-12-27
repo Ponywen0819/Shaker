@@ -4,6 +4,7 @@ from flask import Flask, render_template, request, redirect, url_for, Blueprint,
 from module.configs import configure_collection
 import time
 import json
+from datetime import datetime
 import os
 import uuid
 from module.data_utils import database_utils
@@ -58,89 +59,167 @@ def upload_picture():
     })
 
 
-
 @app.route("/UploadProduct", methods = ["POST"])
 def upload_product():
+    # 確認token(account)
+    token = request.cookies.get("User_Token")
+    if token is None: return "", 601
+    if not current_app.config['jwt'].check_token_valid(token):
+        return "", 601
+    user_info = current_app.config['jwt'].get_token_detail(token)
+    # 有條件未填
+    require_field = ["name", "price", "number", "intro", "category", "picture_id", "status"]
+    for need in require_field:
+        if need not in request.json.keys():
+            return jsonify({"status": "failed", "cause": 603})
     db = database_utils(current_app.config['config'])
-    dbreturn = db.command_excute("""
+    # 確認是否有這個shop
+    check_shop = db.command_excute("""
+        SELECT
+            id
+        FROM
+            shop
+        WHERE
+            owner_id = %(user_id)s
+        """, user_info)
+    if len(check_shop) != 1:
+        return jsonify({
+            'cause': 602
+        })
+    product_info = request.json
+    product_info["shop_id"] = check_shop[0]["id"]
+    product_info["time"] = datetime.now().strftime("%Y/%m/%d %H:%M:%S")
+    check_product = db.command_excute("""
         SELECT
             *
         FROM
             product
         WHERE
             shop_id = %(shop_id)s AND name = %(name)s
-        """, request.json
-    )
+        """, product_info)
     # 已有這個商品
-    if len(dbreturn) != 0:
+    if len(check_product) != 0:
         return jsonify({
-            'cause': 601
+            'cause': 602
         })
-    # 有條件未填
-    require_field = ["shop_id", "name", "price", "number", "intro", "category", "picture_id", "status"]
-    for need in require_field:
-        if need not in request.json.keys():
-            return jsonify({"status": "failed", "cause": 602})
-    # 成功
+    # 插入商品
     db.command_excute("""
                 INSERT INTO product (shop_id, name, price, number, intro, category, picture_id, avgstar, status)
                 VALUES (%(shop_id)s, %(name)s, %(price)s, %(number)s, %(intro)s, %(category)s, %(picture_id)s , 0.0, %(status)s)
-                """, request.json)
+                """, product_info)
+    # 更新時間
+    db.command_excute("""
+                       UPDATE shop
+                       SET last_login = %(time)s
+                       WHERE id = %(shop_id)s
+                       """, product_info)
     return jsonify({
         'cause': 0
     })
 
-
 @app.route("/ModifyProduct", methods = ["POST"])
 def modify_product():
-    # 不能更改shop_id
+    # 確認token(account)
+    token = request.cookies.get("User_Token")
+    if token is None: return "", 601
+    if not current_app.config['jwt'].check_token_valid(token):
+        return "", 601
+    user_info = current_app.config['jwt'].get_token_detail(token)
+    db = database_utils(current_app.config['config'])
+    # 確認是否有這個shop
+    check_shop = db.command_excute("""
+           SELECT
+               id
+           FROM
+               shop
+           WHERE
+               owner_id = %(user_id)s
+           """, user_info)
+    if len(check_shop) != 1:
+        return jsonify({
+            'cause': 602
+        })
+    # 不能更改shop_id以及更改的時候一定要有product_id
     if "shop_id" in request.json.keys():
         return jsonify({"cause": 701})
-
-    db = database_utils(current_app.config['config'])
-    dbreturn = db.command_excute("""
+    temp = request.json
+    temp["shop_id"] = check_shop[0]["id"]
+    check_product = db.command_excute("""
             SELECT
                 *
             FROM
                 product
             WHERE
-                id = %(id)s
-            """, request.json)
+                id = %(id)s AND shop_id = %(shop_id)s
+            """, temp)
     # 須找到商品
-    if len(dbreturn) != 1:
+    if len(check_product) != 1:
         return jsonify({
             'cause': 702
         })
-    #
+    # 若沒有要更新則照原本data
     info = request.json
     require_field = ["name", "price", "number", "intro", "category", "picture_id", "status"]
     for modify in require_field:
         if modify not in request.json.keys():
-            info[modify] = dbreturn[0].get(modify)
-
+            info[modify] = check_product[0].get(modify)
+            info["time"] = datetime.now().strftime("%Y/%m/%d %H:%M:%S")
+            info["shop_id"] = check_shop[0]["id"]
     db.command_excute("""
                      UPDATE product
                      SET name = %(name)s, price = %(price)s, number = %(number)s, intro = %(intro)s, category = %(category)s, picture_id = %(picture_id)s, status = %(status)s
                      WHERE id = %(id)s
                     """, info)
+    # 更新時間
+    db.command_excute("""
+                           UPDATE shop
+                           SET last_login = %(time)s
+                           WHERE id = %(shop_id)s
+                           """, info)
     return jsonify({
         'cause': 0
     })
 
 
+
 @app.route("/DeleteProduct", methods = ["POST"])
 def delete_product():
+    # 確認token(account)
+    token = request.cookies.get("User_Token")
+    if token is None: return "", 601
+    if not current_app.config['jwt'].check_token_valid(token):
+        return "", 601
+    user_info = current_app.config['jwt'].get_token_detail(token)
     db = database_utils(current_app.config['config'])
-    dbreturn = db.command_excute("""
+    # 確認是否有這個shop
+    check_shop = db.command_excute("""
+               SELECT
+                   id
+               FROM
+                   shop
+               WHERE
+                   owner_id = %(user_id)s
+               """, user_info)
+    if len(check_shop) != 1:
+        return jsonify({
+            'cause': 602
+        })
+    if "id" not in request.json.keys():
+        return jsonify({
+            'cause': 602
+        })
+    temp = request.json
+    temp["shop_id"] = check_shop[0]["id"]
+    check_product = db.command_excute("""
                 SELECT
                     *
                 FROM
                     product
                 WHERE
-                    id = %(id)s
-                """, request.json)
+                    id = %(id)s AND shop_id = %(shop_id)s
+                """, temp)
     # 沒有商品
-    if len(dbreturn) != 1:
+    if len(check_product) != 1:
         return jsonify({
             'cause': 801
         })
@@ -148,6 +227,15 @@ def delete_product():
                          DELETE FROM product
                          WHERE id = %(id)s;
                         """, request.json)
+    shop_info_upload = {}
+    shop_info_upload["time"] = datetime.now().strftime("%Y/%m/%d %H:%M:%S")
+    shop_info_upload["shop_id"] = check_shop[0]["id"]
+    # 更新時間
+    db.command_excute("""
+                               UPDATE shop
+                               SET last_login = %(time)s
+                               WHERE id = %(shop_id)s
+                               """, shop_info_upload)
     return jsonify({
         'cause': 0
     })
