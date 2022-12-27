@@ -7,6 +7,8 @@ function Sidebar ()  {
   const [orderIsOpen, setIsOpenO] = useState(false);
   const [productIsOpen, setIsOpenP] = useState(false);
   const [financeIsOpen, setIsOpenF] = useState(false);
+  const [eventIsOpen, setIsOpenE] = useState(false);
+
   function shipmentClose() {
     setIsOpenS(!shipmentIsOpen);
   }
@@ -18,6 +20,9 @@ function Sidebar ()  {
   }
   function financeClose() {
     setIsOpenF(!financeIsOpen);
+  }
+  function eventClose() {
+    setIsOpenE(!eventIsOpen);
   }
   return (
     <div className='sidebar-container'>
@@ -148,8 +153,34 @@ function Sidebar ()  {
           </ul>
         </li>
 
+        <li className='event'>
+          <div className='sidebar-menu-item'>
+            <img src= "https://cf.shopee.tw/file/c15905d5a6284687c4a6ad00d0feb511" className='sidebar-menu-item-icon'></img>
+            <span className='sidebar-menu-item-text' onClick={eventClose}>管理行銷活動</span>
+            <span className='sidebar-menu-item-space'></span>
+            <i className='sidebar-menu-item-collapse shopee-icon'>
+              <svg xmlns='http://www.w3.org/2000/svg' viewBox="0 0 16 16">
+                <path d="M8 6.81l3.97 3.97a.75.75 0 0 0 1.06-1.06l-4.5-4.5a.75.75 0 0 0-1.06 0l-4.5 4.5a.75.75 0 0 0 1.06 1.06L8 6.81z"></path>
+              </svg>
+            </i>
+          </div>
+          <ul className='sidebar-submenu' style={{display : `${eventIsOpen ? 'block' :'none'}`}}>
+            <li className='sidebar-submenu-item'> 
+              <a href ="test.com" className='sidebar-submenu-item-link'>
+                <span>我的行銷活動</span>
+              </a>
+            </li>
+            <li className='sidebar-submenu-item'> 
+              <a href ="test.com" className='sidebar-submenu-item-link'>
+                <span>優惠券</span>
+              </a>
+            </li>
+          </ul>
+        </li>
+
       </ul>
     </div>
   )
 }
 export default Sidebar;
+

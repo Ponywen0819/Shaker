@@ -56,7 +56,6 @@ function SMCbulletin () {
                                 <span className='time'>2022.12.24</span>
                             </div>
                         </div>
-
                     </div>
                 </div>
             </div>
