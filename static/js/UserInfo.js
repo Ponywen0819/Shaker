@@ -48,10 +48,15 @@ var Standerbar = function Standerbar(_ref2) {
 };
 
 var UserInfo = function UserInfo() {
-    var _React$useState = React.useState("Unknow"),
+    var _React$useState = React.useState(""),
         _React$useState2 = _slicedToArray(_React$useState, 2),
         username = _React$useState2[0],
         setusername = _React$useState2[1];
+
+    var _React$useState3 = React.useState(''),
+        _React$useState4 = _slicedToArray(_React$useState3, 2),
+        user_photo = _React$useState4[0],
+        setPhoto = _React$useState4[1];
 
     React.useEffect(function () {}, []);
     var obj = [{ title: '我的帳戶',
@@ -59,13 +64,42 @@ var UserInfo = function UserInfo() {
         img: 'person-square.svg',
         item: [{ title: "更改個人資訊", url: '/user/account/profile' }, { title: "更改密碼", url: '/user/account/password' }] }, { title: '購買清單', url: '/user/purchase', img: 'card-list.svg' }, { title: '我的優惠券', url: '/user/coupon', img: 'ticket-detailed.svg' }];
 
+    React.useState(function () {
+        fetch('/account/GetUserDetail', {
+            method: "POST",
+            body: JSON.stringify({
+                require: ['photo', 'name']
+            }),
+            headers: {
+                'content-type': 'application/json'
+            }
+        }).then(function (res) {
+            var status_code = res.status;
+            if (status_code === 200) {
+                return res.json();
+            } else if (status_code === 401) {
+                FailNotify('請先登入').then(function () {
+                    return location.herf = location.href;
+                });
+            }
+        }).then(function (data) {
+            var return_coode = data.cause;
+            if (return_coode === 0) {
+                setusername(data.name);
+                setPhoto(data.photo);
+            } else {
+                FailNotify('取得使用者資料發生錯誤');
+            }
+        }, []);
+    });
+
     return React.createElement(
         'aside',
         { className: 'side_bar' },
         React.createElement(
             'div',
             { className: 'info_area' },
-            React.createElement('img', { className: 'user_img', src: '/static/img/logo1.png' }),
+            React.createElement('div', { className: 'user_img', style: { backgroundImage: 'url(' + (user_photo == null ? '/static/img/logo1.png' : user_photo) + ')' } }),
             React.createElement(
                 'div',
                 null,

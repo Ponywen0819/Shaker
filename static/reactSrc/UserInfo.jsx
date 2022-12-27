@@ -30,7 +30,8 @@ const Standerbar = ({title,url,items,img})=>{
 }
 
 const UserInfo = ()=>{
-    const [username, setusername] = React.useState("Unknow");
+    const [username, setusername] = React.useState("");
+    const [user_photo, setPhoto] = React.useState('')
     React.useEffect(() => {}, [])
     const obj = [
         { title: '我的帳戶',
@@ -44,10 +45,41 @@ const UserInfo = ()=>{
         { title: '我的優惠券', url: '/user/coupon', img: 'ticket-detailed.svg'}
     ]
 
+    React.useState(()=>{
+        fetch('/account/GetUserDetail',{
+            method:"POST",
+            body:JSON.stringify({
+                require:['photo', 'name']
+            }),
+            headers:{
+                'content-type': 'application/json'
+            }
+        }).then(res=>{
+            const status_code = res.status
+            if(status_code === 200){
+                return res.json()
+            }
+            else if(status_code === 401){
+                FailNotify('請先登入').then(()=>location.herf = location.href)
+            }
+        }).then(data=>{
+            const return_coode = data.cause
+            if(return_coode === 0){
+                setusername(data.name)
+                setPhoto(data.photo)
+            }
+            else{
+                FailNotify('取得使用者資料發生錯誤')
+            }
+        },[])
+
+
+    })
+
     return (
         <aside className="side_bar">
             <div className="info_area">
-                <img className="user_img" src="/static/img/logo1.png"/>
+                <div className="user_img" style={{backgroundImage: `url(${(user_photo==null)?'/static/img/logo1.png':user_photo})`}}></div>
                 <div>
                     <p className="user_name">{ username }</p>
                     <a className="edit_btn" href="/user/account/profile">

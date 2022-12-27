@@ -12,7 +12,7 @@
 .section_btn{
     width: 150px;
     height: 60px;
-    transition: border-bottom-width,color;
+    transition: border-bottom-width 1s,color 1s;
 }
 .selection_btn_on{
     border-bottom: 2px solid orange;
