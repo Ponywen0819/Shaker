@@ -248,7 +248,7 @@ def get_product():
             if need not in request.json.keys():
                 return jsonify({"cause": 1101})
         db = database_utils(current_app.config['config'])
-        product_list = None
+        product_list = []
         for product_id in request.json["id"]:
             product_list.append(db.command_excute("""
                                SELECT
@@ -257,7 +257,7 @@ def get_product():
                                    product
                                WHERE
                                    id = %(id)s
-                               """, {"id": product_id}))
+                               """, {"id": product_id})[0])
         return jsonify(product_list)
     if not current_app.config['jwt'].check_token_valid(token):
         return "", 601
@@ -276,7 +276,7 @@ def get_product():
                            product
                        WHERE
                            id = %(id)s
-                       """, {"id": product_id}))
+                       """, {"id": product_id})[0])
     account_info = {}
     account_info["time"] = datetime.now().strftime("%Y/%m/%d %H:%M:%S")
     account_info["shop_id"] = user_info["user_id"]
