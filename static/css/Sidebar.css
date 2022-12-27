@@ -20,7 +20,7 @@
     background-color: #fff;  
     list-style: none; 
 }
-.shipment ,.order,.product, .finance{
+.shipment ,.order,.product, .finance, .event{
     margin-bottom: 30px;
 }
 .sidebar-menu-item{

@@ -1,9 +1,78 @@
 *{
     padding: 0;
     margin: 0 ;
+    vertical-align: baseline;
+    box-sizing: border-box;
 }
 div.container{
     border: 1px solid blueviolet;
     display: flex;
     flex-wrap: wrap;
+}
+.nav-content{
+    display: flex;
+    width: 100vw;
+    margin: auto;
+    min-height: 56px;
+    max-height: 56px;
+}
+.nav-logo{
+    position: relative;
+    margin-top: 10px;
+    margin-left: 16px;
+    width: 97px;
+    height: 30px;
+}
+.nav-logo-content{
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    margin: 2px 0 0 5px;
+    flex : 1 ;
+}
+.nav-text{
+    color: #1d1d1d;
+    font-size: 18px;
+}
+.pop-over{
+    display: inline-block;
+}
+.account-info-box{
+    position: relative;
+    padding: 8px 16px 8px 0;
+}
+.account-info{
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    position: relative;
+    height: 40px;
+    padding: 4px 16px 4px 4px;
+    box-sizing: border-box;
+    color: #333;
+    cursor: pointer;
+}
+.account-info:hover{
+    border-radius: 20px;
+    background-color: rgba(0,0,0,.06);
+}
+.account-avatar{
+    width: 32px;
+    height: 32px;
+    margin-right: 8px;
+    border-radius: 50%;
+}
+.account-name{
+    min-width: 64px;
+    font-size: 14px;
+    color: #333;
+}
+.pulldown-container{
+    max-width: 300px; 
+    position: absolute; 
+    z-index: 1; 
+    will-change: top, left; 
+    transform-origin: center top; 
+    top: 56px; 
+    left: 19px; 
 }

@@ -1,33 +1,89 @@
 var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
 
 var Nav = function Nav() {
+  var _React$useState = React.useState(false),
+      _React$useState2 = _slicedToArray(_React$useState, 2),
+      accInfoIsTouched = _React$useState2[0],
+      setaccIsTouched = _React$useState2[1];
+
+  function pullDownMenu() {
+    setaccIsTouched(!accInfoIsTouched);
+  }
   return React.createElement(
     'div',
-    { className: 'container' },
-    React.createElement('img', { src: "/public/shi.jpg" })
+    { className: 'nav-container' },
+    React.createElement(
+      'div',
+      { className: 'nav-content' },
+      React.createElement(
+        'a',
+        { href: './test', className: 'nav-logo' },
+        '\u8981\u653E icon '
+      ),
+      React.createElement(
+        'div',
+        { className: 'nav-logo-content' },
+        React.createElement(
+          'a',
+          { href: 'this para. should be filled the anchor link', className: 'nav-text' },
+          ' \u7AA9\u662F\u8CE3\u5BB6\u4E2D\u5FC3\u5466 !'
+        )
+      ),
+      React.createElement(
+        'div',
+        { style: { position: 'relative' } },
+        React.createElement(
+          'div',
+          { className: 'pop-over' },
+          React.createElement(
+            'div',
+            { className: 'pop-over _ref' },
+            React.createElement(
+              'div',
+              { className: 'account-info-box' },
+              React.createElement(
+                'div',
+                { className: 'account-info', onMouseEnter: pullDownMenu, onMouseLeave: pullDownMenu },
+                React.createElement('img', { src: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALQAAAC0CAMAAAAKE/YAAAABJlBMVEXP2NxgfYtjf412j5uMoavO19uis7vG0dVxi5fBzNJyjJhjgI56kp5hfoxxi5h5kZ2ouL9ohJGInaipucCHnah3kJyxv8bL1NnM1dlphJGXqrN4kZzM1tqUp7Gnt76InqlkgY6wvsWGnKdrhpOnuL+xwMZ8lJ+3xMvAzNGCmaTFz9Sdr7fN1trN19tlgY5qhZJkgI6/y9COoqzL1dlphJJ0jZp7k566x8y7x81ng5CywMegsrp4kZ14kJyhs7uJn6nH0dZlgY+Fm6bG0daWqrO2xMqzwcfF0NXBzdK3xcu0wsh7k5+qusG0wsmzwchuiJVviZaYq7S7yM2Kn6m8yM6/y9GInqiWqbKNoqxzjJmjtLyqucGfsbmdr7iwv8WKoKpuiZVif42PQ9RwAAABzUlEQVR4Xu3YVZLjShBA0UyBmZmamXuYmZmZ3tv/Jua3Y8JWTdsKKR1zzwruR1aVlDIdAAAAAAAAAAAAAAAAAADyN1t+3fPqfiOTl7kQ1qp6QqkZinmdnP6hcFVs6wY6RtATwx75OlY7K2ZlczpBzmx194ZONOyKTbc0QiAmrWikFTHoIKeRKgdiz7o6LIo919XhophzRp3yYs01dcqINavqtCTWXFAnX6y5ok7nxZqyOhWJNjAeHERzVx6Py7Y6PRZzqnP4wSQ1dajN4U9AIRSDOhqpIyYFGuGs2HRuqBMNR/O3rKlYXjG1dazhbTGsF4yd557YtlFwrHpNCpslPeHZ81DmQj7T8OvFYt9vfM3LPwkAgOzDzMLdUqV/qHqnXymtLmRe3hPD9h/s7RzpGEc7e1v7Yk+4dX/zWCMsbw6eiClPgzV107XPL8SI3cEr/Wuv3+xK+t4ueXoq3rv3kq4PrbKeWvnjtqRn9MnTqXiDkaTkUkGn9uWypKK5rDM4/CYp+K4z+iGJW9SZrSc+z57OzEt6rtsag6ok6qfGYkOS1NJY/JIk/aexyEmS/tdYHEuSNCbzGU000UQTTTQAAAAAAAAAAAAAAAAAAL8BwZgl987F+p8AAAAASUVORK5CYII=', className: 'account-avatar' }),
+                React.createElement(
+                  'span',
+                  { className: 'account-name' },
+                  'account name'
+                )
+              )
+            )
+          )
+        )
+      )
+    )
   );
 };
 
 var Sidebar = function Sidebar() {
-  var _React$useState = React.useState(false),
-      _React$useState2 = _slicedToArray(_React$useState, 2),
-      shipmentIsOpen = _React$useState2[0],
-      setIsOpenS = _React$useState2[1];
-
   var _React$useState3 = React.useState(false),
       _React$useState4 = _slicedToArray(_React$useState3, 2),
-      orderIsOpen = _React$useState4[0],
-      setIsOpenO = _React$useState4[1];
+      shipmentIsOpen = _React$useState4[0],
+      setIsOpenS = _React$useState4[1];
 
   var _React$useState5 = React.useState(false),
       _React$useState6 = _slicedToArray(_React$useState5, 2),
-      productIsOpen = _React$useState6[0],
-      setIsOpenP = _React$useState6[1];
+      orderIsOpen = _React$useState6[0],
+      setIsOpenO = _React$useState6[1];
 
   var _React$useState7 = React.useState(false),
       _React$useState8 = _slicedToArray(_React$useState7, 2),
-      financeIsOpen = _React$useState8[0],
-      setIsOpenF = _React$useState8[1];
+      productIsOpen = _React$useState8[0],
+      setIsOpenP = _React$useState8[1];
+
+  var _React$useState9 = React.useState(false),
+      _React$useState10 = _slicedToArray(_React$useState9, 2),
+      financeIsOpen = _React$useState10[0],
+      setIsOpenF = _React$useState10[1];
+
+  var _React$useState11 = React.useState(false),
+      _React$useState12 = _slicedToArray(_React$useState11, 2),
+      eventIsOpen = _React$useState12[0],
+      setIsOpenE = _React$useState12[1];
 
   function shipmentClose() {
     setIsOpenS(!shipmentIsOpen);
@@ -40,6 +96,9 @@ var Sidebar = function Sidebar() {
   }
   function financeClose() {
     setIsOpenF(!financeIsOpen);
+  }
+  function eventClose() {
+    setIsOpenE(!eventIsOpen);
   }
   return React.createElement(
     'div',
@@ -327,6 +386,60 @@ var Sidebar = function Sidebar() {
             )
           )
         )
+      ),
+      React.createElement(
+        'li',
+        { className: 'event' },
+        React.createElement(
+          'div',
+          { className: 'sidebar-menu-item' },
+          React.createElement('img', { src: 'https://cf.shopee.tw/file/c15905d5a6284687c4a6ad00d0feb511', className: 'sidebar-menu-item-icon' }),
+          React.createElement(
+            'span',
+            { className: 'sidebar-menu-item-text', onClick: eventClose },
+            '\u7BA1\u7406\u884C\u92B7\u6D3B\u52D5'
+          ),
+          React.createElement('span', { className: 'sidebar-menu-item-space' }),
+          React.createElement(
+            'i',
+            { className: 'sidebar-menu-item-collapse shopee-icon' },
+            React.createElement(
+              'svg',
+              { xmlns: 'http://www.w3.org/2000/svg', viewBox: '0 0 16 16' },
+              React.createElement('path', { d: 'M8 6.81l3.97 3.97a.75.75 0 0 0 1.06-1.06l-4.5-4.5a.75.75 0 0 0-1.06 0l-4.5 4.5a.75.75 0 0 0 1.06 1.06L8 6.81z' })
+            )
+          )
+        ),
+        React.createElement(
+          'ul',
+          { className: 'sidebar-submenu', style: { display: '' + (eventIsOpen ? 'block' : 'none') } },
+          React.createElement(
+            'li',
+            { className: 'sidebar-submenu-item' },
+            React.createElement(
+              'a',
+              { href: 'test.com', className: 'sidebar-submenu-item-link' },
+              React.createElement(
+                'span',
+                null,
+                '\u6211\u7684\u884C\u92B7\u6D3B\u52D5'
+              )
+            )
+          ),
+          React.createElement(
+            'li',
+            { className: 'sidebar-submenu-item' },
+            React.createElement(
+              'a',
+              { href: 'test.com', className: 'sidebar-submenu-item-link' },
+              React.createElement(
+                'span',
+                null,
+                '\u512A\u60E0\u5238'
+              )
+            )
+          )
+        )
       )
     )
   );
@@ -459,45 +572,45 @@ var SMCbulletin = function SMCbulletin() {
 };
 
 var SMContext = function SMContext() {
-  var _React$useState9 = React.useState(true),
-      _React$useState10 = _slicedToArray(_React$useState9, 2),
-      oneIsTouched = _React$useState10[0],
-      setOneIsTouched = _React$useState10[1];
-
-  var _React$useState11 = React.useState(true),
-      _React$useState12 = _slicedToArray(_React$useState11, 2),
-      twoIsTouched = _React$useState12[0],
-      setTwoIsTouched = _React$useState12[1];
-
   var _React$useState13 = React.useState(true),
       _React$useState14 = _slicedToArray(_React$useState13, 2),
-      thirdIsTouched = _React$useState14[0],
-      setThirdIsTouched = _React$useState14[1];
+      oneIsTouched = _React$useState14[0],
+      setOneIsTouched = _React$useState14[1];
 
   var _React$useState15 = React.useState(true),
       _React$useState16 = _slicedToArray(_React$useState15, 2),
-      fourIsTouched = _React$useState16[0],
-      setFourIsTouched = _React$useState16[1];
+      twoIsTouched = _React$useState16[0],
+      setTwoIsTouched = _React$useState16[1];
 
   var _React$useState17 = React.useState(true),
       _React$useState18 = _slicedToArray(_React$useState17, 2),
-      fiveIsTouched = _React$useState18[0],
-      setFiveIsTouched = _React$useState18[1];
+      thirdIsTouched = _React$useState18[0],
+      setThirdIsTouched = _React$useState18[1];
 
   var _React$useState19 = React.useState(true),
       _React$useState20 = _slicedToArray(_React$useState19, 2),
-      sixIsTouched = _React$useState20[0],
-      setSixIsTouched = _React$useState20[1];
+      fourIsTouched = _React$useState20[0],
+      setFourIsTouched = _React$useState20[1];
 
   var _React$useState21 = React.useState(true),
       _React$useState22 = _slicedToArray(_React$useState21, 2),
-      sevenIsTouched = _React$useState22[0],
-      setSevenIsTouched = _React$useState22[1];
+      fiveIsTouched = _React$useState22[0],
+      setFiveIsTouched = _React$useState22[1];
 
   var _React$useState23 = React.useState(true),
       _React$useState24 = _slicedToArray(_React$useState23, 2),
-      eightIsTouched = _React$useState24[0],
-      setEightIsTouched = _React$useState24[1];
+      sixIsTouched = _React$useState24[0],
+      setSixIsTouched = _React$useState24[1];
+
+  var _React$useState25 = React.useState(true),
+      _React$useState26 = _slicedToArray(_React$useState25, 2),
+      sevenIsTouched = _React$useState26[0],
+      setSevenIsTouched = _React$useState26[1];
+
+  var _React$useState27 = React.useState(true),
+      _React$useState28 = _slicedToArray(_React$useState27, 2),
+      eightIsTouched = _React$useState28[0],
+      setEightIsTouched = _React$useState28[1];
 
   function oneChange() {
     setOneIsTouched(!oneIsTouched);
@@ -562,7 +675,7 @@ var SMContext = function SMContext() {
                     { className: 'to-do-box' },
                     React.createElement(
                       'a',
-                      { href: 'test.com', className: 'to-do-box-aitem pending-paid-anchor', onMouseEnter: oneChange, onMouseLeave: oneChange, style: { backgroundColor: '' + (oneIsTouched ? "aliceblue" : "#999") } },
+                      { href: 'test.com', className: 'to-do-box-aitem pending-paid-anchor', onMouseEnter: oneChange, onMouseLeave: oneChange, style: { backgroundColor: '' + (oneIsTouched ? "aliceblue" : "#aacbde") } },
                       React.createElement(
                         'p',
                         { className: 'item-tltle pending-paid-value' },
@@ -576,7 +689,7 @@ var SMContext = function SMContext() {
                     ),
                     React.createElement(
                       'a',
-                      { href: 'test.com', className: 'to-do-box-aitem pending-proccess-anchor', onMouseEnter: twoChange, onMouseLeave: twoChange, style: { backgroundColor: '' + (twoIsTouched ? "aliceblue" : "#999") } },
+                      { href: 'test.com', className: 'to-do-box-aitem pending-proccess-anchor', onMouseEnter: twoChange, onMouseLeave: twoChange, style: { backgroundColor: '' + (twoIsTouched ? "aliceblue" : "#aacbde") } },
                       React.createElement(
                         'p',
                         { className: 'item-tltle pending-proccess-value' },
@@ -590,7 +703,7 @@ var SMContext = function SMContext() {
                     ),
                     React.createElement(
                       'a',
-                      { href: 'test.com', className: 'to-do-box-aitem have-proccess-anchor', onMouseEnter: thirdChange, onMouseLeave: thirdChange, style: { backgroundColor: '' + (thirdIsTouched ? "aliceblue" : "#999") } },
+                      { href: 'test.com', className: 'to-do-box-aitem have-proccess-anchor', onMouseEnter: thirdChange, onMouseLeave: thirdChange, style: { backgroundColor: '' + (thirdIsTouched ? "aliceblue" : "#aacbde") } },
                       React.createElement(
                         'p',
                         { className: 'item-tltle have-proccess-value' },
@@ -604,7 +717,7 @@ var SMContext = function SMContext() {
                     ),
                     React.createElement(
                       'a',
-                      { href: 'test.com', className: 'to-do-box-aitem pending-cancel-anchor', onMouseEnter: fourChange, onMouseLeave: fourChange, style: { backgroundColor: '' + (fourIsTouched ? "aliceblue" : "#999") } },
+                      { href: 'test.com', className: 'to-do-box-aitem pending-cancel-anchor', onMouseEnter: fourChange, onMouseLeave: fourChange, style: { backgroundColor: '' + (fourIsTouched ? "aliceblue" : "#aacbde") } },
                       React.createElement(
                         'p',
                         { className: 'item-tltle pending-cancel-value' },
@@ -618,7 +731,7 @@ var SMContext = function SMContext() {
                     ),
                     React.createElement(
                       'a',
-                      { href: 'test.com', className: 'to-do-box-aitem pending-return-anchor', onMouseEnter: fiveChange, onMouseLeave: fiveChange, style: { backgroundColor: '' + (fiveIsTouched ? "aliceblue" : "#999") } },
+                      { href: 'test.com', className: 'to-do-box-aitem pending-return-anchor', onMouseEnter: fiveChange, onMouseLeave: fiveChange, style: { backgroundColor: '' + (fiveIsTouched ? "aliceblue" : "#aacbde") } },
                       React.createElement(
                         'p',
                         { className: 'item-tltle pending-return-value' },
@@ -632,7 +745,7 @@ var SMContext = function SMContext() {
                     ),
                     React.createElement(
                       'a',
-                      { href: 'test.com', className: 'to-do-box-aitem banned-anchor', onMouseEnter: sixChange, onMouseLeave: sixChange, style: { backgroundColor: '' + (sixIsTouched ? "aliceblue" : "#999") } },
+                      { href: 'test.com', className: 'to-do-box-aitem banned-anchor', onMouseEnter: sixChange, onMouseLeave: sixChange, style: { backgroundColor: '' + (sixIsTouched ? "aliceblue" : "#aacbde") } },
                       React.createElement(
                         'p',
                         { className: 'item-tltle ban-value' },
@@ -646,7 +759,7 @@ var SMContext = function SMContext() {
                     ),
                     React.createElement(
                       'a',
-                      { href: 'test.com', className: 'to-do-box-aitem sold-out-anchor', onMouseEnter: sevenChange, onMouseLeave: sevenChange, style: { backgroundColor: '' + (sevenIsTouched ? "aliceblue" : "#999") } },
+                      { href: 'test.com', className: 'to-do-box-aitem sold-out-anchor', onMouseEnter: sevenChange, onMouseLeave: sevenChange, style: { backgroundColor: '' + (sevenIsTouched ? "aliceblue" : "#aacbde") } },
                       React.createElement(
                         'p',
                         { className: 'item-tltle sold-out-value' },
@@ -660,7 +773,7 @@ var SMContext = function SMContext() {
                     ),
                     React.createElement(
                       'a',
-                      { href: 'test.com', className: 'to-do-box-aitem pending-evevt-anchor', onMouseEnter: eightChange, onMouseLeave: eightChange, style: { backgroundColor: '' + (eightIsTouched ? "aliceblue" : "#999") } },
+                      { href: 'test.com', className: 'to-do-box-aitem pending-evevt-anchor', onMouseEnter: eightChange, onMouseLeave: eightChange, style: { backgroundColor: '' + (eightIsTouched ? "aliceblue" : "#aacbde") } },
                       React.createElement(
                         'p',
                         { className: 'item-tltle pending-evevt-value' },
