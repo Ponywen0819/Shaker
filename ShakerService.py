@@ -171,6 +171,21 @@ def get_product_page(product_id):
     }
     return render_template('main.html', setting=setting)
 
+@app.route('/search')
+def get_search_page():
+    setting = {
+        "title": "搜尋",
+        "script": [
+            'Toolbar.js',
+            "search.js"
+        ],
+        "css": [
+            'Toolbar.css',
+            "search.css",
+            "index.css"
+        ]
+    }
+    return render_template('main.html', setting=setting)
 
 if __name__ == "__main__":
     app.config['config'] = configure_collection()
