@@ -1,5 +1,5 @@
 import React,{useState} from 'react'
-import "./style/SMCbulletin.css"
+import "./css/SMCbulletin.css"
 
 function SMCbulletin () {
     return (

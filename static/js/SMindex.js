@@ -5,7 +5,7 @@ import Sidebar from "./Sidebar"
 import Nav from "./Nav";
 import SMContext from "./shopManagerContext"
 import SMCbulletin from "./SMCbulletin";
-import "./style/SMindex.css";
+import "./css/SMindex.css";
 
 
 ReactDOM.render(

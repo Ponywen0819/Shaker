@@ -1,5 +1,5 @@
 import React ,{useState}from 'react';
-import "./style/SMC.css";
+import "./css/SMC.css";
 function SMContext  ()  {
   const [oneIsTouched, setOneIsTouched] = useState(true);
   const [twoIsTouched, setTwoIsTouched] = useState(true);
