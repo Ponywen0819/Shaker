@@ -175,11 +175,8 @@ def get_smc_page():
     setting = {
         "title": "賣家中心",
         "script": [
-            "Nav.js",
-            'Sidebar.js',
-            "SMCbulletin.js",
-            "shopManagerContext.js",
             "SMindex.js"
+            
         ],
         "css": [
             "Nav.css",
