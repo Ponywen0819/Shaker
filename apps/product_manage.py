@@ -58,7 +58,7 @@ def upload_picture():
     })
 
 
-@app.route("/upload_product", methods=["POST"])
+
 @app.route("/UploadProduct", methods = ["POST"])
 def upload_product():
     db = database_utils(current_app.config['config'])
@@ -89,14 +89,9 @@ def upload_product():
     return jsonify({
         'cause': 0
     })
-<<<<<<< HEAD
 
 
-@app.route("/modify_product", methods=["POST"])
-@app.route("/ModufyProduct", methods = ["POST"])
-=======
 @app.route("/ModifyProduct", methods = ["POST"])
->>>>>>> FlaskShaker
 def modify_product():
     # 不能更改shop_id
     if "shop_id" in request.json.keys():
@@ -133,7 +128,6 @@ def modify_product():
     })
 
 
-@app.route("/delete_product", methods=["POST"])
 @app.route("/DeleteProduct", methods = ["POST"])
 def delete_product():
     db = database_utils(current_app.config['config'])
@@ -157,6 +151,8 @@ def delete_product():
     return jsonify({
         'cause': 0
     })
+
+
 @app.route("/GetProduct", methods = ["POST"])
 def get_product():
     db = database_utils(current_app.config['config'])
@@ -184,6 +180,8 @@ def get_product():
             'avgstar': dbreturn[0]['avgstar'],
             'status': dbreturn[0]['status']
         })
+
+
 @app.route("/CreateOrder", methods = ["POST"])
 def create_order():
     require_field = ['owner_id', 'start_time', 'end_time', 'payment', 'status', 'free_fee', 'price', 'address', 'product_id', 'number']
@@ -207,7 +205,8 @@ def create_order():
         'cause': 0
     })
 
-@app.route("/GetOrder", methods = ["POST"])
+
+@app.route("/GetOrder", methods=["POST"])
 def get_order():
     require_field = ['id']
     for need in require_field:
@@ -246,7 +245,37 @@ def get_order():
         'product_id': orderDetail[0]['product_id'],
         'number': orderDetail[0]['number']
     })
-@app.route("/DeleteOrder", methods = ["POST"])
+
+@app.route('/GetOrderList', methods=["POST"])
+def get_order_list():
+    # 進行身份驗證
+    token = request.cookies.get("User_Token")
+    user_info = current_app.config['jwt'].get_token_detail(token)
+    db = database_utils(current_app.config['config'])
+    user_checker = db.command_excute("""
+                                        SELECT COUNT(*)
+                                        FROM accounts
+                                        WHERE accounts.id = %(user_id)s
+                                        """, {"user_id": user_info["user_id"]})
+    if user_checker < 0:
+        return '', 401
+
+
+    request_json: dict = request.json
+    # 進行欄位檢查
+    require = ['from', 'num']
+    for require_key in require:
+        if require_key not in request_json.keys():
+            return jsonify({
+                "cause": 200
+            })
+
+    # oreder_list = db.command_excute('''
+    #     SELECT
+    # ''')
+
+
+@app.route("/DeleteOrder", methods=["POST"])
 def delete_order():
     require_field = ['id']
     for need in require_field:
@@ -325,8 +354,6 @@ def add_comment():
     })
 
 
-
-
 @app.route("/GetComment", methods=["POST"])
 def get_comment():
     require_field = ['product_id']
@@ -350,6 +377,8 @@ def get_comment():
     return jsonify(
           comments
     )
+
+
 @app.route("/AddProductToCart", methods=["POST"])
 def add_productToCart():
     require_field = ['owner_id', 'product_id', 'count']
@@ -379,6 +408,8 @@ def add_productToCart():
     return jsonify({
         'cause': 0
     })
+
+
 @app.route("/GetProductsToCart", methods=["POST"])
 def get_productsToCart():
     require_field = ['owner_id']
@@ -398,6 +429,7 @@ def get_productsToCart():
     return jsonify(
         allProduct
     )
+
 
 @app.route("/DeleteProductToCart", methods=["POST"])
 def delete_productToCart():

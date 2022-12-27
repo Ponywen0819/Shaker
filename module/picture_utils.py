@@ -41,7 +41,7 @@ def get_new_pic(data: str) -> int:
     print(filename)
 
     # 將檔案寫入實體資料夾
-    with open(current_app.config["config"]["UploadFolder"] + filename, 'wb') as f:
+    with open(current_app.config["config"]["UploadFolder"] +     filename, 'wb') as f:
         f.write(img_data)
         f.close()
 

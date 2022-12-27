@@ -102,10 +102,12 @@ def login():
     else:
         return jsonify({"cause": 101})
 
+
 @app.route("Logoff", methods=['POST'])
 def logoff():
     require_field = request.json['require']
-    if request.cookies.get('User_Token') is None: return "", 401
+    if request.cookies.get('User_Token') is None:
+        return "", 401
     if not current_app.config['jwt'].check_token_valid(request.cookies.get('User_Token')):
         return "", 401
     user_info = current_app.config['jwt'].get_token_detail(request.cookies.get('User_Token'))
@@ -148,6 +150,7 @@ def get_user_detail():
     res["cause"] = 0
 
     return jsonify(res)
+
 
 @app.route("/ChangePassword",  methods=["POST"])
 def change_password():
@@ -192,6 +195,7 @@ def change_password():
                    """, {"user_id": user_info['id'], "date": datetime.now().strftime("%Y/%m/%d %H:%M:%S")})
 
     return jsonify({"cause": 0})
+
 
 @app.route("/ChangeProfile", methods=["POST"])
 def change_profile():

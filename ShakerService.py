@@ -156,8 +156,8 @@ def get_cart_page():
     }
     return render_template('main.html', setting=setting)
 
-@app.route('/product')
-def get_product_page():
+@app.route('/product/<int:product_id>')
+def get_product_page(product_id):
     setting = {
         "title": "商品",
         "script": [
