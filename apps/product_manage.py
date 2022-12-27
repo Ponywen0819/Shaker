@@ -4,7 +4,7 @@ from flask import Flask, render_template, request, redirect, url_for, Blueprint,
 from module.configs import configure_collection
 import time
 import json
-from datetime import datetime
+from datetime import datetime, timedelta
 import os
 import uuid
 from module.data_utils import database_utils
@@ -34,7 +34,6 @@ def upload_picture():
         })
     # 看圖檔是否已經存在
     filename = str(uuid.uuid4()) + "." + extension
-    print(filename)
     while(os.path.exists((current_app.config["config"]["UploadFolder"] + "/" + filename))):
         filename = str(uuid.uuid4()) + "." + extension
 
@@ -243,44 +242,134 @@ def delete_product():
 
 @app.route("/GetProduct", methods = ["POST"])
 def get_product():
+    # 確認token(account)
+    token = request.cookies.get("User_Token")
+    if token is None:
+        require_field = ['id']
+        for need in require_field:
+            if need not in request.json.keys():
+                return jsonify({"cause": 1101})
+        db = database_utils(current_app.config['config'])
+        product_list = []
+        for product_id in request.json["id"]:
+            product_list.append(db.command_excute("""
+                               SELECT
+                                   *
+                               FROM
+                                   product
+                               WHERE
+                                   id = %(id)s
+                               """, {"id": product_id})[0])
+        return jsonify(product_list)
+    if not current_app.config['jwt'].check_token_valid(token):
+        return "", 601
+    user_info = current_app.config['jwt'].get_token_detail(token)
+    require_field = ['id']
+    for need in require_field:
+        if need not in request.json.keys():
+            return jsonify({"cause": 1101})
     db = database_utils(current_app.config['config'])
-    dbreturn = db.command_excute("""
+    product_list = []
+    for product_id in request.json["id"]:
+        product_list.append(db.command_excute("""
+                       SELECT
+                           *
+                       FROM
+                           product
+                       WHERE
+                           id = %(id)s
+                       """, {"id": product_id})[0])
+    account_info = {}
+    account_info["time"] = datetime.now().strftime("%Y/%m/%d %H:%M:%S")
+    account_info["shop_id"] = user_info["user_id"]
+    # 更新時間
+    db.command_excute("""
+                                   UPDATE accounts
+                                   SET last_login = %(time)s
+                                   WHERE id = %(shop_id)s
+                                   """, account_info)
+    return jsonify(product_list)
+@app.route("/GetProductFromShop", methods = ["POST"])
+def get_product_from_shop():
+    # 確認token(account)
+    token = request.cookies.get("User_Token")
+    if token is None:
+        require_field = ['shop_id']
+        for need in require_field:
+            if need not in request.json.keys():
+                return jsonify({"cause": 1101})
+        db = database_utils(current_app.config['config'])
+        product = db.command_excute("""
+                           SELECT
+                               *
+                           FROM
+                               product
+                           WHERE
+                               shop_id = %(shop_id)s
+                           """, request.json)
+        return jsonify(product)
+
+    if not current_app.config['jwt'].check_token_valid(token):
+        return "", 601
+    user_info = current_app.config['jwt'].get_token_detail(token)
+    require_field = ['shop_id']
+    for need in require_field:
+        if need not in request.json.keys():
+            return jsonify({"cause": 1101})
+    db = database_utils(current_app.config['config'])
+    product = db.command_excute("""
                    SELECT
                        *
                    FROM
                        product
                    WHERE
-                       id = %(id)s
+                       shop_id = %(shop_id)s
                    """, request.json)
-    # 超過一筆資料或沒有任何資料
-    if len(dbreturn) != 1:
-        return jsonify({
-            'cause': 901
-        })
-    return jsonify({
-            'shop_id': dbreturn[0]['shop_id'],
-            'name': dbreturn[0]['name'],
-            'price': dbreturn[0]['price'],
-            'number': dbreturn[0]['number'],
-            'intro': dbreturn[0]['intro'],
-            'category': dbreturn[0]['category'],
-            'picture_id': dbreturn[0]['picture_id'],
-            'avgstar': dbreturn[0]['avgstar'],
-            'status': dbreturn[0]['status']
-        })
-
-
+    account_info = {}
+    account_info["time"] = datetime.now().strftime("%Y/%m/%d %H:%M:%S")
+    account_info["shop_id"] = user_info["user_id"]
+    # 更新時間
+    db.command_excute("""
+                                   UPDATE accounts
+                                   SET last_login = %(time)s
+                                   WHERE id = %(shop_id)s
+                                   """, account_info)
+    return jsonify(product)
 @app.route("/CreateOrder", methods = ["POST"])
 def create_order():
-    require_field = ['owner_id', 'start_time', 'end_time', 'payment', 'status', 'free_fee', 'price', 'address', 'product_id', 'number']
+    # 確認token(account)
+    token = request.cookies.get("User_Token")
+    if token is None: return "", 601
+    if not current_app.config['jwt'].check_token_valid(token):
+        return "", 601
+    user_info = current_app.config['jwt'].get_token_detail(token)
+    # 'owner_id', 'start_time', 'end_time'
+    require_field = ['payment', 'status', 'free_fee', 'price', 'address', 'product_id', 'number']
     for need in require_field:
         if need not in request.json.keys():
             return jsonify({"cause": 1101})
+    info = request.json
+    info["owner_id"] = user_info["user_id"]
+    info["start_time"] = datetime.now().strftime("%Y/%m/%d %H:%M:%S")
+    info["end_time"] = (datetime.now() + timedelta(days=7)).strftime("%Y/%m/%d %H:%M:%S")
     db = database_utils(current_app.config['config'])
+    # 確認有這個商品
+    check_product = db.command_excute("""
+                   SELECT
+                       shop_id
+                   FROM
+                       product
+                   WHERE
+                       id = %(product_id)s
+                   """, info)
+    if len(check_product) != 1:
+        return jsonify({
+            'cause': 901
+        })
     db.command_excute("""
                        INSERT INTO `order` (owner_id, start_time, end_time, payment, status, free_fee, price, address)
                        VALUES (%(owner_id)s, %(start_time)s, %(end_time)s, %(payment)s, %(status)s, %(free_fee)s, %(price)s, %(address)s)
-                       """, request.json)
+                       """, info)
 
     temp = request.json
     temp['order_id'] = db.command_excute("""SELECT LAST_INSERT_ID() AS id;""", {})[0]['id']
@@ -289,6 +378,12 @@ def create_order():
                           INSERT INTO order_detail (order_id, product_id, number)
                           VALUES (%(order_id)s, %(product_id)s, %(number)s)
                           """, temp)
+    # 更新時間
+    db.command_excute("""
+                           UPDATE accounts
+                           SET last_login = %(start_time)s
+                           WHERE id = %(owner_id)s
+                           """, info)
     return jsonify({
         'cause': 0
     })
@@ -296,6 +391,12 @@ def create_order():
 
 @app.route("/GetOrder", methods=["POST"])
 def get_order():
+    # 確認token(account)
+    token = request.cookies.get("User_Token")
+    if token is None: return "", 601
+    if not current_app.config['jwt'].check_token_valid(token):
+        return "", 601
+    user_info = current_app.config['jwt'].get_token_detail(token)
     require_field = ['id']
     for need in require_field:
         if need not in request.json.keys():
@@ -317,67 +418,46 @@ def get_order():
                              WHERE
                                  order_id = %(id)s
                              """, request.json)
+    temp = order[0]
+    temp["product_id"] = orderDetail[0]["product_id"]
+    temp["number"] = orderDetail[0]["number"]
+    account_upload_info = {}
+    account_upload_info["time"] = datetime.now().strftime("%Y/%m/%d %H:%M:%S")
+    account_upload_info["id"] = user_info["user_id"]
+    # 更新時間
+    db.command_excute("""
+                               UPDATE accounts
+                               SET last_login = %(time)s
+                               WHERE id = %(id)s
+                               """, account_upload_info)
     if len(order) != 1 or len(orderDetail) != 1:
         return jsonify({
             'cause': 1202
         })
-    return jsonify({
-        'owner_id': order[0]['owner_id'],
-        'start_time': order[0]['start_time'],
-        'end_time': order[0]['end_time'],
-        'payment': order[0]['payment'],
-        'status': order[0]['status'],
-        'free_fee': order[0]['free_fee'],
-        'price': order[0]['price'],
-        'address': order[0]['address'],
-        'product_id': orderDetail[0]['product_id'],
-        'number': orderDetail[0]['number']
-    })
-
-@app.route('/GetOrderList', methods=["POST"])
-def get_order_list():
-    # 進行身份驗證
-    token = request.cookies.get("User_Token")
-    user_info = current_app.config['jwt'].get_token_detail(token)
-    db = database_utils(current_app.config['config'])
-    user_checker = db.command_excute("""
-                                        SELECT COUNT(*)
-                                        FROM accounts
-                                        WHERE accounts.id = %(user_id)s
-                                        """, {"user_id": user_info["user_id"]})
-    if user_checker < 0:
-        return '', 401
-
-
-    request_json: dict = request.json
-    # 進行欄位檢查
-    require = ['from', 'num']
-    for require_key in require:
-        if require_key not in request_json.keys():
-            return jsonify({
-                "cause": 200
-            })
-
-    # oreder_list = db.command_excute('''
-    #     SELECT
-    # ''')
-
-
-@app.route("/DeleteOrder", methods=["POST"])
+    return jsonify(temp)
+@app.route("/DeleteOrder", methods = ["POST"])
 def delete_order():
+    # 確認token(account)
+    token = request.cookies.get("User_Token")
+    if token is None: return "", 601
+    if not current_app.config['jwt'].check_token_valid(token):
+        return "", 601
+    user_info = current_app.config['jwt'].get_token_detail(token)
     require_field = ['id']
     for need in require_field:
         if need not in request.json.keys():
             return jsonify({"cause": 1301})
     db = database_utils(current_app.config['config'])
+    order_info = request.json
+    order_info["owner_id"] = user_info["user_id"]
     detail = db.command_excute("""
                          SELECT
                              *
                          FROM
                              `order`
                          WHERE
-                             id = %(id)s
-                         """, request.json)
+                             id = %(id)s AND owner_id = %(owner_id)s
+                         """, order_info)
     # 沒有此order
     if len(detail) == 0:
         return jsonify({
@@ -386,11 +466,17 @@ def delete_order():
     db.command_excute("""
                            DELETE FROM `order`
                            WHERE id = %(id)s;
-                          """, request.json)
+                          """, order_info)
     # db.command_excute("""
     #                         DELETE FROM order_detail
     #                         WHERE order_id = %(id)s;
     #                         """, request.json)
+    user_info["time"] = datetime.now().strftime("%Y/%m/%d %H:%M:%S")
+    db.command_excute("""
+                                  UPDATE accounts
+                                  SET last_login = %(time)s
+                                  WHERE id = %(user_id)s
+                                  """, user_info)
     return jsonify({
             'cause': 0
         })
@@ -398,8 +484,27 @@ def delete_order():
 
 @app.route("/AddComment", methods = ["POST"])
 def add_comment():
+    # 確認token(account)
+    token = request.cookies.get("User_Token")
+    if token is None: return "", 601
+    if not current_app.config['jwt'].check_token_valid(token):
+        return "", 601
+    user_info = current_app.config['jwt'].get_token_detail(token)
     db = database_utils(current_app.config['config'])
-    dbreturn = db.command_excute("""
+    check_order = db.command_excute("""
+                     SELECT
+                         *
+                     FROM
+                         `order`
+                     WHERE
+                         id = %(order_id)s AND owner_id = %(id)s
+                     """, {"order_id": request.json["order_id"], "id": user_info["user_id"]})
+    # 根本沒下訂單過
+    if len(check_order) != 1:
+        return jsonify({
+            'cause': 1001
+        })
+    check_comment = db.command_excute("""
                      SELECT
                          *
                      FROM
@@ -408,19 +513,20 @@ def add_comment():
                          order_id = %(order_id)s
                      """, request.json)
     # 已經評論過
-    if len(dbreturn) != 0:
+    if len(check_comment) != 0:
         return jsonify({
             'cause': 1001
         })
-    require_field = ["order_id", "product_id", "star", "description", "picture", "time"]
+    require_field = ["order_id", "product_id", "star", "description", "picture"]
     for need in require_field:
         if need not in request.json.keys():
             return jsonify({"cause": 1002})
-
+    comment_info = request.json
+    comment_info["time"] = datetime.now().strftime("%Y/%m/%d %H:%M:%S")
     db.command_excute("""
                     INSERT INTO comment (order_id, product_id, star, description, picture, time)
                     VALUES (%(order_id)s, %(product_id)s, %(star)s, %(description)s, %(picture)s, %(time)s)
-                    """, request.json)
+                    """, comment_info)
 
     average = db.command_excute("""
                      SELECT
@@ -429,7 +535,7 @@ def add_comment():
                          comment
                      WHERE
                          product_id = %(product_id)s
-                     """, request.json)
+                     """, comment_info)
     temp = request.json
     temp["average"] = average[0]["AVG(star)"]
     db.command_excute("""
@@ -437,13 +543,45 @@ def add_comment():
                          SET avgstar = %(average)s
                          WHERE id = %(product_id)s
                         """, temp)
+    # 更新時間
+    db.command_excute("""
+                                      UPDATE accounts
+                                      SET last_login = %(time)s
+                                      WHERE id = %(user_id)s
+                                      """, {"time": datetime.now().strftime("%Y/%m/%d %H:%M:%S"), "user_id": user_info["user_id"]})
     return jsonify({
         'cause': 0
     })
 
-
 @app.route("/GetComment", methods=["POST"])
 def get_comment():
+    # 確認token(account)
+    token = request.cookies.get("User_Token")
+    if token is None:
+        require_field = ['product_id']
+        for need in require_field:
+            if need not in request.json.keys():
+                return jsonify({"cause": 1401})
+        db = database_utils(current_app.config['config'])
+        comments = db.command_excute("""
+                                     SELECT
+                                         *
+                                     FROM
+                                         comment
+                                     WHERE
+                                         product_id = %(product_id)s
+                                     """, request.json)
+
+        if len(comments) == 0:
+            return jsonify({
+                'status': "no comment"
+            })
+        return jsonify(
+            comments
+        )
+    if not current_app.config['jwt'].check_token_valid(token):
+        return "", 601
+    user_info = current_app.config['jwt'].get_token_detail(token)
     require_field = ['product_id']
     for need in require_field:
         if need not in request.json.keys():
@@ -462,6 +600,13 @@ def get_comment():
         return jsonify({
             'status': "no comment"
         })
+        # 更新時間
+        db.command_excute("""
+                                          UPDATE accounts
+                                          SET last_login = %(time)s
+                                          WHERE id = %(user_id)s
+                                          """,
+                          {"time": datetime.now().strftime("%Y/%m/%d %H:%M:%S"), "user_id": user_info["user_id"]})
     return jsonify(
           comments
     )
@@ -469,11 +614,18 @@ def get_comment():
 
 @app.route("/AddProductToCart", methods=["POST"])
 def add_productToCart():
-    require_field = ['owner_id', 'product_id', 'count']
+    # 確認token(account)
+    token = request.cookies.get("User_Token")
+    if token is None: return "", 601
+    if not current_app.config['jwt'].check_token_valid(token):
+        return "", 601
+    user_info = current_app.config['jwt'].get_token_detail(token)
+    require_field = ['product_id', 'count']
     for need in require_field:
         if need not in request.json.keys():
             return jsonify({"cause": 1501})
-
+    add_info = request.json
+    add_info["owner_id"] = user_info["user_id"]
     db = database_utils(current_app.config['config'])
     cartInfo = db.command_excute("""
                                  SELECT
@@ -482,7 +634,7 @@ def add_productToCart():
                                      cart
                                  WHERE
                                      owner_id = %(owner_id)s AND product_id = %(product_id)s
-                                 """, request.json)
+                                 """, add_info)
     # 購物車裡面已經有此商品
     if len(cartInfo) != 0:
         return jsonify({
@@ -491,7 +643,14 @@ def add_productToCart():
     db.command_excute("""
                         INSERT INTO cart (owner_id, product_id, count)
                         VALUES (%(owner_id)s, %(product_id)s, %(count)s)
-                        """, request.json)
+                        """, add_info)
+    # 更新時間
+    db.command_excute("""
+                                          UPDATE accounts
+                                          SET last_login = %(time)s
+                                          WHERE id = %(user_id)s
+                                          """,
+                      {"time": datetime.now().strftime("%Y/%m/%d %H:%M:%S"), "user_id": user_info["user_id"]})
 
     return jsonify({
         'cause': 0
@@ -500,11 +659,11 @@ def add_productToCart():
 
 @app.route("/GetProductsToCart", methods=["POST"])
 def get_productsToCart():
-    require_field = ['owner_id']
-    for need in require_field:
-        if need not in request.json.keys():
-            return jsonify({"cause": 1601})
-
+    token = request.cookies.get("User_Token")
+    if token is None: return "", 601
+    if not current_app.config['jwt'].check_token_valid(token):
+        return "", 601
+    user_info = current_app.config['jwt'].get_token_detail(token)
     db = database_utils(current_app.config['config'])
     allProduct = db.command_excute("""
                                  SELECT
@@ -512,8 +671,15 @@ def get_productsToCart():
                                  FROM
                                      cart
                                  WHERE
-                                     owner_id = %(owner_id)s 
-                                 """, request.json)
+                                     owner_id = %(user_id)s 
+                                 """, user_info)
+    # 更新時間
+    db.command_excute("""
+                                              UPDATE accounts
+                                              SET last_login = %(time)s
+                                              WHERE id = %(user_id)s
+                                              """,
+                      {"time": datetime.now().strftime("%Y/%m/%d %H:%M:%S"), "user_id": user_info["user_id"]})
     return jsonify(
         allProduct
     )
@@ -521,10 +687,18 @@ def get_productsToCart():
 
 @app.route("/DeleteProductToCart", methods=["POST"])
 def delete_productToCart():
-    require_field = ['owner_id', 'product_id']
+    # 確認token(account)
+    token = request.cookies.get("User_Token")
+    if token is None: return "", 601
+    if not current_app.config['jwt'].check_token_valid(token):
+        return "", 601
+    user_info = current_app.config['jwt'].get_token_detail(token)
+    require_field = ['product_id']
     for need in require_field:
         if need not in request.json.keys():
             return jsonify({"cause": 1701})
+    delete_info = request.json
+    delete_info["owner_id"] = user_info["user_id"]
     db = database_utils(current_app.config['config'])
     cartProduct = db.command_excute("""
                                      SELECT
@@ -533,7 +707,7 @@ def delete_productToCart():
                                          cart
                                      WHERE
                                          owner_id = %(owner_id)s AND product_id = %(product_id)s
-                                     """, request.json)
+                                     """, delete_info)
     #沒有此產品
     if len(cartProduct) != 1:
         return jsonify({
@@ -542,7 +716,14 @@ def delete_productToCart():
     db.command_excute("""
                                DELETE FROM cart
                                WHERE owner_id = %(owner_id)s AND product_id = %(product_id)s;
-                              """, request.json)
+                              """, delete_info)
+    # 更新時間
+    db.command_excute("""
+                                                  UPDATE accounts
+                                                  SET last_login = %(time)s
+                                                  WHERE id = %(user_id)s
+                                                  """,
+                      {"time": datetime.now().strftime("%Y/%m/%d %H:%M:%S"), "user_id": user_info["user_id"]})
     return jsonify({
         'cause': 0
     })
