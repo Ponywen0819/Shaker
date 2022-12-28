@@ -1,0 +1,33 @@
+.shipping_container{
+    margin-right: auto;
+    margin-left: auto;
+    max-width: 800px;
+    box-shadow: 0px 0px 1px 0px rgba(0, 0, 0, 0.2);
+    background-color: white;
+}
+
+.choise_btn{
+    width: 100px;
+    height: 50px;
+    box-sizing: border-box;
+}
+
+.choosen_btn{
+    color: #fc753e;
+    border-bottom: 3px solid #fc753e;
+}
+
+.list_title{
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.order_row{
+    display: flex;
+}
+
+.item_img{
+    height: 30px;
+    width: 30px;
+    background-position: center;
+    background-size: cover;
+}
