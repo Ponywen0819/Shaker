@@ -187,6 +187,22 @@ def get_search_page():
     }
     return render_template('main.html', setting=setting)
 
+@app.route('/checkout/<int:checkout>')
+def get_checkout_page(checkout):
+    setting = {
+        "title": "結帳",
+        "script": [
+            'Toolbar.js',
+            "checkout.js"
+        ],
+        "css": [
+            'Toolbar.css',
+            "cart.css"
+        ]
+    }
+    return render_template('main.html', setting=setting)
+
+
 if __name__ == "__main__":
     app.config['config'] = configure_collection()
     app.config['jwt'] = json_web_token_generator(app.config['config'])
