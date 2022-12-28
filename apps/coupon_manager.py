@@ -111,8 +111,8 @@ def get_coupon():
                                                             coupon
                                                     JOIN coupon_type ON coupon.type = coupon_type.id
                                                     WHERE
-                                                    shop_id = %(shop_id)s OR shop_id is NULL
-                                                    """, request.json)
+                                                    (shop_id = %(shop_id)s OR shop_id is NULL) AND end_time > %(time)s
+                                                    """, {"shop_id": request.json["shop_id"], "time": datetime.now().strftime("%Y/%m/%d %H:%M:%S")})
     if len(coupons) <= 0:
         return jsonify({
             "no coupon": 1
