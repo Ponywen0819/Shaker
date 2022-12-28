@@ -13,7 +13,6 @@ def login():
     auth_info['password'] = hashlib.sha256(
         current_app.config['crypto'].decrypt(auth_info['password']).encode("utf-8")).hexdigest()
     db = database_utils(current_app.config['config'])
-    print(auth_info)
     dbreturn = db.command_excute("""
     SELECT *
     FROM admin
@@ -21,10 +20,10 @@ def login():
     """, auth_info)
 
     if len(dbreturn) == 1:
-        token = current_app.config['jwt'].generate_token({"admin_id": dbreturn[0]['id']})
+        token = current_app.config['jwt'].generate_token({"admin_id": dbreturn[0]['id'], "admin": 1})
         res = make_response(json.dumps({"cause": 0}))
 
-        res.set_cookie("User_Token", token, expires=time.time() + 6 * 60)
+        res.set_cookie("User_Token", token, expires=time.time() + 6 * 60*60)
         return res
     elif len(dbreturn) > 1:
         return jsonify({"cause": 102})
