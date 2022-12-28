@@ -175,14 +175,31 @@ def get_smc_page():
     setting = {
         "title": "賣家中心",
         "script": [
+            "seller_center.js",
             "SMindex.js"
-            
         ],
         "css": [
             "Nav.css",
             "Sidebar.css",
             "SMCbulletin.css",
             'SMC.css',
+            "SMindex.css"
+        ]
+    }
+    return render_template('main.html', setting=setting)
+
+@app.route('/sellercenter/shipping')
+def get_shipping_page():
+    setting = {
+        "title": "賣家中心",
+        "script": [
+            "seller_center.js",
+            "seller_shipping.js"
+        ],
+        "css": [
+            "Nav.css",
+            "Sidebar.css",
+            'seller_shipping.css',
             "SMindex.css"
         ]
     }
