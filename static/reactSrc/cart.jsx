@@ -105,6 +105,17 @@ const Order = ({products})=>{
     )
 }
 
+const Footer = ({price,num})=>{
+    return(
+        <div className={`main creat_order`}>
+            <p className={`text-lg`}>總金額</p>
+            <p>{`(${num}個商品): `}</p>
+            <p className={`create_order_price px-1`}>{`${price}`}</p>
+            <button className={`create_order_btn`}>去買單</button>
+        </div>
+    )
+}
+
 const Main = ()=>{
     const products = [
         { no : 'a124fw', img : '/static/img/logo1.png', name : '我是商品', number:1,origin : 123, shop : 2, },
@@ -130,8 +141,8 @@ const Main = ()=>{
         <div className="main">
             <ContentTitle></ContentTitle>
             <Order products={products}></Order>
+            <Footer price={1000}></Footer>
         </div>
-
     ]
 }
 

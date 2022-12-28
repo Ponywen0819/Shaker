@@ -90,7 +90,7 @@ var UserImgInput = function UserImgInput(_ref2) {
                 FailNotify("上傳圖片出現錯誤");
             }
         }).then(function (data) {
-            if (data.status == 200) {
+            if (data.status === 200) {
                 SuccessNotify("銅片上傳成功");
             }
         });
