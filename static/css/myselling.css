@@ -135,3 +135,148 @@
 .date-selecter__input{
     
 }
+.date-picker{
+    border: 1px solid #e5e5e5;
+    border-radius: 4px;
+    outline: none;
+    transition: border .2s ease-in-out;
+    position: relative;
+    display: inline-table;
+    width: 100%;
+    padding: 7px 12px;
+    font-size: 14px;
+    line-height: 16px;
+    color: #333;
+    cursor: pointer;
+    background-color: #fff;
+    border-collapse: separate;
+    border-spacing: 0;
+    box-sizing: border-box;
+}
+.date-picker__prefix{
+    padding-right: 8px;
+
+    position: relative;
+    display: table-cell;
+    width: 1px;
+    height: 100%;
+    line-height: 0;
+    color: #b7b7b7;
+    white-space: nowrap;
+    vertical-align: middle;
+}
+.date-picker__prefix-icon{
+    width: 16px;
+    height: 16px;
+    vertical-align: middle;
+
+    display: inline-block;
+    line-height: 0;
+    fill: currentColor;
+    box-sizing: content-box;
+}
+.prefix__svg{
+    width: 100%;
+    height: 100%;
+}
+.picker__inner{
+    display: -webkit-box;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-break: break-all;
+    -webkit-box-orient: vertical;
+    
+    font-size: 14px;
+    line-height: 16px;
+    -webkit-line-clamp: 1;
+}
+.date-picker__suffix{
+    padding-left: 8px;
+    position: relative;
+    display: table-cell;
+    width: 1px;
+    height: 100%;
+    line-height: 0;
+    color: #b7b7b7;
+    white-space: nowrap;
+    vertical-align: middle;
+}
+.picker__clearBtn{
+    width: 16px;
+    height: 16px;
+    margin-right: 0;
+    vertical-align: middle;
+
+    display: inline-block;
+    visibility: hidden;
+    transition: color .2s ease-in-out;
+    line-height: 0;
+    fill: currentColor;
+}
+.order-search-container{
+    display: flex;
+}
+.search-input__Util{
+    display: flex;
+    flex: 1;
+    margin-right: 16px;
+}
+.input-group__prepend{
+    width: 190px;
+}
+.search__prepend{
+    display: inline-block;
+    width: 100%;
+}                                                                 
+.data__picker{
+    border-right: 0;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+
+    border: 1px solid #e5e5e5;
+    border-radius: 4px;
+    transition: border .2s ease-in-out;
+    position: relative;
+    display: inline-table;
+    width: 100%;
+    padding: 7px 12px;
+    font-size: 14px;
+    line-height: 16px;
+    color: #333;
+    cursor: pointer;
+    background-color: #fff;
+    border-collapse: separate;
+    border-spacing: 0;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+.picker__inner{
+    display: -webkit-box;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-break: break-all;
+    -webkit-box-orient: vertical;
+    font-size: 14px;
+    line-height: 16px;
+    -webkit-line-clamp: 1;
+}
+.picker__suffix{
+    padding-left: 8px;
+    position: relative;
+    display: table-cell;
+    width: 1px;
+    height: 100%;
+    line-height: 0;
+    color: #b7b7b7;
+    white-space: nowrap;
+    vertical-align: middle;
+}
+.picker__suffix_icon{
+    width: 16px;
+    height: 16px;
+    vertical-align: middle;
+    
+    display: inline-block;
+    line-height: 0;
+    fill: currentColor;
+}
