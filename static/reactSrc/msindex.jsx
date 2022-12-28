@@ -1,10 +1,10 @@
 const Main = ()=>{
     return [
-        <div style={{ display: "flex", flexDirection: "column", height: "100vh" }}>
+        <div className="test" style={{ display: "flex", flexDirection: "column", height: "100vh" }}>
             <Nav />
             <div className="mainContext flex-1">
                 <Sidebar />
-                <SMContext/>
+                <SellingPanel/>
             </div>
         </div>
     ]

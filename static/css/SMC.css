@@ -16,11 +16,15 @@
     justify-content: flex-start;
     align-items: flex-start;
     background-color: aliceblue;
+
 }
 
 .content{
+    display: block;
     flex: 1 ;
     -webkit-box-flex: 1;
+    justify-content: center;   
+    align-items: center;
 }
 
 .main-column{
@@ -32,7 +36,7 @@
     border-radius: 2px;
     background-color: #fff;
     box-shadow: 0 1px 4px 0 rgb(0 0 0 /10%);
-    padding: 24px 24px 8px;
+    padding: 24px 24px 24px;
 }
 .card-1{
     width:784px;

@@ -175,15 +175,35 @@ def get_smc_page():
     setting = {
         "title": "賣家中心",
         "script": [
-            "SMindex.js"
+            "SMindex.js",
+            "sellerContent.js",
+            "sellerNav.js",
+            "sellerSidebar.js"
             
         ],
         "css": [
             "Nav.css",
             "Sidebar.css",
-            "SMCbulletin.css",
             'SMC.css',
             "SMindex.css"
+        ]
+    }
+    return render_template('main.html', setting=setting)
+@app.route('/myselling')
+def get_ms_page():
+    setting = {
+        "title": "賣家中心",
+        "script": [
+            "msindex.js",
+            "myselling.js",
+            "sellerNav.js",
+            "sellerSidebar.js"
+        ],
+        "css": [
+            "Nav.css",
+            "Sidebar.css",
+            "myselling.css",
+            "msindex.css"
         ]
     }
     return render_template('main.html', setting=setting)
