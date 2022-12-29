@@ -66,7 +66,7 @@ const ShiipingArea = ()=>{
             {items: [{img: '/static/img/logo1.png', name:'12'}], price: 100, payment: 1, state:2},
             {items: [{img: '/static/img/logo1.png', name:'12'}], price: 100, payment: 0, state:0},
         ])
-    })
+    },[])
 
     return(
         <div className={`w-1/2 grow`}>
