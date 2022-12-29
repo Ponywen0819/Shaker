@@ -8,6 +8,8 @@ from datetime import datetime, timedelta
 import os
 import uuid
 from module.data_utils import database_utils
+from module.picture_utils import get_new_pic
+from module.seller_center_util import get_shop_id
 app = Blueprint('product_manage', __name__)
 
 
@@ -62,59 +64,60 @@ def upload_picture():
 def upload_product():
     # 確認token(account)
     token = request.cookies.get("User_Token")
-    if token is None: return "", 601
+    if token is None:
+        return '', 401
     if not current_app.config['jwt'].check_token_valid(token):
-        return "", 601
+        return '', 401
     user_info = current_app.config['jwt'].get_token_detail(token)
+
     # 有條件未填
-    require_field = ["name", "price", "number", "intro", "category", "picture_id", "status"]
+    require_field = ["name", "price", "number", "intro", "category", "photo", "status"]
     for need in require_field:
         if need not in request.json.keys():
             return jsonify({"status": "failed", "cause": 603})
     db = database_utils(current_app.config['config'])
-    # 確認是否有這個shop
-    check_shop = db.command_excute("""
-        SELECT
-            id
-        FROM
-            shop
-        WHERE
-            owner_id = %(user_id)s
-        """, user_info)
-    if len(check_shop) != 1:
-        return jsonify({
-            'cause': 602
-        })
+
+    # 取得商店ID
+    shop_id = get_shop_id(user_info['user_id'])
+
+    if shop_id != 1:
+        return jsonify({'cause': 602})
+
     product_info = request.json
-    product_info["shop_id"] = check_shop[0]["id"]
+    product_info["shop_id"] = shop_id
     product_info["time"] = datetime.now().strftime("%Y/%m/%d %H:%M:%S")
     check_product = db.command_excute("""
-        SELECT
-            *
-        FROM
-            product
-        WHERE
-            shop_id = %(shop_id)s AND name = %(name)s
-        """, product_info)
+        SELECT *
+        FROM product
+        WHERE shop_id = %(shop_id)s AND name = %(name)s
+    """, product_info)
     # 已有這個商品
     if len(check_product) != 0:
-        return jsonify({
-            'cause': 602
-        })
+        return jsonify({'cause': 602})
+
+    # 將圖片儲存
+    picture_id = get_new_pic(request.json['photo'])
+
+    if picture_id == -1:
+        return jsonify({'cause': 602})
+
+    product_info['picture_id'] = picture_id
+
     # 插入商品
     db.command_excute("""
-                INSERT INTO product (shop_id, name, price, number, intro, category, picture_id, avgstar, status)
-                VALUES (%(shop_id)s, %(name)s, %(price)s, %(number)s, %(intro)s, %(category)s, %(picture_id)s , 0.0, %(status)s)
-                """, product_info)
+        INSERT INTO product (shop_id, name, price, number, intro, category, picture_id, avgstar, status)
+        VALUES (%(shop_id)s, %(name)s, %(price)s, %(number)s, %(intro)s, %(category)s, %(picture_id)s , 0.0, %(status)s)
+    """, product_info)
+
     # 更新時間
     db.command_excute("""
-                       UPDATE shop
-                       SET last_login = %(time)s
-                       WHERE id = %(shop_id)s
-                       """, product_info)
-    return jsonify({
-        'cause': 0
-    })
+        UPDATE shop
+        SET last_login = %(time)s
+        WHERE id = %(shop_id)s
+    """, product_info)
+
+    return jsonify({'cause': 0})
+
 
 @app.route("/ModifyProduct", methods = ["POST"])
 def modify_product():
@@ -178,7 +181,6 @@ def modify_product():
     return jsonify({
         'cause': 0
     })
-
 
 
 @app.route("/DeleteProduct", methods = ["POST"])
@@ -289,6 +291,8 @@ def get_product():
                                    WHERE id = %(shop_id)s
                                    """, account_info)
     return jsonify(product_list)
+
+
 @app.route("/GetProductFromShop", methods = ["POST"])
 def get_product_from_shop():
     # 確認token(account)
@@ -335,6 +339,8 @@ def get_product_from_shop():
                                    WHERE id = %(shop_id)s
                                    """, account_info)
     return jsonify(product)
+
+
 @app.route("/CreateOrder", methods = ["POST"])
 def create_order():
     # 確認token(account)
@@ -435,6 +441,8 @@ def get_order():
             'cause': 1202
         })
     return jsonify(temp)
+
+
 @app.route("/DeleteOrder", methods = ["POST"])
 def delete_order():
     # 確認token(account)
@@ -552,6 +560,7 @@ def add_comment():
     return jsonify({
         'cause': 0
     })
+
 
 @app.route("/GetComment", methods=["POST"])
 def get_comment():
@@ -727,3 +736,81 @@ def delete_productToCart():
     return jsonify({
         'cause': 0
     })
+
+
+@app.route("/CreateCategory", methods=["POST"])
+def create_category():
+    token = request.cookies.get("User_Token")
+    if token is None: return "", 401
+    if not current_app.config['jwt'].check_token_valid(token, True):
+        return "", 401
+    admin_info = current_app.config['jwt'].get_token_detail(token)
+    require_field = ["name"]
+    for need in require_field:
+        if need not in request.json.keys():
+            return jsonify({"cause": 153})
+
+    db = database_utils(current_app.config['config'])
+    check_category = db.command_excute("""
+                                         SELECT
+                                             *
+                                         FROM
+                                             category_type
+                                         WHERE
+                                             name = %(name)s
+                                         """, request.json)
+    if len(check_category) != 0:
+        return jsonify({
+            'cause': 1801
+        })
+    db.command_excute("""
+                            INSERT INTO `category_type` (`name`)
+                            VALUES (%(name)s)
+                            """, request.json)
+    return jsonify({"cause": 0})
+
+
+@app.route("/DeleteCategory", methods=["POST"])
+def delete_category():
+    token = request.cookies.get("User_Token")
+    if token is None: return "", 401
+    if not current_app.config['jwt'].check_token_valid(token, True):
+        return "", 401
+    admin_info = current_app.config['jwt'].get_token_detail(token)
+    require_field = ["name"]
+    for need in require_field:
+        if need not in request.json.keys():
+            return jsonify({"cause": 153})
+
+    db = database_utils(current_app.config['config'])
+    check_category = db.command_excute("""
+                                             SELECT
+                                                 *
+                                             FROM
+                                                 category_type
+                                             WHERE
+                                                 name = %(name)s
+                                             """, request.json)
+    if len(check_category) != 1:
+        return jsonify({
+            'cause': 1901
+        })
+    db.command_excute("""
+                                DELETE FROM category_type
+                                WHERE name = %(name)s
+                                """, request.json)
+    return jsonify({"cause": 0})
+
+
+@app.route("/GetAllCategory", methods=["GET"])
+def get_category():
+    db = database_utils(current_app.config['config'])
+    all_category = db.command_excute("""
+        SELECT *
+        FROM category_type
+    """, {})
+
+    if len(all_category) <= 0:
+        return jsonify({"no category": 1})
+
+    return jsonify(all_category)

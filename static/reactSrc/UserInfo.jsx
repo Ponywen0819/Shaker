@@ -8,7 +8,6 @@ const Navbutton = ({img, url, title,activate})=>(
 const Standerbar = ({title,url,items,img})=>{
 
     const isOpened = (items? items.some((i)=> (i.url == window.location.pathname)) : false);
-
     return (
         <div className={`normal_bar`} >
             <Navbutton

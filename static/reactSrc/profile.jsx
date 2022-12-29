@@ -69,7 +69,7 @@ const UserImgInput = ({orgin}) =>{
                 FailNotify("上傳圖片出現錯誤")
             }
         }).then(data=>{
-            if(data.status == 200){
+            if(data.status === 200){
                 SuccessNotify("銅片上傳成功")
             }
         })
@@ -232,5 +232,6 @@ const Main = ()=>{
         </div>
     )
 }
+
 
 ReactDOM.createRoot(document.getElementById("main")).render(<Main></Main>)

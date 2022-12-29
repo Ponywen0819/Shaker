@@ -27,7 +27,6 @@ var Standerbar = function Standerbar(_ref2) {
     var isOpened = items ? items.some(function (i) {
         return i.url == window.location.pathname;
     }) : false;
-
     return React.createElement(
         'div',
         { className: 'normal_bar' },

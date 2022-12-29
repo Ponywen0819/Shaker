@@ -1,0 +1,114 @@
+
+.aside-column {
+    width: 304px;
+}
+.card-offset{
+    margin-bottom: 16px;
+}
+.title-box{
+    display: flex;
+    -webkit-box-pack: justify;
+    justify-content: space-between;
+    -webkit-box-align: start;
+    align-items: start;
+}
+.title{
+    font-size: 18px;
+    color: #333;
+    font-weight: 500;
+    font-weight: var(--font-weight);
+}
+.bulletin-more{
+    color: #2673dd;
+    background-color: transparent;
+    border-color: transparent;
+    height: unset;
+    min-width: unset;
+    padding: 0;
+    font-weight: 400;
+
+    border: 1px solid #e5e5e5;
+    position: relative;
+    display: inline-flex;
+    -webkit-box-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    justify-content: center;
+    font-size: 14px;
+    text-decoration: none;
+    white-space: nowrap;
+    vertical-align: middle;
+    cursor: pointer;
+    border-radius: 4px;
+    outline: none;
+    transition: all .2s ease-in-out;
+    appearance: none;
+}
+.more-icon{
+    display: inline-block;
+    line-height: 0;
+    fill: currentColor;
+    margin-left: 2px;
+}
+.svg-more{
+    width: 100%;
+    height: 100%;
+    fill: currentColor;
+    box-sizing: border-box;
+    line-height: 0;
+    overflow-clip-margin: content-box;
+}
+.announcement-wrapper{
+    margin: 0;
+    overflow: hidden;
+    min-height: 188px;
+    padding-top: 24px;
+}
+.status-box{
+    margin-bottom: 16px;
+    display: flex;
+}
+.hot{
+    width: 24px;
+}
+.hot-icon{
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    margin-right: 8px;
+    color: #ee4c2d;
+}
+.context{
+    width: 100%;
+}
+.item-hover{
+    cursor: pointer;
+
+}
+.context-title{
+    font-size: 14px;
+    color: #333;
+    margin-bottom: 4px;
+    font-weight: var(--font-weight); 
+}
+.descr{
+    color: #666;
+    position: relative;
+    max-height: 108px;
+    line-height: 18px;
+    font-size: 14px;
+    display: -webkit-box;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -webkit-line-clamp: 6;
+    -webkit-box-orient: vertical;
+}
+.time{
+    margin-top: 6px;
+    display: inline-block;
+    font-size: 12px;
+    color: #999;
+}
+.sv{
+    fill: currentColor;
+}

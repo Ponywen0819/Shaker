@@ -202,6 +202,36 @@ var Order = function Order(_ref3) {
     );
 };
 
+var Footer = function Footer(_ref4) {
+    var price = _ref4.price,
+        num = _ref4.num;
+
+    return React.createElement(
+        "div",
+        { className: "main creat_order" },
+        React.createElement(
+            "p",
+            { className: "text-lg" },
+            "\u7E3D\u91D1\u984D"
+        ),
+        React.createElement(
+            "p",
+            null,
+            "(" + num + "\u500B\u5546\u54C1): "
+        ),
+        React.createElement(
+            "p",
+            { className: "create_order_price px-1" },
+            "" + price
+        ),
+        React.createElement(
+            "button",
+            { className: "create_order_btn" },
+            "\u53BB\u8CB7\u55AE"
+        )
+    );
+};
+
 var Main = function Main() {
     var products = [{ no: 'a124fw', img: '/static/img/logo1.png', name: '我是商品', number: 1, origin: 123, shop: 2 }, { no: 'a124fw', img: '/static/img/logo1.png', name: '我是商品', number: 1, origin: 123, shop: 2 }, { no: 'a124fw', img: '/static/img/logo1.png', name: '我是商品', number: 1, origin: 123, shop: 2 }, { no: 'a124fw', img: '/static/img/logo1.png', name: '我是商品', number: 1, origin: 123, shop: 1 }, { no: 'a124fw', img: '/static/img/logo1.png', name: '我是商品', number: 1, origin: 123, shop: 1 }, { no: 'a124fw', img: '/static/img/logo1.png', name: '我是商品', number: 1, origin: 123, shop: 1 }, { no: 'a124fw', img: '/static/img/logo1.png', name: '我是商品', number: 1, origin: 123, shop: 1 }, { no: 'a124fw', img: '/static/img/logo1.png', name: '我是商品', number: 1, origin: 123, shop: 1 }, { no: 'a124fw', img: '/static/img/logo1.png', name: '我是商品', number: 1, origin: 123, shop: 1 }, { no: 'a124fw', img: '/static/img/logo1.png', name: '我是商品', number: 1, origin: 123, shop: 1 }, { no: 'a124fw', img: '/static/img/logo1.png', name: '我是商品', number: 1, origin: 123, shop: 1 }, { no: 'a124fw', img: '/static/img/logo1.png', name: '我是商品', number: 1, origin: 123, shop: 1 }, { no: 'a124fw', img: '/static/img/logo1.png', name: '我是商品', number: 1, origin: 123, shop: 1 }];
 
@@ -214,7 +244,8 @@ var Main = function Main() {
         "div",
         { className: "main" },
         React.createElement(ContentTitle, null),
-        React.createElement(Order, { products: products })
+        React.createElement(Order, { products: products }),
+        React.createElement(Footer, { price: 1000 })
     )];
 };
 

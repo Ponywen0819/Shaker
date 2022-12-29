@@ -51,7 +51,7 @@ def register():
     require_field = ["account_id", "name", "email", "phone", "password"]
     for need in require_field:
         if need not in request.json.keys():
-            return jsonify({"cause": 153 })
+            return jsonify({"cause": 153})
 
     account_info = request.json
     account_info['password'] = hashlib.sha256(current_app.config['crypto'].decrypt(request.json['password']).encode("utf-8")).hexdigest()

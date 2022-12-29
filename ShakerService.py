@@ -30,6 +30,7 @@ Swagger(app)
 # app.config.from_object()
 
 @app.route('/')
+@app.route('/index')
 def get_index_page():
     setting = {
         "title": "這是首頁拉",
@@ -183,6 +184,130 @@ def get_search_page():
             'Toolbar.css',
             "search.css",
             "index.css"
+        ]
+    }
+    return render_template('main.html', setting=setting)
+
+@app.route('/checkout/<int:checkout>')
+def get_checkout_page(checkout):
+    setting = {
+        "title": "結帳",
+        "script": [
+            'Toolbar.js',
+            "checkout.js"
+        ],
+        "css": [
+            'Toolbar.css',
+            "cart.css"
+        ]
+    }
+    return render_template('main.html', setting=setting)
+
+
+@app.route('/sellercenter/index')
+def get_smc_page():
+    setting = {
+        "title": "賣家中心",
+        "script": [
+            "SMindex.js",
+            "sellerNav.js",
+            "sellerContent.js",
+            "sellerSidebar.js"
+            
+        ],
+        "css": [
+            "Nav.css",
+            "Sidebar.css",
+            'SMC.css',
+            "SMindex.css"
+        ]
+    }
+    return render_template('main.html', setting=setting)
+@app.route('/sellercenter/marketing')
+def get_ms_page():
+    setting = {
+        "title": "賣家中心",
+        "script": [
+            "msindex.js",
+            "myselling.js",
+            "sellerSidebar.js",
+            "sellerNav.js",
+        ],
+        "css": [
+            "Nav.css",
+            "Sidebar.css",
+            "myselling.css",
+            "msindex.css"
+        ]
+    }
+    return render_template('main.html', setting=setting)
+
+
+
+@app.route('/sellercenter/shipping')
+def get_shipping_page():
+    setting = {
+        "title": "賣家中心",
+        "script": [
+            "seller_center.js",
+            "seller_shipping.js"
+        ],
+    "css": [
+            "Nav.css",
+            "Sidebar.css",
+            'seller_shipping.css',
+            "SMindex.css"
+        ]
+    }
+    return render_template('main.html', setting=setting)
+
+@app.route('/sellercenter/finance')
+def get_finance_page():
+    setting = {
+        "title": "賣家中心",
+        "script": [
+            "seller_center.js",
+            "seller_shipping.js"
+        ],
+        "css": [
+            "Sidebar.css",
+            "Nav.css",
+            'seller_shipping.css',
+            "SMindex.css"
+        ]
+    }
+    return render_template('main.html', setting=setting)
+@app.route('/sellercenter/myproduct')
+def get_myproduct_page():
+    setting = {
+        "title": "賣家中心",
+        "script": [
+            "seller_center.js",
+        ],
+        "css": [
+            "seller_shipping.js"
+            "Nav.css",
+            "Sidebar.css",
+            'seller_shipping.css',
+            "SMindex.css"
+        ]
+    }
+    return render_template('main.html', setting=setting)
+
+
+@app.route('/sellercenter/newproduct')
+def get_newproduct_page():
+    setting = {
+        "title": "賣家中心",
+        "script": [
+            "newproduct.js",
+            "seller_center.js",
+        ],
+        "css": [
+            "Sidebar.css",
+            "Nav.css",
+            'seller_shipping.css',
+            "SMindex.css"
         ]
     }
     return render_template('main.html', setting=setting)
