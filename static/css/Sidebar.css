@@ -89,3 +89,14 @@
     color: inherit;
     width: 100%;
 }
+
+
+.title{
+    display: flex;
+    margin-bottom: 10px;
+}
+
+.arrow-rolling{
+    transition: transform 2s;
+    transform: rotate();
+}

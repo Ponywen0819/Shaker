@@ -96,51 +96,83 @@ var SellerBar = function SellerBar() {
     );
 };
 
-var Sidebar = function Sidebar() {
+var Section = function Section(_ref) {
+    var title = _ref.title,
+        href = _ref.href,
+        subtitles = _ref.subtitles;
+
     var _React$useState3 = React.useState(false),
         _React$useState4 = _slicedToArray(_React$useState3, 2),
-        shipmentIsOpen = _React$useState4[0],
-        setIsOpenS = _React$useState4[1];
+        isOpen = _React$useState4[0],
+        setOpen = _React$useState4[1];
 
-    var _React$useState5 = React.useState(false),
-        _React$useState6 = _slicedToArray(_React$useState5, 2),
-        orderIsOpen = _React$useState6[0],
-        setIsOpenO = _React$useState6[1];
+    return React.createElement(
+        'div',
+        { className: 'sidebar-menu-item mb-5 !flex-col' },
+        React.createElement(
+            'div',
+            { className: 'flex w-[100%]', onClick: function onClick() {
+                    return setOpen(!isOpen);
+                } },
+            React.createElement('img', { src: 'https://cf.shopee.tw/file/c15905d5a6284687c4a6ad00d0feb511',
+                className: 'sidebar-menu-item-icon' }),
+            subtitles.length === 0 ? React.createElement(
+                'a',
+                { className: 'sidebar-menu-item-text grow', href: href },
+                title
+            ) : React.createElement(
+                'span',
+                { className: 'sidebar-menu-item-text grow' },
+                title
+            ),
+            subtitles.length !== 0 && React.createElement(
+                'i',
+                { className: 'sidebar-menu-item-icon shopee-icon sidebar-menu-item-collapse',
+                    style: { transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)' }
+                },
+                React.createElement(
+                    'svg',
+                    { xmlns: 'http://www.w3.org/2000/svg', viewBox: '0 0 16 16' },
+                    React.createElement('path', {
+                        d: 'M8 6.81l3.97 3.97a.75.75 0 0 0 1.06-1.06l-4.5-4.5a.75.75 0 0 0-1.06 0l-4.5 4.5a.75.75 0 0 0 1.06 1.06L8 6.81z' })
+                )
+            )
+        ),
+        React.createElement(
+            'ul',
+            { className: 'sidebar-submenu' },
+            isOpen && subtitles.map(function (i) {
+                return React.createElement(
+                    'li',
+                    { className: 'sidebar-submenu-item' },
+                    React.createElement(
+                        'a',
+                        { className: 'sidebar-submenu-item-link', href: i.href },
+                        i.title
+                    )
+                );
+            })
+        )
+    );
+};
 
-    var _React$useState7 = React.useState(false),
-        _React$useState8 = _slicedToArray(_React$useState7, 2),
-        productIsOpen = _React$useState8[0],
-        setIsOpenP = _React$useState8[1];
-
-    var _React$useState9 = React.useState(false),
-        _React$useState10 = _slicedToArray(_React$useState9, 2),
-        financeIsOpen = _React$useState10[0],
-        setIsOpenF = _React$useState10[1];
-
-    var _React$useState11 = React.useState(false),
-        _React$useState12 = _slicedToArray(_React$useState11, 2),
-        eventIsOpen = _React$useState12[0],
-        setIsOpenE = _React$useState12[1];
-
-    function shipmentClose() {
-        setIsOpenS(!shipmentIsOpen);
-    }
-
-    function orderClose() {
-        setIsOpenO(!orderIsOpen);
-    }
-
-    function productClose() {
-        setIsOpenP(!productIsOpen);
-    }
-
-    function financeClose() {
-        setIsOpenF(!financeIsOpen);
-    }
-
-    function eventClose() {
-        setIsOpenE(!eventIsOpen);
-    }
+var Sidebar = function Sidebar() {
+    var titles = [{
+        title: '訂單中心',
+        href: '/sellercenter/shipping',
+        subtitles: []
+    }, {
+        title: '商品管理',
+        subtitles: [{ title: '我的商品', herf: '/sellercenter/myproduct' }, { title: '新增商品', herf: '/sellercenter/newproduct' }]
+    }, {
+        title: '財務管理',
+        href: '/sellercenter/finance',
+        subtitles: []
+    }, {
+        title: '行銷活動',
+        href: '/sellercenter/marketing',
+        subtitles: []
+    }];
 
     return React.createElement(
         'div',
@@ -148,351 +180,9 @@ var Sidebar = function Sidebar() {
         React.createElement(
             'ul',
             { className: 'sidebar-menu' },
-            React.createElement(
-                'li',
-                { className: 'shipment' },
-                React.createElement(
-                    'div',
-                    { className: 'sidebar-menu-item' },
-                    React.createElement('img', { src: 'https://cf.shopee.tw/file/c15905d5a6284687c4a6ad00d0feb511',
-                        className: 'sidebar-menu-item-icon' }),
-                    React.createElement(
-                        'span',
-                        { className: 'sidebar-menu-item-text', onClick: shipmentClose },
-                        '\u7269\u6D41\u4E2D\u5FC3'
-                    ),
-                    React.createElement('span', { className: 'sidebar-menu-item-space' }),
-                    React.createElement(
-                        'i',
-                        { className: 'sidebar-menu-item-collapse shopee-icon' },
-                        React.createElement(
-                            'svg',
-                            { xmlns: 'http://www.w3.org/2000/svg', viewBox: '0 0 16 16' },
-                            React.createElement('path', {
-                                d: 'M8 6.81l3.97 3.97a.75.75 0 0 0 1.06-1.06l-4.5-4.5a.75.75 0 0 0-1.06 0l-4.5 4.5a.75.75 0 0 0 1.06 1.06L8 6.81z' })
-                        )
-                    )
-                ),
-                React.createElement(
-                    'ul',
-                    { className: 'sidebar-submenu', style: { display: '' + (shipmentIsOpen ? 'block' : 'none') } },
-                    React.createElement(
-                        'li',
-                        { className: 'sidebar-submenu-item' },
-                        React.createElement(
-                            'a',
-                            { href: 'test.com', className: 'sidebar-submenu-item-link' },
-                            React.createElement(
-                                'span',
-                                null,
-                                '\u5F85\u51FA\u8CA8'
-                            )
-                        )
-                    ),
-                    React.createElement(
-                        'li',
-                        { className: 'sidebar-submenu-item' },
-                        React.createElement(
-                            'a',
-                            { href: 'test.com', className: 'sidebar-submenu-item-link' },
-                            React.createElement(
-                                'span',
-                                null,
-                                '\u6279\u6B21\u51FA\u8CA8'
-                            )
-                        )
-                    ),
-                    React.createElement(
-                        'li',
-                        { className: 'sidebar-submenu-item' },
-                        React.createElement(
-                            'a',
-                            { href: 'test.com', className: 'sidebar-submenu-item-link' },
-                            React.createElement(
-                                'span',
-                                null,
-                                '\u7269\u6D41\u8A2D\u5B9A'
-                            )
-                        )
-                    )
-                )
-            ),
-            React.createElement(
-                'li',
-                { className: 'order' },
-                React.createElement(
-                    'div',
-                    { className: 'sidebar-menu-item' },
-                    React.createElement('img', { src: 'https://cf.shopee.tw/file/c15905d5a6284687c4a6ad00d0feb511',
-                        className: 'sidebar-menu-item-icon' }),
-                    React.createElement(
-                        'span',
-                        { className: 'sidebar-menu-item-text', onClick: orderClose },
-                        '\u8A02\u55AE\u7BA1\u7406'
-                    ),
-                    React.createElement('span', { className: 'sidebar-menu-item-space' }),
-                    React.createElement(
-                        'i',
-                        { className: 'sidebar-menu-item-collapse shopee-icon' },
-                        React.createElement(
-                            'svg',
-                            { xmlns: 'http://www.w3.org/2000/svg', viewBox: '0 0 16 16' },
-                            React.createElement('path', {
-                                d: 'M8 6.81l3.97 3.97a.75.75 0 0 0 1.06-1.06l-4.5-4.5a.75.75 0 0 0-1.06 0l-4.5 4.5a.75.75 0 0 0 1.06 1.06L8 6.81z' })
-                        )
-                    )
-                ),
-                React.createElement(
-                    'ul',
-                    { className: 'sidebar-submenu', style: { display: '' + (orderIsOpen ? 'block' : 'none') } },
-                    React.createElement(
-                        'li',
-                        { className: 'sidebar-submenu-item' },
-                        React.createElement(
-                            'a',
-                            { href: 'test.com', className: 'sidebar-submenu-item-link' },
-                            React.createElement(
-                                'span',
-                                null,
-                                '\u6211\u7684\u92B7\u552E'
-                            )
-                        )
-                    ),
-                    React.createElement(
-                        'li',
-                        { className: 'sidebar-submenu-item' },
-                        React.createElement(
-                            'a',
-                            { href: 'test.com', className: 'sidebar-submenu-item-link' },
-                            React.createElement(
-                                'span',
-                                null,
-                                '\u4E0D\u6210\u7ACB'
-                            )
-                        )
-                    ),
-                    React.createElement(
-                        'li',
-                        { className: 'sidebar-submenu-item' },
-                        React.createElement(
-                            'a',
-                            { href: 'test.com', className: 'sidebar-submenu-item-link' },
-                            React.createElement(
-                                'span',
-                                null,
-                                '\u9000\u6B3E & \u9000\u8CA8'
-                            )
-                        )
-                    )
-                )
-            ),
-            React.createElement(
-                'li',
-                { className: 'product' },
-                React.createElement(
-                    'div',
-                    { className: 'sidebar-menu-item' },
-                    React.createElement('img', { src: 'https://cf.shopee.tw/file/c15905d5a6284687c4a6ad00d0feb511',
-                        className: 'sidebar-menu-item-icon' }),
-                    React.createElement(
-                        'span',
-                        { className: 'sidebar-menu-item-text', onClick: productClose },
-                        '\u5546\u54C1\u7BA1\u7406'
-                    ),
-                    React.createElement('span', { className: 'sidebar-menu-item-space' }),
-                    React.createElement(
-                        'i',
-                        { className: 'sidebar-menu-item-collapse shopee-icon' },
-                        React.createElement(
-                            'svg',
-                            { xmlns: 'http://www.w3.org/2000/svg', viewBox: '0 0 16 16' },
-                            React.createElement('path', {
-                                d: 'M8 6.81l3.97 3.97a.75.75 0 0 0 1.06-1.06l-4.5-4.5a.75.75 0 0 0-1.06 0l-4.5 4.5a.75.75 0 0 0 1.06 1.06L8 6.81z' })
-                        )
-                    )
-                ),
-                React.createElement(
-                    'ul',
-                    { className: 'sidebar-submenu', style: { display: '' + (productIsOpen ? 'block' : 'none') } },
-                    React.createElement(
-                        'li',
-                        { className: 'sidebar-submenu-item' },
-                        React.createElement(
-                            'a',
-                            { href: 'test.com', className: 'sidebar-submenu-item-link' },
-                            React.createElement(
-                                'span',
-                                null,
-                                '\u6211\u7684\u5546\u54C1'
-                            )
-                        )
-                    ),
-                    React.createElement(
-                        'li',
-                        { className: 'sidebar-submenu-item' },
-                        React.createElement(
-                            'a',
-                            { href: 'test.com', className: 'sidebar-submenu-item-link' },
-                            React.createElement(
-                                'span',
-                                null,
-                                '\u65B0\u589E\u5546\u54C1'
-                            )
-                        )
-                    ),
-                    React.createElement(
-                        'li',
-                        { className: 'sidebar-submenu-item' },
-                        React.createElement(
-                            'a',
-                            { href: 'test.com', className: 'sidebar-submenu-item-link' },
-                            React.createElement(
-                                'span',
-                                null,
-                                '\u5546\u54C1\u8A2D\u5B9A'
-                            )
-                        )
-                    ),
-                    React.createElement(
-                        'li',
-                        { className: 'sidebar-submenu-item' },
-                        React.createElement(
-                            'a',
-                            { href: 'test.com', className: 'sidebar-submenu-item-link' },
-                            React.createElement(
-                                'span',
-                                null,
-                                '\u5C3A\u5BF8\u8868\u7BA1\u7406'
-                            )
-                        )
-                    )
-                )
-            ),
-            React.createElement(
-                'li',
-                { className: 'finance' },
-                React.createElement(
-                    'div',
-                    { className: 'sidebar-menu-item' },
-                    React.createElement('img', { src: 'https://cf.shopee.tw/file/c15905d5a6284687c4a6ad00d0feb511',
-                        className: 'sidebar-menu-item-icon' }),
-                    React.createElement(
-                        'span',
-                        { className: 'sidebar-menu-item-text', onClick: financeClose },
-                        '\u8CA1\u52D9\u7BA1\u7406'
-                    ),
-                    React.createElement('span', { className: 'sidebar-menu-item-space' }),
-                    React.createElement(
-                        'i',
-                        { className: 'sidebar-menu-item-collapse shopee-icon' },
-                        React.createElement(
-                            'svg',
-                            { xmlns: 'http://www.w3.org/2000/svg', viewBox: '0 0 16 16' },
-                            React.createElement('path', {
-                                d: 'M8 6.81l3.97 3.97a.75.75 0 0 0 1.06-1.06l-4.5-4.5a.75.75 0 0 0-1.06 0l-4.5 4.5a.75.75 0 0 0 1.06 1.06L8 6.81z' })
-                        )
-                    )
-                ),
-                React.createElement(
-                    'ul',
-                    { className: 'sidebar-submenu', style: { display: '' + (financeIsOpen ? 'block' : 'none') } },
-                    React.createElement(
-                        'li',
-                        { className: 'sidebar-submenu-item' },
-                        React.createElement(
-                            'a',
-                            { href: 'test.com', className: 'sidebar-submenu-item-link' },
-                            React.createElement(
-                                'span',
-                                null,
-                                '\u6211\u7684\u9032\u5E33'
-                            )
-                        )
-                    ),
-                    React.createElement(
-                        'li',
-                        { className: 'sidebar-submenu-item' },
-                        React.createElement(
-                            'a',
-                            { href: 'test.com', className: 'sidebar-submenu-item-link' },
-                            React.createElement(
-                                'span',
-                                null,
-                                '\u9280\u884C\u5E33\u865F'
-                            )
-                        )
-                    ),
-                    React.createElement(
-                        'li',
-                        { className: 'sidebar-submenu-item' },
-                        React.createElement(
-                            'a',
-                            { href: 'test.com', className: 'sidebar-submenu-item-link' },
-                            React.createElement(
-                                'span',
-                                null,
-                                '\u4ED8\u6B3E\u8A2D\u5B9A'
-                            )
-                        )
-                    )
-                )
-            ),
-            React.createElement(
-                'li',
-                { className: 'event' },
-                React.createElement(
-                    'div',
-                    { className: 'sidebar-menu-item' },
-                    React.createElement('img', { src: 'https://cf.shopee.tw/file/c15905d5a6284687c4a6ad00d0feb511',
-                        className: 'sidebar-menu-item-icon' }),
-                    React.createElement(
-                        'span',
-                        { className: 'sidebar-menu-item-text', onClick: eventClose },
-                        '\u7BA1\u7406\u884C\u92B7\u6D3B\u52D5'
-                    ),
-                    React.createElement('span', { className: 'sidebar-menu-item-space' }),
-                    React.createElement(
-                        'i',
-                        { className: 'sidebar-menu-item-collapse shopee-icon' },
-                        React.createElement(
-                            'svg',
-                            { xmlns: 'http://www.w3.org/2000/svg', viewBox: '0 0 16 16' },
-                            React.createElement('path', {
-                                d: 'M8 6.81l3.97 3.97a.75.75 0 0 0 1.06-1.06l-4.5-4.5a.75.75 0 0 0-1.06 0l-4.5 4.5a.75.75 0 0 0 1.06 1.06L8 6.81z' })
-                        )
-                    )
-                ),
-                React.createElement(
-                    'ul',
-                    { className: 'sidebar-submenu', style: { display: '' + (eventIsOpen ? 'block' : 'none') } },
-                    React.createElement(
-                        'li',
-                        { className: 'sidebar-submenu-item' },
-                        React.createElement(
-                            'a',
-                            { href: 'test.com', className: 'sidebar-submenu-item-link' },
-                            React.createElement(
-                                'span',
-                                null,
-                                '\u6211\u7684\u884C\u92B7\u6D3B\u52D5'
-                            )
-                        )
-                    ),
-                    React.createElement(
-                        'li',
-                        { className: 'sidebar-submenu-item' },
-                        React.createElement(
-                            'a',
-                            { href: 'test.com', className: 'sidebar-submenu-item-link' },
-                            React.createElement(
-                                'span',
-                                null,
-                                '\u512A\u60E0\u5238'
-                            )
-                        )
-                    )
-                )
-            )
+            titles.map(function (title) {
+                return React.createElement(Section, { title: title.title, href: title.href, subtitles: title.subtitles });
+            })
         )
     );
 };

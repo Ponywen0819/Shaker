@@ -108,7 +108,7 @@ var ShiipingArea = function ShiipingArea() {
 
     React.useEffect(function () {
         setItems([{ items: [{ img: '/static/img/logo1.png', name: '12' }], price: 100, payment: 0, state: 1 }, { items: [{ img: '/static/img/logo1.png', name: '12' }, { img: '/static/img/logo1.png', name: '12' }], price: 100, payment: 1, state: 2 }, { items: [{ img: '/static/img/logo1.png', name: '12' }], price: 100, payment: 2, state: 0 }, { items: [{ img: '/static/img/logo1.png', name: '12' }], price: 100, payment: 2, state: 1 }, { items: [{ img: '/static/img/logo1.png', name: '12' }], price: 100, payment: 1, state: 2 }, { items: [{ img: '/static/img/logo1.png', name: '12' }], price: 100, payment: 0, state: 0 }]);
-    });
+    }, []);
 
     return React.createElement(
         'div',
