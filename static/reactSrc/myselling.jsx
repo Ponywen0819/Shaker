@@ -1,4 +1,100 @@
 const SellingPanel = () =>{
+    var navOptSels = [false,false,false,false,false,false,false,false];
+    let formerOpt  = 1;
+    const [navOptSelOne, setNavOptSelOne] = React.useState(false);
+    const [navOptSelTwo, setNavOptSelTwo] = React.useState(false);
+    const [navOptSelThird, setNavOptSelThird] = React.useState(false);
+    const [navOptSelFour, setNavOptSelFour] = React.useState(false);
+    const [navOptSelFive, setNavOptSelFive] = React.useState(false);
+    const [navOptSelSix, setNavOptSelSix] = React.useState(false);
+    const [navOptSelSeven, setNavOptSelSeven] = React.useState(false);    
+    const [navOptSelEight, setNavOptSelEight] = React.useState(false);
+    function SeletNavOptOne (){
+        formerOpt = 1;
+        if(formerOpt!=1){
+            ResetBtn(formerOpt);
+        }
+        setNavOptSelOne(!navOptSelOne);
+    }
+    function SeletNavOptTwo (){
+        formerOpt = 2;
+        if(formerOpt!=2){
+            ResetBtn(formerOpt);
+        }
+        setNavOptSelTwo(!navOptSelTwo);
+    }
+    function SeletNavOptThird (){
+        formerOpt = 3;
+        if(formerOpt!=3){
+            ResetBtn(formerOpt);
+        }
+        setNavOptSelThird(!navOptSelThird);
+    }
+    function SeletNavOptFour (){
+        formerOpt = 4;
+        if(formerOpt!=4){
+            ResetBtn(formerOpt);
+        }
+        setNavOptSelFour(!navOptSelFour);
+    }
+    function SeletNavOptFive (){
+        formerOpt = 5;
+        if(formerOpt!=5){
+            ResetBtn(formerOpt);
+        }
+        setNavOptSelFive(!navOptSelFive);
+    }
+    function SeletNavOptSix (){
+        formerOpt = 6;
+        if(formerOpt!=6){
+            ResetBtn(formerOpt);
+        }
+        setNavOptSelSix(!navOptSelSix);
+    }
+    function SeletNavOptSeven (){
+        formerOpt = 7;
+        if(formerOpt!=7){
+            ResetBtn(formerOpt);
+        }
+        setNavOptSelSeven(!navOptSelSeven);
+    }
+    function SeletNavOptEight (){
+        formerOpt = 8;
+        if(formerOpt!=8){
+            ResetBtn(formerOpt);
+        }
+        setNavOptSelEight(!navOptSelEight);
+    }
+    function ResetBtn(optInd){
+        switch(optInd){
+            case 1:
+                setNavOptSelOne(!navOptSelOne);
+                console.log(navOptSelOne);
+                break;
+            case 2:
+                setNavOptSelTwo(!navOptSelTwo);
+                break;
+            case 3:
+                setNavOptSelThird(!navOptSelThird);
+                break;
+            case 4:
+                setNavOptSelFour(!navOptSelFour);
+                break;
+            case 5:
+                setNavOptSelFive(!navOptSelFive);
+                break;
+            case 6:
+                setNavOptSelSix(!navOptSelSix);
+                break;
+            case 7:
+                setNavOptSelSeven(!navOptSelSeven);
+                break;
+            case 8:
+                setNavOptSelEight(!navOptSelEight);
+                break;
+        }
+    }
+
     return (
         <div className="page-container has-siderbar">
             <div className="page-content-wrapper">
@@ -10,52 +106,52 @@ const SellingPanel = () =>{
                                     <div className="list-tabs">
                                         <div className="top-tab-flex main-content">
                                             <div className="panel-nav">
-                                                <div className="tabs_nav-warp">
-                                                    <div className="nav_options">
+                                                <div className="tabs_nav-warp" >
+                                                    <div className="nav_options" >
 
-                                                        <div className="nav_option">
+                                                        <div className="nav_option" tabIndex="0">
                                                             <div className="option-label">
                                                                 <span>全部</span>
                                                             </div>
                                                         </div>
 
-                                                        <div className="nav_option">
+                                                        <div className="nav_option" tabIndex="0">
                                                             <div className="option-label">
                                                                 <span>尚未付款</span>
                                                             </div>
                                                         </div>
 
-                                                        <div className="nav_option">
+                                                        <div className="nav_option" tabIndex="0">
                                                             <div className="option-label">
                                                                 <span>待出貨</span>
                                                             </div>
                                                         </div>
 
-                                                        <div className="nav_option">
+                                                        <div className="nav_option" tabIndex="0">
                                                             <div className="option-label">
                                                                 <span>運送中</span>
                                                             </div>
                                                         </div>
 
-                                                        <div className="nav_option">
+                                                        <div className="nav_option" tabIndex="0">
                                                             <div className="option-label">
                                                                 <span>已完成</span>
                                                             </div>
                                                         </div>
 
-                                                        <div className="nav_option">
+                                                        <div className="nav_option" tabIndex="0">
                                                             <div className="option-label">
                                                                 <span>不成立</span>
                                                             </div>
                                                         </div>
 
-                                                        <div className="nav_option">
+                                                        <div className="nav_option" tabIndex="0">
                                                             <div className="option-label">
                                                                 <span>退款/退貨</span>
                                                             </div>
                                                         </div>
 
-                                                        <div className="nav_option">
+                                                        <div className="nav_option" tabIndex="0">
                                                             <div className="option-label">
                                                                 <span>運送失敗</span>
                                                             </div>
@@ -136,7 +232,7 @@ const SellingPanel = () =>{
                                                     <div className="order-search-input">
                                                         <div className="search-wrapper">
                                                             <div className="search-input__inner">
-                                                                <input type="text" className="search-target" placeholder="請輸入帳號" /> //* clearable="true" ??
+                                                                <input type="text" className="search-target" placeholder="請輸入帳號" /> 
 
                                                                 <div className="search-input__suffix">
                                                                 </div>
@@ -144,6 +240,37 @@ const SellingPanel = () =>{
                                                         </div>
                                                     </div>
                                                 </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="order-panel-header">
+                                        <div className="order-header-title">
+                                            訂單
+                                        </div>
+                                        <div className="title-space">
+                                            <div className="div-button">
+                                                <button type="button" className="action_btn">
+                                                <i className="action-btn-icon">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+                                                        <path d="M4.035 4h7.923l-.238-1.105a.5.5 0 0 0-.49-.395H4.763a.5.5 0 0 0-.489.395L4.035 4zm9.471.065A2 2 0 0 1 15 6v7a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V6a2 2 0 0 1 1.486-1.933l.32-1.488A2 2 0 0 1 4.763 1h6.469a2 2 0 0 1 1.955 1.579l.32 1.486zM13.5 6h-11v7a.5.5 0 0 0 .5.5h10a.5.5 0 0 0 .5-.5V6zM4.75 8h5.5a.75.75 0 0 1 0 1.5h-5.5a.75.75 0 0 1 0-1.5zm0 3h2.5a.75.75 0 1 1 0 1.5h-2.5a.75.75 0 1 1 0-1.5z"></path>
+                                                    </svg>
+                                                </i>
+                                                <span className="action-btn-context">功能按鍵</span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="order-list-pannel">
+                                    <div className="order-list-section">
+                                        <div className="order-list-section-header">
+                                            <div className="order-container">
+                                                <div className="order-list-header inner">
+                                                    <span className="item-product">商品</span>
+                                                    <span className="item-total">收付金額</span>
+                                                    <span className="item-status">商品狀態</span>
+                                                    <span className="item-expire">到期時間</span>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>

@@ -1,4 +1,135 @@
+var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+
 var SellingPanel = function SellingPanel() {
+    var navOptSels = [false, false, false, false, false, false, false, false];
+    var formerOpt = 1;
+
+    var _React$useState = React.useState(false),
+        _React$useState2 = _slicedToArray(_React$useState, 2),
+        navOptSelOne = _React$useState2[0],
+        setNavOptSelOne = _React$useState2[1];
+
+    var _React$useState3 = React.useState(false),
+        _React$useState4 = _slicedToArray(_React$useState3, 2),
+        navOptSelTwo = _React$useState4[0],
+        setNavOptSelTwo = _React$useState4[1];
+
+    var _React$useState5 = React.useState(false),
+        _React$useState6 = _slicedToArray(_React$useState5, 2),
+        navOptSelThird = _React$useState6[0],
+        setNavOptSelThird = _React$useState6[1];
+
+    var _React$useState7 = React.useState(false),
+        _React$useState8 = _slicedToArray(_React$useState7, 2),
+        navOptSelFour = _React$useState8[0],
+        setNavOptSelFour = _React$useState8[1];
+
+    var _React$useState9 = React.useState(false),
+        _React$useState10 = _slicedToArray(_React$useState9, 2),
+        navOptSelFive = _React$useState10[0],
+        setNavOptSelFive = _React$useState10[1];
+
+    var _React$useState11 = React.useState(false),
+        _React$useState12 = _slicedToArray(_React$useState11, 2),
+        navOptSelSix = _React$useState12[0],
+        setNavOptSelSix = _React$useState12[1];
+
+    var _React$useState13 = React.useState(false),
+        _React$useState14 = _slicedToArray(_React$useState13, 2),
+        navOptSelSeven = _React$useState14[0],
+        setNavOptSelSeven = _React$useState14[1];
+
+    var _React$useState15 = React.useState(false),
+        _React$useState16 = _slicedToArray(_React$useState15, 2),
+        navOptSelEight = _React$useState16[0],
+        setNavOptSelEight = _React$useState16[1];
+
+    function SeletNavOptOne() {
+        formerOpt = 1;
+        if (formerOpt != 1) {
+            ResetBtn(formerOpt);
+        }
+        setNavOptSelOne(!navOptSelOne);
+    }
+    function SeletNavOptTwo() {
+        formerOpt = 2;
+        if (formerOpt != 2) {
+            ResetBtn(formerOpt);
+        }
+        setNavOptSelTwo(!navOptSelTwo);
+    }
+    function SeletNavOptThird() {
+        formerOpt = 3;
+        if (formerOpt != 3) {
+            ResetBtn(formerOpt);
+        }
+        setNavOptSelThird(!navOptSelThird);
+    }
+    function SeletNavOptFour() {
+        formerOpt = 4;
+        if (formerOpt != 4) {
+            ResetBtn(formerOpt);
+        }
+        setNavOptSelFour(!navOptSelFour);
+    }
+    function SeletNavOptFive() {
+        formerOpt = 5;
+        if (formerOpt != 5) {
+            ResetBtn(formerOpt);
+        }
+        setNavOptSelFive(!navOptSelFive);
+    }
+    function SeletNavOptSix() {
+        formerOpt = 6;
+        if (formerOpt != 6) {
+            ResetBtn(formerOpt);
+        }
+        setNavOptSelSix(!navOptSelSix);
+    }
+    function SeletNavOptSeven() {
+        formerOpt = 7;
+        if (formerOpt != 7) {
+            ResetBtn(formerOpt);
+        }
+        setNavOptSelSeven(!navOptSelSeven);
+    }
+    function SeletNavOptEight() {
+        formerOpt = 8;
+        if (formerOpt != 8) {
+            ResetBtn(formerOpt);
+        }
+        setNavOptSelEight(!navOptSelEight);
+    }
+    function ResetBtn(optInd) {
+        switch (optInd) {
+            case 1:
+                setNavOptSelOne(!navOptSelOne);
+                console.log(navOptSelOne);
+                break;
+            case 2:
+                setNavOptSelTwo(!navOptSelTwo);
+                break;
+            case 3:
+                setNavOptSelThird(!navOptSelThird);
+                break;
+            case 4:
+                setNavOptSelFour(!navOptSelFour);
+                break;
+            case 5:
+                setNavOptSelFive(!navOptSelFive);
+                break;
+            case 6:
+                setNavOptSelSix(!navOptSelSix);
+                break;
+            case 7:
+                setNavOptSelSeven(!navOptSelSeven);
+                break;
+            case 8:
+                setNavOptSelEight(!navOptSelEight);
+                break;
+        }
+    }
+
     return React.createElement(
         "div",
         { className: "page-container has-siderbar" },
@@ -37,7 +168,7 @@ var SellingPanel = function SellingPanel() {
                                                     { className: "nav_options" },
                                                     React.createElement(
                                                         "div",
-                                                        { className: "nav_option" },
+                                                        { className: "nav_option", tabIndex: "0" },
                                                         React.createElement(
                                                             "div",
                                                             { className: "option-label" },
@@ -50,7 +181,7 @@ var SellingPanel = function SellingPanel() {
                                                     ),
                                                     React.createElement(
                                                         "div",
-                                                        { className: "nav_option" },
+                                                        { className: "nav_option", tabIndex: "0" },
                                                         React.createElement(
                                                             "div",
                                                             { className: "option-label" },
@@ -63,7 +194,7 @@ var SellingPanel = function SellingPanel() {
                                                     ),
                                                     React.createElement(
                                                         "div",
-                                                        { className: "nav_option" },
+                                                        { className: "nav_option", tabIndex: "0" },
                                                         React.createElement(
                                                             "div",
                                                             { className: "option-label" },
@@ -76,7 +207,7 @@ var SellingPanel = function SellingPanel() {
                                                     ),
                                                     React.createElement(
                                                         "div",
-                                                        { className: "nav_option" },
+                                                        { className: "nav_option", tabIndex: "0" },
                                                         React.createElement(
                                                             "div",
                                                             { className: "option-label" },
@@ -89,7 +220,7 @@ var SellingPanel = function SellingPanel() {
                                                     ),
                                                     React.createElement(
                                                         "div",
-                                                        { className: "nav_option" },
+                                                        { className: "nav_option", tabIndex: "0" },
                                                         React.createElement(
                                                             "div",
                                                             { className: "option-label" },
@@ -102,7 +233,7 @@ var SellingPanel = function SellingPanel() {
                                                     ),
                                                     React.createElement(
                                                         "div",
-                                                        { className: "nav_option" },
+                                                        { className: "nav_option", tabIndex: "0" },
                                                         React.createElement(
                                                             "div",
                                                             { className: "option-label" },
@@ -115,7 +246,7 @@ var SellingPanel = function SellingPanel() {
                                                     ),
                                                     React.createElement(
                                                         "div",
-                                                        { className: "nav_option" },
+                                                        { className: "nav_option", tabIndex: "0" },
                                                         React.createElement(
                                                             "div",
                                                             { className: "option-label" },
@@ -128,7 +259,7 @@ var SellingPanel = function SellingPanel() {
                                                     ),
                                                     React.createElement(
                                                         "div",
-                                                        { className: "nav_option" },
+                                                        { className: "nav_option", tabIndex: "0" },
                                                         React.createElement(
                                                             "div",
                                                             { className: "option-label" },
@@ -264,10 +395,84 @@ var SellingPanel = function SellingPanel() {
                                                             "div",
                                                             { className: "search-input__inner" },
                                                             React.createElement("input", { type: "text", className: "search-target", placeholder: "\u8ACB\u8F38\u5165\u5E33\u865F" }),
-                                                            " //* clearable=\"true\" ??",
                                                             React.createElement("div", { className: "search-input__suffix" })
                                                         )
                                                     )
+                                                )
+                                            )
+                                        )
+                                    )
+                                ),
+                                React.createElement(
+                                    "div",
+                                    { className: "order-panel-header" },
+                                    React.createElement(
+                                        "div",
+                                        { className: "order-header-title" },
+                                        "\u8A02\u55AE"
+                                    ),
+                                    React.createElement(
+                                        "div",
+                                        { className: "title-space" },
+                                        React.createElement(
+                                            "div",
+                                            { className: "div-button" },
+                                            React.createElement(
+                                                "button",
+                                                { type: "button", className: "action_btn" },
+                                                React.createElement(
+                                                    "i",
+                                                    { className: "action-btn-icon" },
+                                                    React.createElement(
+                                                        "svg",
+                                                        { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 16 16" },
+                                                        React.createElement("path", { d: "M4.035 4h7.923l-.238-1.105a.5.5 0 0 0-.49-.395H4.763a.5.5 0 0 0-.489.395L4.035 4zm9.471.065A2 2 0 0 1 15 6v7a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V6a2 2 0 0 1 1.486-1.933l.32-1.488A2 2 0 0 1 4.763 1h6.469a2 2 0 0 1 1.955 1.579l.32 1.486zM13.5 6h-11v7a.5.5 0 0 0 .5.5h10a.5.5 0 0 0 .5-.5V6zM4.75 8h5.5a.75.75 0 0 1 0 1.5h-5.5a.75.75 0 0 1 0-1.5zm0 3h2.5a.75.75 0 1 1 0 1.5h-2.5a.75.75 0 1 1 0-1.5z" })
+                                                    )
+                                                ),
+                                                React.createElement(
+                                                    "span",
+                                                    { className: "action-btn-context" },
+                                                    "\u529F\u80FD\u6309\u9375"
+                                                )
+                                            )
+                                        )
+                                    )
+                                )
+                            ),
+                            React.createElement(
+                                "div",
+                                { className: "order-list-pannel" },
+                                React.createElement(
+                                    "div",
+                                    { className: "order-list-section" },
+                                    React.createElement(
+                                        "div",
+                                        { className: "order-list-section-header" },
+                                        React.createElement(
+                                            "div",
+                                            { className: "order-container" },
+                                            React.createElement(
+                                                "div",
+                                                { className: "order-list-header inner" },
+                                                React.createElement(
+                                                    "span",
+                                                    { className: "item-product" },
+                                                    "\u5546\u54C1"
+                                                ),
+                                                React.createElement(
+                                                    "span",
+                                                    { className: "item-total" },
+                                                    "\u6536\u4ED8\u91D1\u984D"
+                                                ),
+                                                React.createElement(
+                                                    "span",
+                                                    { className: "item-status" },
+                                                    "\u5546\u54C1\u72C0\u614B"
+                                                ),
+                                                React.createElement(
+                                                    "span",
+                                                    { className: "item-expire" },
+                                                    "\u5230\u671F\u6642\u9593"
                                                 )
                                             )
                                         )
