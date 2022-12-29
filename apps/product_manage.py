@@ -7,6 +7,7 @@ import json
 import os
 import uuid
 from module.data_utils import database_utils
+from module.seller_center_util import get_shop_id
 app = Blueprint('product_manage', __name__)
 
 
@@ -63,27 +64,43 @@ def upload_picture():
 
 @app.route("/upload_product", methods=["POST"])
 def upload_product():
+    # 取得店家資訊
+    token = request.cookies.get("User_Token")
+    if token is None: return "", 401
+    if not current_app.config['jwt'].check_token_valid(token):
+        return "", 401
+
+    user_info = current_app.config['jwt'].get_token_detail(token)
+
+    # 根據登入資訊找出商店id
+    shop_id = get_shop_id(user_info["user_id"])
+
+    # 如果shop_id 為 -1 表示資料庫出現問題
+    if shop_id == -1:
+        return '', 500
+
+    request_dict: dict = request.json
+
+    # 檢查名稱是否重複
     db = database_utils(current_app.config['config'])
-    dbreturn = db.command_excute("""
-        SELECT
-            *
-        FROM
-            product
-        WHERE
-            shop_id = %(shop_id)s AND name = %(name)s
-        """, request.json
-    )
-    # 已有這個商品
-    if len(dbreturn) != 0:
-        return jsonify({
-            'status': "failed",
-            'cause': 601
-        })
-    # 有條件未填
-    require_field = ["shop_id", "name", "price", "number", "intro", "category", "picture_id", "status"]
+    product_count = db.command_excute("""
+        SELECT COUNT(*)
+        FROM product
+        WHERE shop_id = %(shop_id)s AND name = %(name)s
+    """, {'shop_id': shop_id, 'name': request_dict['name']})
+
+    if product_count[0] != 0:
+        return jsonify({'status': "failed", 'cause': 601})
+
+    # 檢查輸入欄位
+    require_field = ["name", "price", "number", "intro", "category", "photo", "status"]
     for need in require_field:
         if need not in request.json.keys():
             return jsonify({"status": "failed", "cause": 602})
+
+
+
+
     # 成功
     db.command_excute("""
                 INSERT INTO product (shop_id, name, price, number, intro, category, picture_id, avgstar, status)
