@@ -42,6 +42,8 @@
 .new_img{
     height: 80px;
     width: 80px;
+    background-position: center;
+    background-size: cover;
 }
 
 .new_img_notact{
