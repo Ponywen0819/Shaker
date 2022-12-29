@@ -79,7 +79,7 @@ const SellingPanel = () =>{
                                         <div className="order-export">
                                             <div className="singal-picker-wrapper">
                                                 <span className="date">訂單成立日期</span>
-                                                <div className="date-selecter">
+                                                <div className="date-selecter"> 
                                                     <div className="date-selecter__input">
                                                         <div className="date-picker">
                                                             <div className="date-picker__prefix">
@@ -113,11 +113,11 @@ const SellingPanel = () =>{
                                             <div className="search-input__Util">
                                                 <span className="input-group__prepend">
 
-                                                    <div className="search__prepend select">
+                                                    <div className="search__prepend select"> 
                                                         <div tabIndex={0} className="data__picker ">
                                                             
                                                             <div className="picker__inner">
-                                                                買家帳號
+                                                                買家帳號 
                                                             </div>
 
                                                             <div className="picker__suffix">
@@ -129,6 +129,18 @@ const SellingPanel = () =>{
                                                                 </i>
                                                             </div>
 
+                                                        </div>
+                                                    </div>
+                                                </span>
+                                                <span className="input-group__append">
+                                                    <div className="order-search-input">
+                                                        <div className="search-wrapper">
+                                                            <div className="search-input__inner">
+                                                                <input type="text" className="search-target" placeholder="請輸入帳號" /> //* clearable="true" ??
+
+                                                                <div className="search-input__suffix">
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </span>

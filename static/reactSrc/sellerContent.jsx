@@ -7,7 +7,7 @@ function SMContext () {
   const [sixIsTouched, setSixIsTouched] = React.useState(true);
   const [sevenIsTouched, setSevenIsTouched] = React.useState(true);
   const [eightIsTouched, setEightIsTouched] = React.useState(true);
-  function oneChange(){
+  function                                                           oneChange(){
     setOneIsTouched(!oneIsTouched);
   }
   function twoChange(){

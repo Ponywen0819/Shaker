@@ -9,7 +9,7 @@ function Nav  ()  {
             <a href='./test' className='nav-logo'>
               <img src="/static/img/logo2.png"></img>
             </a>
-            <div className='nav-logo-content'onMouseEnter={accInfoIsTouched ? pullDownMenu:""}> 
+            <div className='nav-logo-content' onMouseEnter={() => accInfoIsTouched ? pullDownMenu:""}> 
                 <a href= 'this para. should be filled the anchor link' className='nav-text'> 賣家中心</a>
             </div>
             <div style={{position:'relative'}} >

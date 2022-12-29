@@ -1,4 +1,4 @@
-*{
+*{  `
     padding: 0;
     margin: 0;
     font:inherit;
@@ -8,9 +8,10 @@
 .page-content-wrapper{
     display: flex;
     flex-direction: column;
+    padding: 200px;
 }
 
-.flex-box{
+.flex-box{  
     display: flex;
     -webkit-box-pack: start;
     justify-content: flex-start;

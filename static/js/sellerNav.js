@@ -22,7 +22,9 @@ function Nav() {
             ),
             React.createElement(
                 'div',
-                { className: 'nav-logo-content', onMouseEnter: accInfoIsTouched ? pullDownMenu : "" },
+                { className: 'nav-logo-content', onMouseEnter: function onMouseEnter() {
+                        return accInfoIsTouched ? pullDownMenu : "";
+                    } },
                 React.createElement(
                     'a',
                     { href: 'this para. should be filled the anchor link', className: 'nav-text' },
