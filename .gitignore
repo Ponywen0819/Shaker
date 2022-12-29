@@ -16,3 +16,4 @@ Shaker/
 config.json
 
 *.pem
+.vscode/settings.json

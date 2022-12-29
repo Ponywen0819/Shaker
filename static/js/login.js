@@ -9,7 +9,11 @@ var ToolBar = function ToolBar() {
 };
 
 var handle_login = function handle_login() {
+<<<<<<< HEAD
     fetch('/account/PublicKey', {
+=======
+    fetch('account/PublicKey', {
+>>>>>>> sale-center
         method: 'GET'
     }).then(function (respone) {
         if (respone.status === 200) {
@@ -23,7 +27,11 @@ var handle_login = function handle_login() {
         var encode_password = forge.util.encode64(public_key.encrypt(forge.util.encodeUtf8(password), 'RSA-OAEP', { md: forge.md.sha256.create(), mgf1: { md: forge.md.sha1.create() } }));
         console.log('success');
 
+<<<<<<< HEAD
         fetch('/account/Login', {
+=======
+        fetch('account/Login', {
+>>>>>>> sale-center
             method: 'POST',
             body: JSON.stringify({
                 email: account,
@@ -37,7 +45,11 @@ var handle_login = function handle_login() {
                 return respons.json();
             }
         }).then(function (json) {
+<<<<<<< HEAD
             if (json.cause === 0) {
+=======
+            if (json.status === "success") {
+>>>>>>> sale-center
                 SuccessNotify("登入成功").then(function () {
                     location.href = '/';
                 });
