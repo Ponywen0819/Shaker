@@ -727,3 +727,80 @@ def delete_productToCart():
     return jsonify({
         'cause': 0
     })
+@app.route("/CreateCategory", methods=["POST"])
+def create_category():
+    token = request.cookies.get("User_Token")
+    if token is None: return "", 401
+    if not current_app.config['jwt'].check_token_valid(token, True):
+        return "", 401
+    admin_info = current_app.config['jwt'].get_token_detail(token)
+    require_field = ["name"]
+    for need in require_field:
+        if need not in request.json.keys():
+            return jsonify({"cause": 153})
+
+    db = database_utils(current_app.config['config'])
+    check_category = db.command_excute("""
+                                         SELECT
+                                             *
+                                         FROM
+                                             category_type
+                                         WHERE
+                                             name = %(name)s
+                                         """, request.json)
+    if len(check_category) != 0:
+        return jsonify({
+            'cause': 1801
+        })
+    db.command_excute("""
+                            INSERT INTO `category_type` (`name`)
+                            VALUES (%(name)s)
+                            """, request.json)
+    return jsonify({"cause": 0})
+@app.route("/DeleteCategory", methods=["POST"])
+def delete_category():
+    token = request.cookies.get("User_Token")
+    if token is None: return "", 401
+    if not current_app.config['jwt'].check_token_valid(token, True):
+        return "", 401
+    admin_info = current_app.config['jwt'].get_token_detail(token)
+    require_field = ["name"]
+    for need in require_field:
+        if need not in request.json.keys():
+            return jsonify({"cause": 153})
+
+    db = database_utils(current_app.config['config'])
+    check_category = db.command_excute("""
+                                             SELECT
+                                                 *
+                                             FROM
+                                                 category_type
+                                             WHERE
+                                                 name = %(name)s
+                                             """, request.json)
+    if len(check_category) != 1:
+        return jsonify({
+            'cause': 1901
+        })
+    db.command_excute("""
+                                DELETE FROM category_type
+                                WHERE name = %(name)s
+                                """, request.json)
+    return jsonify({"cause": 0})
+@app.route("/GetAllCategory", methods=["POST"])
+def get_category():
+    token = request.cookies.get("User_Token")
+    if token is None: return "", 401
+    if not current_app.config['jwt'].check_token_valid(token):
+        return "", 401
+    user_info = current_app.config['jwt'].get_token_detail(token)
+    db = database_utils(current_app.config['config'])
+    all_category = db.command_excute("""
+                                             SELECT
+                                                 *
+                                             FROM
+                                                 category_type
+                                             """, {})
+    if len(all_category) <= 0:
+        return jsonify({"no category": 1})
+    return jsonify(all_category)
