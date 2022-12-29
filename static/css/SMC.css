@@ -17,6 +17,7 @@
     justify-content: flex-start;
     align-items: flex-start;
     background-color: aliceblue;
+    box-shadow: 5px 5px #777464;
 
 }
 
@@ -80,6 +81,8 @@
     -webkit-box-orient: vertical;
     -webkit-box-direction: normal;
     flex-direction: column;
+    box-shadow: 2px 2px 2px 2px #609dcf;
+    margin: 3px 3px;
 }
 .item-tltle{
     margin-bottom: 7px;
