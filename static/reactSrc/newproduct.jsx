@@ -4,6 +4,9 @@ const From = ()=>{
     const [options, setOptions] = React.useState([])
     const [intro, setIntro] = React.useState('')
 
+
+
+
     React.useEffect(()=>{
         setOptions(['3C', '周邊', 'NB', '通訊', '數位', '家電', '日用', '食品', '生活', '運動戶外', '美妝', '衣鞋包錶', '品牌旗艦', '書店'])
     },[])
@@ -18,7 +21,10 @@ const From = ()=>{
                     {
                         (img === '')?
                             <button className={`new_img new_img_notact`}>設定商品照片</button>:
-                            <div className={`new_img`} style={{}}></div>
+                            <div>
+                                <div className={`new_img`} style={{backgroundImage: `url(${img})`}}></div>
+                                <button className={`new_btn`}>設定商品照片</button>
+                            </div>
                     }
                 </div>
                 <div className={`flex mb-3`}>
@@ -41,7 +47,7 @@ const From = ()=>{
                     <textarea  className={`new_intro_input`} value={intro} placeholder={`在這裡新增商品敘述`}/>
                 </div>
                 <div className={`flex justify-end`}>
-                    <button className={`new_btn bg-[`}>新增商品並下架</button>
+                    <button className={`new_btn`}>新增商品並下架</button>
                     <button className={`new_btn`}>新增商品並上架</button>
                 </div>
             </form>

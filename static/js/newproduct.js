@@ -48,7 +48,16 @@ var From = function From() {
                     'button',
                     { className: 'new_img new_img_notact' },
                     '\u8A2D\u5B9A\u5546\u54C1\u7167\u7247'
-                ) : React.createElement('div', { className: 'new_img', style: {} })
+                ) : React.createElement(
+                    'div',
+                    null,
+                    React.createElement('div', { className: 'new_img', style: { backgroundImage: 'url(' + img + ')' } }),
+                    React.createElement(
+                        'button',
+                        { className: 'new_btn' },
+                        '\u8A2D\u5B9A\u5546\u54C1\u7167\u7247'
+                    )
+                )
             ),
             React.createElement(
                 'div',
@@ -100,7 +109,7 @@ var From = function From() {
                 { className: 'flex justify-end' },
                 React.createElement(
                     'button',
-                    { className: 'new_btn bg-[' },
+                    { className: 'new_btn' },
                     '\u65B0\u589E\u5546\u54C1\u4E26\u4E0B\u67B6'
                 ),
                 React.createElement(
