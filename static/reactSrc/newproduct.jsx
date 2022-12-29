@@ -39,22 +39,22 @@ const From = ()=>{
         }
     }
 
-    const triggerImageUpload = (state)=>{
+    const triggerImageUpload = (status)=>{
         if (img === '') {FailNotify('請上傳商品圖片'); return;}
         if (name === ''){FailNotify('請輸入商品名稱'); return;}
         if (choosen === ''){FailNotify('請選擇商品類別'); return;}
         if (price === ''){FailNotify('請輸入商品價格'); return;}
         if (num === ''){FailNotify('請輸入商品數量'); return;}
 
-        fetch('/account/ChangeProfile',{
+        fetch('/product/UploadProduct',{
             body: JSON.stringify({
                 photo: img,
                 name: name,
                 category: choosen,
                 price: parseInt(price),
-                num: parseInt(num),
+                number: parseInt(num),
                 intro: intro,
-                state: state
+                status: status
             }),
             headers:{
                 'content-type': 'application/json'
@@ -65,21 +65,30 @@ const From = ()=>{
                 return res.json()
             }
             else{
-                FailNotify("上傳圖片出現錯誤")
+                FailNotify("新增商品失敗")
             }
         }).then(data=>{
-            if(data.status !== 200){
-                FailNotify("上傳圖片出現錯誤")
+            console.log(data)
+            if(data.cause !== 0){
+                FailNotify("新增商品出現錯誤")
             }
-        }).then(data=>{
-            if(data.status === 200){
-                SuccessNotify("圖片上傳成功")
+            else{
+                SuccessNotify("新增商品成功")
             }
         })
     }
 
     React.useEffect(()=>{
-        setOptions(['3C', '周邊', 'NB', '通訊', '數位', '家電', '日用', '食品', '生活', '運動戶外', '美妝', '衣鞋包錶', '品牌旗艦', '書店'])
+        fetch('/product/GetAllCategory',{
+            method: 'GET'
+        }).then(res=>{
+            if (res.status === 200){
+                return res.json()
+            }
+        }).then((data)=>{
+            setOptions(data)
+        })
+        // setOptions(['3C', '周邊', 'NB', '通訊', '數位', '家電', '日用', '食品', '生活', '運動戶外', '美妝', '衣鞋包錶', '品牌旗艦', '書店'])
     },[])
 
     return(
@@ -127,7 +136,7 @@ const From = ()=>{
                         <option value="" disabled selected>選擇商品類別</option>
                         {
                             options.map(option=>(
-                                <option value={option}>{option}</option>
+                                <option value={option.id}>{option.name}</option>
                             ))
                         }
                     </select>
@@ -141,8 +150,8 @@ const From = ()=>{
                     />
                 </div>
                 <div className={`flex justify-end`}>
-                    <button className={`new_btn`}>新增商品並下架</button>
-                    <button className={`new_btn`}>新增商品並上架</button>
+                    <button className={`new_btn`} onClick={()=>triggerImageUpload(0)}>新增商品並下架</button>
+                    <button className={`new_btn`} onClick={()=>triggerImageUpload(1)}>新增商品並上架</button>
                 </div>
             </div>
         </div>

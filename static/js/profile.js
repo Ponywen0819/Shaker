@@ -2,20 +2,14 @@ var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = [
 
 var UserInput = function UserInput(_ref) {
     var type = _ref.type,
-<<<<<<< HEAD
         orgin = _ref.orgin,
         change = _ref.change,
         title = _ref.title;
-=======
-        title = _ref.title,
-        orgin = _ref.orgin;
->>>>>>> sale-center
 
     var _React$useState = React.useState(''),
         _React$useState2 = _slicedToArray(_React$useState, 2),
         val = _React$useState2[0],
         setval = _React$useState2[1];
-<<<<<<< HEAD
 
     var handle_number_input = function handle_number_input(e) {
         setval(e.target.value.replace(/[^0-9]/, ''));
@@ -270,154 +264,6 @@ var Interface = function Interface() {
     };
 
     var name2type = { name: 'text', email: 'email', phone: 'text' };
-=======
-
-    React.useEffect(function () {
-        setval(orgin);
-    }, []);
-
-    var handle_number_input = function handle_number_input(e) {
-        setval(e.target.value.replace(/[^0-9]/, ''));
-    };
-
-    var handle_text_input = function handle_text_input(e) {
-        setval(e.target.value);
-    };
-
-    return React.createElement(
-        'div',
-        { className: 'form_line' },
-        React.createElement(
-            'p',
-            { className: 'form_title' },
-            title
-        ),
-        React.createElement('input', { className: 'form_input',
-            type: 'text',
-            value: val,
-            name: title,
-            id: title,
-            onInput: type === 'text' ? handle_text_input : handle_number_input
-        })
-    );
-};
-
-var UserImgInput = function UserImgInput(_ref2) {
-    var orgin = _ref2.orgin;
-
-    var _React$useState3 = React.useState(orgin),
-        _React$useState4 = _slicedToArray(_React$useState3, 2),
-        img = _React$useState4[0],
-        setImg = _React$useState4[1];
-
-    var _React$useState5 = React.useState(false),
-        _React$useState6 = _slicedToArray(_React$useState5, 2),
-        img_change = _React$useState6[0],
-        setChange = _React$useState6[1];
-
-    var triggerImageChange = function triggerImageChange() {
-        var file_input = document.createElement("input");
-        file_input.type = "file";
-        file_input.accept = "image/*";
-        file_input.onchange = function (e) {
-            var image = e.target.files[0];
-            var reader = new FileReader();
-            reader.readAsDataURL(image);
-            reader.onload = function (readerEvent) {
-                var content = readerEvent.target.result;
-                console.log(content);
-                setImg(content);
-            };
-        };
-        file_input.click();
-    };
-
-    var triggerImageUpload = function triggerImageUpload() {
-        console.log('還沒寫拉哈哈');
-    };
-
-    React.useEffect(function () {
-        if (orgin !== img) {
-            setChange(true);
-        } else {
-            setChange(false);
-        }
-    }, [img]);
-
-    return React.createElement(
-        'div',
-        { className: 'img_form_container' },
-        React.createElement('img', { className: 'from_img', src: img }),
-        React.createElement(
-            'div',
-            { className: 'img_form_btn_area' },
-            img_change ? React.createElement(
-                'button',
-                { className: 'img_form_btn', onClick: triggerImageUpload },
-                '\u78BA\u8A8D\u4FEE\u6539'
-            ) : React.createElement(
-                'button',
-                { className: 'img_form_btn', onClick: triggerImageChange },
-                '\u66F4\u6539\u7167\u7247'
-            )
-        ),
-        React.createElement(
-            'p',
-            { className: 'img_form_text' },
-            '\u6211\u53EA\u5403png :P'
-        )
-    );
-};
-
-var Interface = function Interface() {
-    var _React$useState7 = React.useState({
-        name: "",
-        email: "",
-        phone: "",
-        img: "/static/img/logo1.png"
-    }),
-        _React$useState8 = _slicedToArray(_React$useState7, 2),
-        userinfo = _React$useState8[0],
-        setInfo = _React$useState8[1];
-
-    var _React$useState9 = React.useState(''),
-        _React$useState10 = _slicedToArray(_React$useState9, 2),
-        user_img = _React$useState10[0],
-        setImg = _React$useState10[1];
-
-    var getInfo = function getInfo() {
-        fetch('/account/GetUserDetail', {
-            method: 'POST'
-        }).then(function (response) {
-            if (response.status === 200) {
-                return response.json();
-            } else {
-                FailNotify('請先登入').then(function () {
-                    return location.href = '/login';
-                });
-            }
-        }).then(function (data) {
-            if (data.cause === 200) {
-                setInfo({
-                    name: data.name,
-                    email: data.email,
-                    phone: data.phone,
-                    img: data.photo == null ? "/static/img/logo1.png" : data.photo
-                });
-                setImg(data.photo == null ? "/static/img/logo1.png" : data.photo);
-            } else {
-                FailNotify('請先登入').then(function () {
-                    return location.href = '/login';
-                });
-            }
-        });
-    };
-
-    React.useEffect(function () {
-        getInfo();
-        console.log(user_img);
-    }, []);
->>>>>>> sale-center
 
     return React.createElement(
         'div',
@@ -435,7 +281,6 @@ var Interface = function Interface() {
             'div',
             { className: 'input_area' },
             React.createElement(
-<<<<<<< HEAD
                 'div',
                 { className: 'form' },
                 Object.entries(userinfo).map(function (i) {
@@ -444,21 +289,13 @@ var Interface = function Interface() {
                         return React.createElement(UserInput, { orgin: i[1], type: name2type[i[0]], title: i[0], change: handle_change });
                     }
                 }),
-=======
-                'form',
-                { className: 'form' },
->>>>>>> sale-center
                 React.createElement(
                     'div',
                     { className: 'form_submit' },
                     React.createElement('p', { className: 'form_title' }),
                     React.createElement(
                         'button',
-<<<<<<< HEAD
                         { className: 'form_btn', onClick: handle_upload },
-=======
-                        { className: 'form_btn' },
->>>>>>> sale-center
                         '\u78BA\u8A8D\u8B8A\u66F4'
                     )
                 )
@@ -466,18 +303,13 @@ var Interface = function Interface() {
             React.createElement(
                 'div',
                 { className: 'img_form' },
-<<<<<<< HEAD
                 React.createElement(UserImgInput, { orgin: user_img })
-=======
-                React.createElement(UserImgInput, { orgin: userinfo.img })
->>>>>>> sale-center
             )
         )
     );
 };
 
 var Main = function Main() {
-<<<<<<< HEAD
     return React.createElement(
         'div',
         null,
@@ -489,14 +321,6 @@ var Main = function Main() {
             React.createElement(Interface, null)
         )
     );
-=======
-    return [React.createElement(ToolBar, null), React.createElement(
-        'div',
-        { className: 'main_area' },
-        React.createElement(UserInfo, null),
-        React.createElement(Interface, null)
-    )];
->>>>>>> sale-center
 };
 
 ReactDOM.createRoot(document.getElementById("main")).render(React.createElement(Main, null));

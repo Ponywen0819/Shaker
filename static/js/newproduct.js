@@ -68,7 +68,7 @@ var From = function From() {
         }
     };
 
-    var triggerImageUpload = function triggerImageUpload(state) {
+    var triggerImageUpload = function triggerImageUpload(status) {
         if (img === '') {
             FailNotify('請上傳商品圖片');return;
         }
@@ -85,15 +85,15 @@ var From = function From() {
             FailNotify('請輸入商品數量');return;
         }
 
-        fetch('/account/ChangeProfile', {
+        fetch('/product/UploadProduct', {
             body: JSON.stringify({
                 photo: img,
                 name: name,
                 category: choosen,
                 price: parseInt(price),
-                num: parseInt(num),
+                number: parseInt(num),
                 intro: intro,
-                state: state
+                status: status
             }),
             headers: {
                 'content-type': 'application/json'
@@ -103,21 +103,29 @@ var From = function From() {
             if (res.status === 200) {
                 return res.json();
             } else {
-                FailNotify("上傳圖片出現錯誤");
+                FailNotify("新增商品失敗");
             }
         }).then(function (data) {
-            if (data.status !== 200) {
-                FailNotify("上傳圖片出現錯誤");
-            }
-        }).then(function (data) {
-            if (data.status === 200) {
-                SuccessNotify("圖片上傳成功");
+            console.log(data);
+            if (data.cause !== 0) {
+                FailNotify("新增商品出現錯誤");
+            } else {
+                SuccessNotify("新增商品成功");
             }
         });
     };
 
     React.useEffect(function () {
-        setOptions(['3C', '周邊', 'NB', '通訊', '數位', '家電', '日用', '食品', '生活', '運動戶外', '美妝', '衣鞋包錶', '品牌旗艦', '書店']);
+        fetch('/product/GetAllCategory', {
+            method: 'GET'
+        }).then(function (res) {
+            if (res.status === 200) {
+                return res.json();
+            }
+        }).then(function (data) {
+            setOptions(data);
+        });
+        // setOptions(['3C', '周邊', 'NB', '通訊', '數位', '家電', '日用', '食品', '生活', '運動戶外', '美妝', '衣鞋包錶', '品牌旗艦', '書店'])
     }, []);
 
     return React.createElement(
@@ -223,8 +231,8 @@ var From = function From() {
                     options.map(function (option) {
                         return React.createElement(
                             'option',
-                            { value: option },
-                            option
+                            { value: option.id },
+                            option.name
                         );
                     })
                 )
@@ -250,12 +258,16 @@ var From = function From() {
                 { className: 'flex justify-end' },
                 React.createElement(
                     'button',
-                    { className: 'new_btn' },
+                    { className: 'new_btn', onClick: function onClick() {
+                            return triggerImageUpload(0);
+                        } },
                     '\u65B0\u589E\u5546\u54C1\u4E26\u4E0B\u67B6'
                 ),
                 React.createElement(
                     'button',
-                    { className: 'new_btn' },
+                    { className: 'new_btn', onClick: function onClick() {
+                            return triggerImageUpload(1);
+                        } },
                     '\u65B0\u589E\u5546\u54C1\u4E26\u4E0A\u67B6'
                 )
             )

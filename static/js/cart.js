@@ -144,7 +144,6 @@ var Product = function Product(_ref2) {
 var Order = function Order(_ref3) {
     var products = _ref3.products;
 
-<<<<<<< HEAD
     var _React$useState = React.useState({}),
         _React$useState2 = _slicedToArray(_React$useState, 2),
         orders = _React$useState2[0],
@@ -199,19 +198,10 @@ var Order = function Order(_ref3) {
                     return React.createElement(Product, { item: i });
                 })
             );
-=======
-    return React.createElement(
-        "div",
-        { className: "order_container" },
-        React.createElement(Order_title, { shop_name: "\u6211\u8D85\u68D2" }),
-        products.map(function (i) {
-            return React.createElement(Product, { item: i });
->>>>>>> sale-center
         })
     );
 };
 
-<<<<<<< HEAD
 var Footer = function Footer(_ref4) {
     var price = _ref4.price,
         num = _ref4.num;
@@ -244,10 +234,6 @@ var Footer = function Footer(_ref4) {
 
 var Main = function Main() {
     var products = [{ no: 'a124fw', img: '/static/img/logo1.png', name: '我是商品', number: 1, origin: 123, shop: 2 }, { no: 'a124fw', img: '/static/img/logo1.png', name: '我是商品', number: 1, origin: 123, shop: 2 }, { no: 'a124fw', img: '/static/img/logo1.png', name: '我是商品', number: 1, origin: 123, shop: 2 }, { no: 'a124fw', img: '/static/img/logo1.png', name: '我是商品', number: 1, origin: 123, shop: 1 }, { no: 'a124fw', img: '/static/img/logo1.png', name: '我是商品', number: 1, origin: 123, shop: 1 }, { no: 'a124fw', img: '/static/img/logo1.png', name: '我是商品', number: 1, origin: 123, shop: 1 }, { no: 'a124fw', img: '/static/img/logo1.png', name: '我是商品', number: 1, origin: 123, shop: 1 }, { no: 'a124fw', img: '/static/img/logo1.png', name: '我是商品', number: 1, origin: 123, shop: 1 }, { no: 'a124fw', img: '/static/img/logo1.png', name: '我是商品', number: 1, origin: 123, shop: 1 }, { no: 'a124fw', img: '/static/img/logo1.png', name: '我是商品', number: 1, origin: 123, shop: 1 }, { no: 'a124fw', img: '/static/img/logo1.png', name: '我是商品', number: 1, origin: 123, shop: 1 }, { no: 'a124fw', img: '/static/img/logo1.png', name: '我是商品', number: 1, origin: 123, shop: 1 }, { no: 'a124fw', img: '/static/img/logo1.png', name: '我是商品', number: 1, origin: 123, shop: 1 }];
-=======
-var Main = function Main() {
-    var products = [{ no: 'a124fw', img: '/static/img/logo1.png', name: '我是商品', number: 1, origin: 123, dis: 100 }, { no: 'a124fw', img: '/static/img/logo1.png', name: '我是商品', number: 1, origin: 123, dis: null }, { no: 'a124fw', img: '/static/img/logo1.png', name: '我是商品', number: 1, origin: 123, dis: 102 }, { no: 'a124fw', img: '/static/img/logo1.png', name: '我是商品', number: 1, origin: 123, dis: 102 }, { no: 'a124fw', img: '/static/img/logo1.png', name: '我是商品', number: 1, origin: 123, dis: 102 }, { no: 'a124fw', img: '/static/img/logo1.png', name: '我是商品', number: 1, origin: 123, dis: 102 }, { no: 'a124fw', img: '/static/img/logo1.png', name: '我是商品', number: 1, origin: 123, dis: 102 }, { no: 'a124fw', img: '/static/img/logo1.png', name: '我是商品', number: 1, origin: 123, dis: 102 }, { no: 'a124fw', img: '/static/img/logo1.png', name: '我是商品', number: 1, origin: 123, dis: 102 }, { no: 'a124fw', img: '/static/img/logo1.png', name: '我是商品', number: 1, origin: 123, dis: 102 }, { no: 'a124fw', img: '/static/img/logo1.png', name: '我是商品', number: 1, origin: 123, dis: 102 }, { no: 'a124fw', img: '/static/img/logo1.png', name: '我是商品', number: 1, origin: 123, dis: 102 }, { no: 'a124fw', img: '/static/img/logo1.png', name: '我是商品', number: 1, origin: 123, dis: 102 }];
->>>>>>> sale-center
 
     return [React.createElement(
         "div",
@@ -258,12 +244,8 @@ var Main = function Main() {
         "div",
         { className: "main" },
         React.createElement(ContentTitle, null),
-<<<<<<< HEAD
         React.createElement(Order, { products: products }),
         React.createElement(Footer, { price: 1000 })
-=======
-        React.createElement(Order, { products: products })
->>>>>>> sale-center
     )];
 };
 

@@ -74,7 +74,6 @@ var UpperBar = function UpperBar() {
     var testLogin = function testLogin() {
         if (document.cookie.indexOf('User_Token=') !== -1) {
             fetch('/account/GetUserDetail', {
-<<<<<<< HEAD
                 body: JSON.stringify({
                     require: ["photo", "name"]
                 }),
@@ -82,19 +81,12 @@ var UpperBar = function UpperBar() {
                 headers: {
                     'content-type': 'application/json'
                 }
-=======
-                method: 'POST'
->>>>>>> sale-center
             }).then(function (response) {
                 if (response.status === 200) {
                     return response.json();
                 }
             }).then(function (data) {
-<<<<<<< HEAD
                 if (data.cause === 0) {
-=======
-                if (data.cause == 200) {
->>>>>>> sale-center
                     setLog(true);
                     setinfo(data);
                 }
@@ -120,11 +112,7 @@ var UpperBar = function UpperBar() {
                     { className: 'upper_nobar' },
                     React.createElement(
                         'a',
-<<<<<<< HEAD
                         { className: 'Toolbat_text', href: '' },
-=======
-                        { className: 'Toolbat_text', href: './js/SMindex.js' },
->>>>>>> sale-center
                         '\u8CE3\u5BB6\u4E2D\u5FC3'
                     )
                 )

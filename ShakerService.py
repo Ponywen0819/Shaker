@@ -226,11 +226,11 @@ def get_smc_page():
 @app.route('/sellercenter/marketing')
 def get_ms_page():
     setting = {
+        "title": "賣家中心",
         "script": [
             "msindex.js",
-        "title": "賣家中心",
             "myselling.js",
-            "sellerSidebar.js"
+            "sellerSidebar.js",
             "sellerNav.js",
         ],
         "css": [
@@ -238,20 +238,22 @@ def get_ms_page():
             "Sidebar.css",
             "myselling.css",
             "msindex.css"
-    }
         ]
+    }
     return render_template('main.html', setting=setting)
 
-    setting = {
-def get_shipping_page():
+
+
 @app.route('/sellercenter/shipping')
+def get_shipping_page():
+    setting = {
         "title": "賣家中心",
         "script": [
             "seller_center.js",
             "seller_shipping.js"
         ],
+    "css": [
             "Nav.css",
-        "css": [
             "Sidebar.css",
             'seller_shipping.css',
             "SMindex.css"
@@ -276,29 +278,29 @@ def get_finance_page():
     }
     return render_template('main.html', setting=setting)
 @app.route('/sellercenter/myproduct')
-
 def get_myproduct_page():
-        "title": "賣家中心",
-            "seller_center.js",
     setting = {
+        "title": "賣家中心",
         "script": [
+            "seller_center.js",
         ],
         "css": [
             "seller_shipping.js"
             "Nav.css",
             "Sidebar.css",
             'seller_shipping.css',
-        ]
             "SMindex.css"
+        ]
     }
     return render_template('main.html', setting=setting)
 
-    setting = {
+
 @app.route('/sellercenter/newproduct')
 def get_newproduct_page():
+    setting = {
         "title": "賣家中心",
         "script": [
-            "newproduct.js"
+            "newproduct.js",
             "seller_center.js",
         ],
         "css": [

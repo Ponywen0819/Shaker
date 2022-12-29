@@ -560,20 +560,20 @@ video {
   margin-bottom: 2rem;
 }
 
-.mb-3 {
-  margin-bottom: 0.75rem;
-}
-
 .mb-5 {
   margin-bottom: 1.25rem;
 }
 
-.mb-2 {
-  margin-bottom: 0.5rem;
-}
-
 .mb-10 {
   margin-bottom: 2.5rem;
+}
+
+.mb-3 {
+  margin-bottom: 0.75rem;
+}
+
+.mb-2 {
+  margin-bottom: 0.5rem;
 }
 
 .block {
@@ -582,10 +582,6 @@ video {
 
 .flex {
   display: flex;
-}
-
-.h-\[50px\] {
-  height: 50px;
 }
 
 .\!h-20 {
@@ -599,14 +595,6 @@ video {
 .\!h-fit {
   height: -moz-fit-content !important;
   height: fit-content !important;
-}
-
-.\!h-3 {
-  height: 0.75rem !important;
-}
-
-.\!h-10 {
-  height: 2.5rem !important;
 }
 
 .\!h-8 {
@@ -625,12 +613,20 @@ video {
   width: 14%;
 }
 
-.w-full {
-  width: 100%;
+.w-\[60\%\] {
+  width: 60%;
+}
+
+.w-\[10\%\] {
+  width: 10%;
 }
 
 .w-\[20\%\] {
   width: 20%;
+}
+
+.w-full {
+  width: 100%;
 }
 
 .w-\[100\%\] {
@@ -651,22 +647,6 @@ video {
 
 .w-1\/5 {
   width: 20%;
-}
-
-.w-\[60\%\] {
-  width: 60%;
-}
-
-.w-\[10\%\] {
-  width: 10%;
-}
-
-.\!w-10 {
-  width: 2.5rem !important;
-}
-
-.\!w-20 {
-  width: 5rem !important;
 }
 
 .flex-1 {
@@ -709,32 +689,16 @@ video {
   justify-content: space-between;
 }
 
-.gap-5 {
-  gap: 1.25rem;
-}
-
 .gap-2 {
   gap: 0.5rem;
 }
 
+.gap-5 {
+  gap: 1.25rem;
+}
+
 .gap-1 {
   gap: 0.25rem;
-}
-
-.gap-10 {
-  gap: 2.5rem;
-}
-
-.gap-6 {
-  gap: 1.5rem;
-}
-
-.gap-7 {
-  gap: 1.75rem;
-}
-
-.gap-4 {
-  gap: 1rem;
 }
 
 .border {
@@ -760,22 +724,22 @@ video {
   padding-bottom: 0.75rem;
 }
 
-.px-6 {
-  padding-left: 1.5rem;
-  padding-right: 1.5rem;
-}
-
 .py-1 {
   padding-top: 0.25rem;
   padding-bottom: 0.25rem;
 }
 
-.pl-1 {
-  padding-left: 0.25rem;
+.px-6 {
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
 }
 
 .pr-5 {
   padding-right: 1.25rem;
+}
+
+.pl-1 {
+  padding-left: 0.25rem;
 }
 
 .text-center {
@@ -784,6 +748,11 @@ video {
 
 .text-right {
   text-align: right;
+}
+
+.text-lg {
+  font-size: 1.125rem;
+  line-height: 1.75rem;
 }
 
 .text-2xl {
@@ -801,11 +770,6 @@ video {
   line-height: 1.75rem;
 }
 
-.text-lg {
-  font-size: 1.125rem;
-  line-height: 1.75rem;
-}
-
 .font-bold {
   font-weight: 700;
 }
@@ -813,6 +777,11 @@ video {
 .text-\[cadetblue\] {
   --tw-text-opacity: 1;
   color: rgb(95 158 160 / var(--tw-text-opacity));
+}
+
+.text-gray-400 {
+  --tw-text-opacity: 1;
+  color: rgb(156 163 175 / var(--tw-text-opacity));
 }
 
 .text-gray-500 {
@@ -828,9 +797,4 @@ video {
 .text-white {
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity));
-}
-
-.text-gray-400 {
-  --tw-text-opacity: 1;
-  color: rgb(156 163 175 / var(--tw-text-opacity));
 }
