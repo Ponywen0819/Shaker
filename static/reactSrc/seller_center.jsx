@@ -8,11 +8,11 @@ const SellerBar = () => {
     return (
         <div className='nav-container'>
             <div className='nav-content'>
-                <a href='./test' className='nav-logo'>
+                <a href='/' className='nav-logo'>
                     <img src="/static/img/logo2.png"></img>
                 </a>
                 <div className='nav-logo-content' onMouseEnter={accInfoIsTouched ? pullDownMenu : ""}>
-                    <a href='this para. should be filled the anchor link' className='nav-text'> 賣家中心</a>
+                    <a href='/sellercenter/index' className='nav-text'> 賣家中心</a>
                 </div>
                 <div style={{position: 'relative'}}>
                     <div className='pop-over'>
@@ -97,8 +97,8 @@ const Sidebar = () => {
         {
             title: '商品管理',
             subtitles: [
-                {title: '我的商品', herf:'/sellercenter/myproduct'},
-                {title: '新增商品', herf: '/sellercenter/newproduct'}
+                {title: '我的商品', href:'/sellercenter/myproduct'},
+                {title: '新增商品', href: '/sellercenter/newproduct'}
             ]
         },
         {

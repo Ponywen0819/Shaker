@@ -18,7 +18,7 @@ var SellerBar = function SellerBar() {
             { className: 'nav-content' },
             React.createElement(
                 'a',
-                { href: './test', className: 'nav-logo' },
+                { href: '/', className: 'nav-logo' },
                 React.createElement('img', { src: '/static/img/logo2.png' })
             ),
             React.createElement(
@@ -26,7 +26,7 @@ var SellerBar = function SellerBar() {
                 { className: 'nav-logo-content', onMouseEnter: accInfoIsTouched ? pullDownMenu : "" },
                 React.createElement(
                     'a',
-                    { href: 'this para. should be filled the anchor link', className: 'nav-text' },
+                    { href: '/sellercenter/index', className: 'nav-text' },
                     ' \u8CE3\u5BB6\u4E2D\u5FC3'
                 )
             ),
@@ -163,7 +163,7 @@ var Sidebar = function Sidebar() {
         subtitles: []
     }, {
         title: '商品管理',
-        subtitles: [{ title: '我的商品', herf: '/sellercenter/myproduct' }, { title: '新增商品', herf: '/sellercenter/newproduct' }]
+        subtitles: [{ title: '我的商品', href: '/sellercenter/myproduct' }, { title: '新增商品', href: '/sellercenter/newproduct' }]
     }, {
         title: '財務管理',
         href: '/sellercenter/finance',

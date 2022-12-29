@@ -28,6 +28,7 @@ Swagger(app)
 # app.config.from_object()
 
 @app.route('/')
+@app.route('/index')
 def get_index_page():
     setting = {
         "title": "這是首頁拉",
@@ -170,7 +171,7 @@ def get_product_page():
     }
     return render_template('main.html', setting=setting)
 
-@app.route('/sellercenter')
+@app.route('/sellercenter/index')
 def get_smc_page():
     setting = {
         "title": "賣家中心",
@@ -189,7 +190,7 @@ def get_smc_page():
         ]
     }
     return render_template('main.html', setting=setting)
-@app.route('/myselling')
+@app.route('/sellercenter/marketing')
 def get_ms_page():
     setting = {
         "title": "賣家中心",
@@ -215,6 +216,57 @@ def get_shipping_page():
         "script": [
             "seller_center.js",
             "seller_shipping.js"
+        ],
+        "css": [
+            "Nav.css",
+            "Sidebar.css",
+            'seller_shipping.css',
+            "SMindex.css"
+        ]
+    }
+    return render_template('main.html', setting=setting)
+
+@app.route('/sellercenter/finance')
+def get_finance_page():
+    setting = {
+        "title": "賣家中心",
+        "script": [
+            "seller_center.js",
+            "seller_shipping.js"
+        ],
+        "css": [
+            "Nav.css",
+            "Sidebar.css",
+            'seller_shipping.css',
+            "SMindex.css"
+        ]
+    }
+    return render_template('main.html', setting=setting)
+
+@app.route('/sellercenter/myproduct')
+def get_myproduct_page():
+    setting = {
+        "title": "賣家中心",
+        "script": [
+            "seller_center.js",
+            "seller_shipping.js"
+        ],
+        "css": [
+            "Nav.css",
+            "Sidebar.css",
+            'seller_shipping.css',
+            "SMindex.css"
+        ]
+    }
+    return render_template('main.html', setting=setting)
+
+@app.route('/sellercenter/newproduct')
+def get_newproduct_page():
+    setting = {
+        "title": "賣家中心",
+        "script": [
+            "seller_center.js",
+            "newproduct.js"
         ],
         "css": [
             "Nav.css",

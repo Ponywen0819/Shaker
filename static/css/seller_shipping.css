@@ -31,3 +31,47 @@
     background-position: center;
     background-size: cover;
 }
+
+.interface_title{
+    font-size: 30px;
+    font-weight: 800;
+    margin-bottom: 10px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+}
+
+.new_img{
+    height: 80px;
+    width: 80px;
+}
+
+.new_img_notact{
+    padding: 2px;
+    border: 1px dashed rgba(0,0,0,0.3);
+    font-size: 8px;
+    color: #9ca3af;
+}
+
+.new_name_input{
+    flex-grow: 1;
+    height: 40px;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    padding: 5px 10px;
+}
+
+.new_intro_input{
+    flex-grow: 1;
+    height: 200px !important;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    padding: 5px 10px;
+}
+
+.new_btn{
+    height: 40px;
+    width: 150px;
+    border-radius: 5px;
+    margin-right: 10px;
+    background-color: #fc753e;
+    color: white;
+}
