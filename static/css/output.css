@@ -601,6 +601,18 @@ video {
   height: fit-content !important;
 }
 
+.\!h-3 {
+  height: 0.75rem !important;
+}
+
+.\!h-10 {
+  height: 2.5rem !important;
+}
+
+.\!h-8 {
+  height: 2rem !important;
+}
+
 .w-2\/5 {
   width: 40%;
 }
@@ -647,6 +659,14 @@ video {
 
 .w-\[10\%\] {
   width: 10%;
+}
+
+.\!w-10 {
+  width: 2.5rem !important;
+}
+
+.\!w-20 {
+  width: 5rem !important;
 }
 
 .flex-1 {
@@ -699,6 +719,22 @@ video {
 
 .gap-1 {
   gap: 0.25rem;
+}
+
+.gap-10 {
+  gap: 2.5rem;
+}
+
+.gap-6 {
+  gap: 1.5rem;
+}
+
+.gap-7 {
+  gap: 1.75rem;
+}
+
+.gap-4 {
+  gap: 1rem;
 }
 
 .border {
