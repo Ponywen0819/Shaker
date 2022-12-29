@@ -250,6 +250,25 @@ var SellingPanel = function SellingPanel() {
                                                         )
                                                     )
                                                 )
+                                            ),
+                                            React.createElement(
+                                                "span",
+                                                { className: "input-group__append" },
+                                                React.createElement(
+                                                    "div",
+                                                    { className: "order-search-input" },
+                                                    React.createElement(
+                                                        "div",
+                                                        { className: "search-wrapper" },
+                                                        React.createElement(
+                                                            "div",
+                                                            { className: "search-input__inner" },
+                                                            React.createElement("input", { type: "text", className: "search-target", placeholder: "\u8ACB\u8F38\u5165\u5E33\u865F" }),
+                                                            " //* clearable=\"true\" ??",
+                                                            React.createElement("div", { className: "search-input__suffix" })
+                                                        )
+                                                    )
+                                                )
                                             )
                                         )
                                     )
