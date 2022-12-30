@@ -432,13 +432,44 @@ def get_order():
             'cause': 1202
         })
     return jsonify(temp)
+@app.route("/ModifyOrderState", methods = ["POST"])
+def modify_order_state():
+    # 確認token(account)
+    token = request.cookies.get("User_Token")
+    if token is None: return "", 401
+    if not current_app.config['jwt'].check_token_valid(token, True):
+        return "", 401
+    admin_info = current_app.config['jwt'].get_token_detail(token)
+    require_field = ['order_id', 'status']
+    for need in require_field:
+        if need not in request.json.keys():
+            return jsonify({"cause": 2301})
+    db = database_utils(current_app.config['config'])
+    order = db.command_excute("""
+                         SELECT
+                             *
+                         FROM
+                             `order`
+                         WHERE
+                             id = %(order_id)s
+                         """, request.json)
+    if len(order) != 1:
+        return jsonify({"cause": 2302})
+    db.command_excute("""
+                        UPDATE `order`
+                        SET status = %(status)s
+                        WHERE id = %(order_id)s
+                    """, request.json)
+    return jsonify({"cause": 0})
+
+
 @app.route("/DeleteOrder", methods = ["POST"])
 def delete_order():
     # 確認token(account)
     token = request.cookies.get("User_Token")
-    if token is None: return "", 601
+    if token is None: return "", 401
     if not current_app.config['jwt'].check_token_valid(token):
-        return "", 601
+        return "", 401
     user_info = current_app.config['jwt'].get_token_detail(token)
     require_field = ['id']
     for need in require_field:
