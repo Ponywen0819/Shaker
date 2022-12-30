@@ -286,58 +286,55 @@ def get_product():
     account_info["shop_id"] = user_info["user_id"]
     # 更新時間
     db.command_excute("""
-                                   UPDATE accounts
-                                   SET last_login = %(time)s
-                                   WHERE id = %(shop_id)s
-                                   """, account_info)
+        UPDATE accounts
+        SET last_login = %(time)s
+        WHERE id = %(shop_id)s
+    """, account_info)
     return jsonify(product_list)
 
 
-@app.route("/GetProductFromShop", methods = ["POST"])
+@app.route("/GetProductFromShop", methods = ["GET"])
 def get_product_from_shop():
     # 確認token(account)
     token = request.cookies.get("User_Token")
     if token is None:
+        # 訪客登入時
         require_field = ['shop_id']
         for need in require_field:
             if need not in request.json.keys():
                 return jsonify({"cause": 1101})
         db = database_utils(current_app.config['config'])
         product = db.command_excute("""
-                           SELECT
-                               *
-                           FROM
-                               product
-                           WHERE
-                               shop_id = %(shop_id)s
-                           """, request.json)
+            SELECT *
+            FROM product
+            WHERE shop_id = %(shop_id)s
+        """, request.json)
         return jsonify(product)
 
     if not current_app.config['jwt'].check_token_valid(token):
         return "", 601
     user_info = current_app.config['jwt'].get_token_detail(token)
-    require_field = ['shop_id']
-    for need in require_field:
-        if need not in request.json.keys():
-            return jsonify({"cause": 1101})
+
+    shop_id = get_shop_id(user_info['user_id'])
+
     db = database_utils(current_app.config['config'])
     product = db.command_excute("""
-                   SELECT
-                       *
-                   FROM
-                       product
-                   WHERE
-                       shop_id = %(shop_id)s
-                   """, request.json)
+        SELECT *
+        FROM product
+        WHERE shop_id = %(shop_id)s
+    """, {
+        'shop_id': shop_id
+    })
+
     account_info = {}
     account_info["time"] = datetime.now().strftime("%Y/%m/%d %H:%M:%S")
     account_info["shop_id"] = user_info["user_id"]
     # 更新時間
     db.command_excute("""
-                                   UPDATE accounts
-                                   SET last_login = %(time)s
-                                   WHERE id = %(shop_id)s
-                                   """, account_info)
+        UPDATE accounts
+        SET last_login = %(time)s
+        WHERE id = %(shop_id)s
+    """, account_info)
     return jsonify(product)
 
 

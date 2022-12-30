@@ -73,6 +73,12 @@ const From = ()=>{
                 FailNotify("新增商品出現錯誤")
             }
             else{
+                setIntro('')
+                setName('')
+                setChoosen('')
+                setNum('')
+                setPrice('')
+                setImg('')
                 SuccessNotify("新增商品成功")
             }
         })

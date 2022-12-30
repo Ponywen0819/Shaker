@@ -74,6 +74,7 @@ def get_register_page():
     }
     return render_template('main.html', setting=setting)
 
+
 @app.route('/user/account/profile')
 def get_profile_page():
     setting = {
@@ -90,6 +91,7 @@ def get_profile_page():
         ]
     }
     return render_template('main.html', setting=setting)
+
 
 @app.route('/user/account/password')
 def get_password_page():
@@ -108,6 +110,7 @@ def get_password_page():
     }
     return render_template('main.html', setting=setting)
 
+
 @app.route('/user/purchase')
 def get_purchase_page():
     setting = {
@@ -124,6 +127,7 @@ def get_purchase_page():
         ]
     }
     return render_template('main.html', setting=setting)
+
 
 @app.route('/user/coupon')
 def get_coupon_page():
@@ -142,6 +146,7 @@ def get_coupon_page():
     }
     return render_template('main.html', setting=setting)
 
+
 @app.route('/cart')
 def get_cart_page():
     setting = {
@@ -156,6 +161,7 @@ def get_cart_page():
         ]
     }
     return render_template('main.html', setting=setting)
+
 
 @app.route('/product/<int:product_id>')
 def get_product_page(product_id):
@@ -172,6 +178,7 @@ def get_product_page(product_id):
     }
     return render_template('main.html', setting=setting)
 
+
 @app.route('/search')
 def get_search_page():
     setting = {
@@ -187,6 +194,7 @@ def get_search_page():
         ]
     }
     return render_template('main.html', setting=setting)
+
 
 @app.route('/checkout/<int:checkout>')
 def get_checkout_page(checkout):
@@ -223,6 +231,8 @@ def get_smc_page():
         ]
     }
     return render_template('main.html', setting=setting)
+
+
 @app.route('/sellercenter/marketing')
 def get_ms_page():
     setting = {
@@ -243,7 +253,6 @@ def get_ms_page():
     return render_template('main.html', setting=setting)
 
 
-
 @app.route('/sellercenter/shipping')
 def get_shipping_page():
     setting = {
@@ -252,7 +261,7 @@ def get_shipping_page():
             "seller_center.js",
             "seller_shipping.js"
         ],
-    "css": [
+        "css": [
             "Nav.css",
             "Sidebar.css",
             'seller_shipping.css',
@@ -260,6 +269,7 @@ def get_shipping_page():
         ]
     }
     return render_template('main.html', setting=setting)
+
 
 @app.route('/sellercenter/finance')
 def get_finance_page():
@@ -277,12 +287,15 @@ def get_finance_page():
         ]
     }
     return render_template('main.html', setting=setting)
+
+
 @app.route('/sellercenter/myproduct')
 def get_myproduct_page():
     setting = {
         "title": "賣家中心",
         "script": [
             "seller_center.js",
+            "myproduct.js"
         ],
         "css": [
             "seller_shipping.js"
@@ -300,8 +313,8 @@ def get_newproduct_page():
     setting = {
         "title": "賣家中心",
         "script": [
-            "newproduct.js",
             "seller_center.js",
+            "newproduct.js",
         ],
         "css": [
             "Sidebar.css",
@@ -311,6 +324,7 @@ def get_newproduct_page():
         ]
     }
     return render_template('main.html', setting=setting)
+
 
 if __name__ == "__main__":
     app.config['config'] = configure_collection()

@@ -254,6 +254,7 @@ def change_profile():
 
     return jsonify({"cause": 0})
 
+
 @app.route("RegisterShop", methods=['POST'])
 def register_shop():
     token = request.cookies.get("User_Token")
