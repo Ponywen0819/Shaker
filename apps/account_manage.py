@@ -295,6 +295,50 @@ def register_shop():
     return jsonify({
         'cause': 0
     })
+@app.route("GetShopInfo", methods=['GET'])
+def get_shop_info():
+    token = request.cookies.get("User_Token")
+    # 無帳號
+    if token is None:
+        require_field = ["shop_id"]
+        for need in require_field:
+            if need not in request.json.keys():
+                return jsonify({"cause": 201})
+        db = database_utils(current_app.config['config'])
+        shop_info = db.command_excute("""
+                                                SELECT name, avgstar, last_login,picture.file_path
+                                                FROM shop
+                                                JOIN picture ON shop.logo = picture.id
+                                                WHERE shop.id = %(shop_id)s
+                                                """, request.json)
+        if len(shop_info) != 1:
+            return jsonify({"cause": 202})
+        return jsonify(shop_info)
+    if not current_app.config['jwt'].check_token_valid(token):
+        return "", 401
+    # 有帳號
+    user_info = current_app.config['jwt'].get_token_detail(token)
+    require_field = ["shop_id"]
+    for need in require_field:
+        if need not in request.json.keys():
+            return jsonify({"cause": 201})
+    db = database_utils(current_app.config['config'])
+    shop_info = db.command_excute("""
+                                        SELECT name, avgstar, last_login,picture.file_path
+                                        FROM shop
+                                        JOIN picture ON shop.logo = picture.id
+                                        WHERE shop.id = %(shop_id)s
+                                        """, request.json)
+    if len(shop_info) != 1:
+        return jsonify({"cause": 202})
+    # 更新時間
+    db.command_excute("""
+                        UPDATE accounts
+                        SET last_login = %(time)s
+                        WHERE id = %(user_id)s
+                        """,
+                      {"time": datetime.now().strftime("%Y/%m/%d %H:%M:%S"), "user_id": user_info["user_id"]})
+    return jsonify(shop_info)
 
 @app.route("/PublicKey", methods=['GET'])
 def publickey():

@@ -609,19 +609,34 @@ def get_comment():
     )
 @app.route("/AddProductToCart", methods=["POST"])
 def add_productToCart():
+    db = database_utils(current_app.config['config'])
     # 確認token(account)
     token = request.cookies.get("User_Token")
-    if token is None: return "", 601
+    if token is None: return "", 401
     if not current_app.config['jwt'].check_token_valid(token):
-        return "", 601
+        return "", 401
     user_info = current_app.config['jwt'].get_token_detail(token)
     require_field = ['product_id', 'count']
     for need in require_field:
         if need not in request.json.keys():
             return jsonify({"cause": 1501})
+    check_product_num = db.command_excute("""
+                                 SELECT
+                                     number
+                                 FROM
+                                     product
+                                 WHERE
+                                     id = %(product_id)s
+                                 """, request.json)
+    # 沒有此商品
+    if len(check_product_num) != 1:
+        return jsonify({"cause": 1502})
+    # 超過能提供的數量
+    if request.json['count'] > check_product_num[0]['number']:
+        return jsonify({"cause": 1503})
+    # 如果有就用更新並判斷是否超過能提供數目
     add_info = request.json
     add_info["owner_id"] = user_info["user_id"]
-    db = database_utils(current_app.config['config'])
     cartInfo = db.command_excute("""
                                  SELECT
                                      *
@@ -630,23 +645,25 @@ def add_productToCart():
                                  WHERE
                                      owner_id = %(owner_id)s AND product_id = %(product_id)s
                                  """, add_info)
-    # 購物車裡面已經有此商品
-    if len(cartInfo) != 0:
-        return jsonify({
-            'cause': 1502
-        })
-    db.command_excute("""
+    # cart已有此商品 -> 更新數量
+    if len(cartInfo) == 1:
+        db.command_excute("""
+                            UPDATE cart
+                            SET count = %(count)s
+                            WHERE owner_id = %(owner_id)s
+                        """, add_info)
+    # cart沒有此商品 -> 新增
+    elif len(cartInfo) == 0:
+        db.command_excute("""
                         INSERT INTO cart (owner_id, product_id, count)
                         VALUES (%(owner_id)s, %(product_id)s, %(count)s)
                         """, add_info)
     # 更新時間
     db.command_excute("""
-                                          UPDATE accounts
-                                          SET last_login = %(time)s
-                                          WHERE id = %(user_id)s
-                                          """,
-                      {"time": datetime.now().strftime("%Y/%m/%d %H:%M:%S"), "user_id": user_info["user_id"]})
-
+                        UPDATE accounts
+                        SET last_login = %(time)s
+                        WHERE id = %(user_id)s
+                        """, {"time": datetime.now().strftime("%Y/%m/%d %H:%M:%S"), "user_id": user_info["user_id"]})
     return jsonify({
         'cause': 0
     })
