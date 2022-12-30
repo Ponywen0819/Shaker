@@ -62,9 +62,9 @@ def upload_picture():
 def upload_product():
     # 確認token(account)
     token = request.cookies.get("User_Token")
-    if token is None: return "", 601
+    if token is None: return "", 401
     if not current_app.config['jwt'].check_token_valid(token):
-        return "", 601
+        return "", 401
     user_info = current_app.config['jwt'].get_token_detail(token)
     # 有條件未填
     require_field = ["name", "price", "number", "intro", "category", "picture_id", "status"]
@@ -120,9 +120,9 @@ def upload_product():
 def modify_product():
     # 確認token(account)
     token = request.cookies.get("User_Token")
-    if token is None: return "", 601
+    if token is None: return "", 401
     if not current_app.config['jwt'].check_token_valid(token):
-        return "", 601
+        return "", 401
     user_info = current_app.config['jwt'].get_token_detail(token)
     db = database_utils(current_app.config['config'])
     # 確認是否有這個shop
@@ -185,9 +185,9 @@ def modify_product():
 def delete_product():
     # 確認token(account)
     token = request.cookies.get("User_Token")
-    if token is None: return "", 601
+    if token is None: return "", 401
     if not current_app.config['jwt'].check_token_valid(token):
-        return "", 601
+        return "", 401
     user_info = current_app.config['jwt'].get_token_detail(token)
     db = database_utils(current_app.config['config'])
     # 確認是否有這個shop
@@ -260,7 +260,7 @@ def get_product():
                                """, {"id": product_id})[0])
         return jsonify(product_list)
     if not current_app.config['jwt'].check_token_valid(token):
-        return "", 601
+        return "", 401
     user_info = current_app.config['jwt'].get_token_detail(token)
     require_field = ['id']
     for need in require_field:
@@ -308,7 +308,7 @@ def get_product_from_shop():
         return jsonify(product)
 
     if not current_app.config['jwt'].check_token_valid(token):
-        return "", 601
+        return "", 401
     user_info = current_app.config['jwt'].get_token_detail(token)
     require_field = ['shop_id']
     for need in require_field:
@@ -432,9 +432,9 @@ def create_order():
 def get_order():
     # 確認token(account)
     token = request.cookies.get("User_Token")
-    if token is None: return "", 601
+    if token is None: return "", 401
     if not current_app.config['jwt'].check_token_valid(token):
-        return "", 601
+        return "", 401
     user_info = current_app.config['jwt'].get_token_detail(token)
     require_field = ['id']
     for need in require_field:
@@ -556,9 +556,9 @@ def delete_order():
 def add_comment():
     # 確認token(account)
     token = request.cookies.get("User_Token")
-    if token is None: return "", 601
+    if token is None: return "", 401
     if not current_app.config['jwt'].check_token_valid(token):
-        return "", 601
+        return "", 401
     user_info = current_app.config['jwt'].get_token_detail(token)
     db = database_utils(current_app.config['config'])
     check_order = db.command_excute("""
@@ -569,8 +569,8 @@ def add_comment():
                      WHERE
                          id = %(order_id)s AND owner_id = %(id)s
                      """, {"order_id": request.json["order_id"], "id": user_info["user_id"]})
-    # 根本沒下訂單過
-    if len(check_order) != 1:
+    # 根本沒下訂單過或根本還沒完成訂單
+    if len(check_order) != 1 or check_order[0]["status"] != 2:
         return jsonify({
             'cause': 1001
         })
@@ -585,14 +585,22 @@ def add_comment():
     # 已經評論過
     if len(check_comment) != 0:
         return jsonify({
-            'cause': 1001
+            'cause': 1002
         })
-    require_field = ["order_id", "product_id", "star", "description", "picture"]
+    require_field = ["order_id", "star", "description", "picture"]
     for need in require_field:
         if need not in request.json.keys():
-            return jsonify({"cause": 1002})
+            return jsonify({"cause": 1003})
     comment_info = request.json
     comment_info["time"] = datetime.now().strftime("%Y/%m/%d %H:%M:%S")
+    comment_info["product_id"] = db.command_excute("""
+                            SELECT
+                                *
+                            FROM
+                                 order_detail
+                            WHERE
+                                order_id = %(order_id)s
+                            """, request.json)[0]["product_id"]
     db.command_excute("""
                     INSERT INTO comment (order_id, product_id, star, description, picture, time)
                     VALUES (%(order_id)s, %(product_id)s, %(star)s, %(description)s, %(picture)s, %(time)s)
@@ -650,7 +658,7 @@ def get_comment():
             comments
         )
     if not current_app.config['jwt'].check_token_valid(token):
-        return "", 601
+        return "", 401
     user_info = current_app.config['jwt'].get_token_detail(token)
     require_field = ['product_id']
     for need in require_field:
@@ -743,9 +751,9 @@ def add_productToCart():
 @app.route("/GetProductsToCart", methods=["POST"])
 def get_productsToCart():
     token = request.cookies.get("User_Token")
-    if token is None: return "", 601
+    if token is None: return "", 401
     if not current_app.config['jwt'].check_token_valid(token):
-        return "", 601
+        return "", 401
     user_info = current_app.config['jwt'].get_token_detail(token)
     db = database_utils(current_app.config['config'])
     allProduct = db.command_excute("""
@@ -771,9 +779,9 @@ def get_productsToCart():
 def delete_productToCart():
     # 確認token(account)
     token = request.cookies.get("User_Token")
-    if token is None: return "", 601
+    if token is None: return "", 401
     if not current_app.config['jwt'].check_token_valid(token):
-        return "", 601
+        return "", 401
     user_info = current_app.config['jwt'].get_token_detail(token)
     require_field = ['product_id']
     for need in require_field:
