@@ -337,45 +337,87 @@ def get_product_from_shop():
 def create_order():
     # 確認token(account)
     token = request.cookies.get("User_Token")
-    if token is None: return "", 601
+    if token is None: return "", 401
     if not current_app.config['jwt'].check_token_valid(token):
-        return "", 601
+        return "", 401
     user_info = current_app.config['jwt'].get_token_detail(token)
     # 'owner_id', 'start_time', 'end_time'
-    require_field = ['payment', 'status', 'free_fee', 'price', 'address', 'product_id', 'number']
+    require_field = ['product', 'address', 'payment']
     for need in require_field:
         if need not in request.json.keys():
             return jsonify({"cause": 1101})
     info = request.json
+    info["product_id"] = info["product"][0]["product_id"]
+    info["num"] = info["product"][0]["num"]
     info["owner_id"] = user_info["user_id"]
     info["start_time"] = datetime.now().strftime("%Y/%m/%d %H:%M:%S")
     info["end_time"] = (datetime.now() + timedelta(days=7)).strftime("%Y/%m/%d %H:%M:%S")
+    info["status"] = 0
+    info.pop("product")
     db = database_utils(current_app.config['config'])
-    # 確認有這個商品
-    check_product = db.command_excute("""
-                   SELECT
-                       shop_id
-                   FROM
-                       product
-                   WHERE
-                       id = %(product_id)s
-                   """, info)
-    if len(check_product) != 1:
+    # 判斷商品是否存在以及數量是否足夠
+    product = db.command_excute("""
+                         SELECT
+                             *
+                         FROM
+                             `product`
+                         WHERE
+                             id = %(product_id)s
+                         """, info)
+    if len(product) == 0 or product[0]["number"] < info["num"]:
+        return jsonify({"cause": 1102})
+    # 判斷coupon是否存在
+    if "coupon_id" in info.keys():
+        coupon = db.command_excute("""
+                             SELECT
+                                 *
+                             FROM
+                                 `coupon_type`
+                             WHERE
+                                 id = %(coupon_id)s
+                             """, info)
+        if len(coupon) == 0:
+            return jsonify({"cause": 1103})
+        # 低消拉幹，順便算總價
+        total_price = product[0]["price"] * info["num"]
+        if coupon[0]["minimum_consumption"] > total_price:
+            return jsonify({"cause": 1104})
+        if coupon[0]["discount_type"] == 0:
+            info["free_fee"] = 1
+            info["price"] = total_price
+        else:
+            info["free_fee"] = 0
+            info["price"] = (total_price * coupon[0]["discount"] / 100) + 150
+        db.command_excute("""
+                            INSERT INTO `order` (owner_id, start_time, end_time, payment, status, free_fee, price, address)
+                            VALUES (%(owner_id)s, %(start_time)s, %(end_time)s, %(payment)s, %(status)s, %(free_fee)s, %(price)s, %(address)s)
+                            """, info)
+        info['order_id'] = db.command_excute("""SELECT LAST_INSERT_ID() AS id;""", {})[0]['id']
+        db.command_excute("""
+                            INSERT INTO order_detail (order_id, product_id, number)
+                            VALUES (%(order_id)s, %(product_id)s, %(num)s)
+                            """, info)
+        # 更新時間
+        db.command_excute("""
+                               UPDATE accounts
+                               SET last_login = %(start_time)s
+                               WHERE id = %(owner_id)s
+                               """, info)
         return jsonify({
-            'cause': 901
+            'cause': 0
         })
+    # 沒有折價券拉，總價
+    info["price"] = product[0]["price"] * info["num"] + 150
+    info["free_fee"] = 0
     db.command_excute("""
-                       INSERT INTO `order` (owner_id, start_time, end_time, payment, status, free_fee, price, address)
-                       VALUES (%(owner_id)s, %(start_time)s, %(end_time)s, %(payment)s, %(status)s, %(free_fee)s, %(price)s, %(address)s)
-                       """, info)
-
-    temp = request.json
-    temp['order_id'] = db.command_excute("""SELECT LAST_INSERT_ID() AS id;""", {})[0]['id']
-    # order_detail
+                        INSERT INTO `order` (owner_id, start_time, end_time, payment, status, free_fee, price, address)
+                        VALUES (%(owner_id)s, %(start_time)s, %(end_time)s, %(payment)s, %(status)s, %(free_fee)s, %(price)s, %(address)s)
+                        """, info)
+    info['order_id'] = db.command_excute("""SELECT LAST_INSERT_ID() AS id;""", {})[0]['id']
     db.command_excute("""
-                          INSERT INTO order_detail (order_id, product_id, number)
-                          VALUES (%(order_id)s, %(product_id)s, %(number)s)
-                          """, temp)
+                                INSERT INTO order_detail (order_id, product_id, number)
+                                VALUES (%(order_id)s, %(product_id)s, %(num)s)
+                                """, info)
     # 更新時間
     db.command_excute("""
                            UPDATE accounts
