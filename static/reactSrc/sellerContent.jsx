@@ -1,5 +1,5 @@
 function SMContext () {
-    const [oneIsTouched, setOneIsTouched] = React.useState(true);
+  const [oneIsTouched, setOneIsTouched] = React.useState(true);
   const [twoIsTouched, setTwoIsTouched] = React.useState(true);
   const [thirdIsTouched, setThirdIsTouched] = React.useState(true);
   const [fourIsTouched, setFourIsTouched] = React.useState(true);
@@ -7,7 +7,7 @@ function SMContext () {
   const [sixIsTouched, setSixIsTouched] = React.useState(true);
   const [sevenIsTouched, setSevenIsTouched] = React.useState(true);
   const [eightIsTouched, setEightIsTouched] = React.useState(true);
-  function                                                           oneChange(){
+  function oneChange(){
     setOneIsTouched(!oneIsTouched);
   }
   function twoChange(){
