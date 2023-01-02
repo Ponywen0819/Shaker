@@ -275,10 +275,10 @@ def get_shipping_page():
 @app.route('/sellercenter/finance')
 def get_finance_page():
     setting = {
-        "title": "賣家中心",
+        "title": "賣家中心|優惠券管理",
         "script": [
             "seller_center.js",
-            "seller_shipping.js"
+            "finance.js",
         ],
         "css": [
             "Sidebar.css",

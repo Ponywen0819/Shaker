@@ -118,7 +118,7 @@ var UpperBar = function UpperBar() {
                     { className: 'upper_nobar' },
                     React.createElement(
                         'a',
-                        { className: 'Toolbat_text', href: '' },
+                        { className: 'Toolbat_text', href: '/sellercenter/index' },
                         '\u8CE3\u5BB6\u4E2D\u5FC3'
                     )
                 )
