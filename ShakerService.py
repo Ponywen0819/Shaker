@@ -282,6 +282,7 @@ def get_finance_page():
             "finance.js",
         ],
         "css": [
+            'coupon.css',
             "Sidebar.css",
             "Nav.css",
             'seller_shipping.css',

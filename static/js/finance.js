@@ -1,7 +1,55 @@
 var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
 
-var Coupon = function Coupon() {
-    return React.createElement('div', null);
+var Coupon = function Coupon(_ref) {
+    var info = _ref.info;
+
+    var start = new Date(info.start_time);
+    var end = new Date(info.end_time);
+    return React.createElement(
+        'div',
+        { className: 'item' },
+        React.createElement(
+            'div',
+            { className: 'item_info' },
+            React.createElement(
+                'div',
+                { className: 'item_head item_head_shop' },
+                info.discount_type === 1 ? '季節折扣' : '特殊折扣'
+            ),
+            React.createElement(
+                'div',
+                { className: 'item_text_area' },
+                React.createElement(
+                    'div',
+                    null,
+                    React.createElement(
+                        'p',
+                        null,
+                        info.name
+                    ),
+                    info.discount_type === 1 ? React.createElement(
+                        'p',
+                        { className: 'item_name' },
+                        '\u6253' + info.discount + '\u6298'
+                    ) : [React.createElement(
+                        'p',
+                        { className: 'item_name' },
+                        '\u6298$' + info.discount
+                    ), React.createElement(
+                        'p',
+                        { className: 'item_num' },
+                        ' ',
+                        '\u4F4E\u6D88$' + info.minimum_consumptio
+                    )]
+                ),
+                React.createElement(
+                    'p',
+                    null,
+                    '\u4F7F\u7528\u671F\u9650 ' + end.getFullYear() + '/' + (end.getMonth() + 1) + '/' + end.getDate()
+                )
+            )
+        )
+    );
 };
 var Main = function Main() {
     // 用於新增優惠券使用
@@ -90,15 +138,36 @@ var Main = function Main() {
             }
         }).then(function (data) {
             console.log(data);
-            if (data.cause === 0) {} else {
+            if (data.cause === 0) {
+                SuccessNotify('新增優惠券成功');
+                setType('');
+                setName('');
+                setFix('');
+                setPer('');
+                setMin('');
+                get_coupons();
+            } else {
                 FailNotify('新增優惠券失敗');
             }
         });
     };
 
+    var get_coupons = function get_coupons() {
+        fetch('/coupon/GetShopCoupons', {
+            method: 'POST'
+        }).then(function (res) {
+            if (res.status === 200) {
+                return res.json();
+            }
+        }).then(function (data) {
+            console.log(data);
+            setCoupons(data);
+        });
+    };
+
     React.useEffect(function () {
-        fetch('');
-    }, [coupons]);
+        get_coupons();
+    }, []);
 
     return React.createElement(
         'div',
@@ -219,7 +288,7 @@ var Main = function Main() {
                         '\u73FE\u7121\u767C\u884C\u4E4B\u512A\u60E0\u5238'
                     )
                 ) : coupons.map(function (coupon) {
-                    return React.createElement(Coupon, null);
+                    return React.createElement(Coupon, { info: coupon });
                 })
             )
         )

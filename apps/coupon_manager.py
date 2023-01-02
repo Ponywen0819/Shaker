@@ -4,6 +4,7 @@ import time
 import json
 import os
 import uuid
+from module.seller_center_util import get_shop_id
 from datetime import datetime, timedelta
 from module.data_utils import database_utils
 app = Blueprint('coupon_manager', __name__)
@@ -154,19 +155,23 @@ def get_shop_coupon():
         return "", 401
     user_info = current_app.config['jwt'].get_token_detail(token)
     require_field = ['shop_id']
-    for need in require_field:
-        if need not in request.json.keys():
-            return jsonify({"cause": 2301})
+    # for need in require_field:
+    #     if need not in request.json.keys():
+    #         return jsonify({"cause": 2301})
+    shop_id = get_shop_id(user_info['user_id'])
+
     db = database_utils(current_app.config['config'])
     # 取的shop的publisher_id
     shop_publisher_id = db.command_excute("""
-                                                    SELECT
-                                                            publisher_id
-                                                    FROM
-                                                            shop
-                                                    WHERE
-                                                            id = %(shop_id)s
-                                                    """, request.json)
+        SELECT
+                publisher_id
+        FROM
+                shop
+        WHERE
+                id = %(shop_id)s
+        """, {
+            'shop_id': shop_id
+        })
     # 取的該shop的coupon資訊以及admin所發行的免運勸
     coupons = db.command_excute("""
                                                     SELECT

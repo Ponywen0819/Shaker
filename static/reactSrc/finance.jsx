@@ -1,7 +1,30 @@
-const Coupon = ()=>{
+const Coupon = ({info})=>{
+    let start = new Date(info.start_time)
+    let end = new Date(info.end_time)
     return(
-        <div>
+        <div className={`item`}>
+            <div className={`item_info`}>
+                <div className={`item_head item_head_shop`}>
+                    {
+                        info.discount_type === 1?'季節折扣':'特殊折扣'
+                    }
+                </div>
+                <div className={`item_text_area`}>
+                    <div>
+                        <p>{info.name}</p>
+                        {
+                            (info.discount_type === 1)?(
+                                <p className={`item_name`}>{`打${info.discount}折`}</p>
+                            ):[
+                                <p className={`item_name`}>{`折$${info.discount}`}</p>,
+                                <p className={`item_num`}> {`低消$${info.minimum_consumptio}`}</p>
+                            ]
+                        }
 
+                    </div>
+                    <p>{`使用期限 ${end.getFullYear()}/${end.getMonth() + 1}/${end.getDate()}`}</p>
+                </div>
+            </div>
         </div>
     )
 }
@@ -72,7 +95,13 @@ const Main = ()=>{
         }).then(data=>{
             console.log(data)
             if(data.cause === 0){
-
+                SuccessNotify('新增優惠券成功')
+                setType('')
+                setName('')
+                setFix('')
+                setPer('')
+                setMin('')
+                get_coupons()
             }
             else{
                 FailNotify('新增優惠券失敗')
@@ -80,10 +109,22 @@ const Main = ()=>{
         })
     }
 
+    const get_coupons = ()=>{
+        fetch('/coupon/GetShopCoupons',{
+            method: 'POST'
+        }).then(res=>{
+            if(res.status === 200){
+                return res.json()
+            }
+        }).then(data=>{
+            console.log(data)
+            setCoupons(data)
+        })
+    }
 
     React.useEffect(()=>{
-        fetch('')
-    },[coupons])
+        get_coupons()
+    },[])
 
     return(
         <div>
@@ -130,7 +171,7 @@ const Main = ()=>{
                     {
                         (coupons.length === 0)?(
                             <div className={`h-36 flex justify-center items-center`}><p className={`text-2xl font-extrabold `}>現無發行之優惠券</p></div>
-                        ):coupons.map(coupon=>(<Coupon></Coupon>))
+                        ):coupons.map(coupon=>(<Coupon info={coupon}></Coupon>))
                     }
                 </div>
             </div>
