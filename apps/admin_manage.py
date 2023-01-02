@@ -13,6 +13,7 @@ def login():
     auth_info['password'] = hashlib.sha256(
         current_app.config['crypto'].decrypt(auth_info['password']).encode("utf-8")).hexdigest()
     db = database_utils(current_app.config['config'])
+    # 確認admin有沒有重複
     dbreturn = db.command_excute("""
     SELECT *
     FROM admin
@@ -47,11 +48,13 @@ def register():
         current_app.config['crypto'].decrypt(request.json['password']).encode("utf-8")).hexdigest()
 
     db = database_utils(current_app.config['config'])
+    # 插入admin的publisher_id
     db.command_excute("""
                 INSERT INTO publisher (publisher_id)
                 VALUES (%(id)s);
                 """, {"id": 0})
     auth_info['publisher_id'] = db.command_excute("""SELECT LAST_INSERT_ID() AS id;""", {})[0]['id']
+    # 新增此admin
     db.command_excute_and_return_id("""
                     INSERT INTO admin (name, account, password, publisher_id)
                     VALUES (%(name)s, %(account)s, %(password)s, %(publisher_id)s);

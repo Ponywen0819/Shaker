@@ -39,11 +39,12 @@ def upload_picture():
 
     file.save(os.path.join(current_app.config["config"]["UploadFolder"], filename))
     db = database_utils(current_app.config['config'])
+    # 新增圖片file到picture
     db.command_excute("""
                     INSERT INTO picture (file_path) 
                     VALUES (%(file_path)s);
                     """, {"file_path": (current_app.config["config"]["UploadFolder"] + "/" + filename)})
-
+    # 拿picture資訊並回傳
     dbreturn = db.command_excute("""
                 SELECT 
                     id
@@ -88,6 +89,7 @@ def upload_product():
     product_info = request.json
     product_info["shop_id"] = check_shop[0]["id"]
     product_info["time"] = datetime.now().strftime("%Y/%m/%d %H:%M:%S")
+    # 確認是否有商品
     check_product = db.command_excute("""
         SELECT
             *
@@ -143,6 +145,7 @@ def modify_product():
         return jsonify({"cause": 701})
     temp = request.json
     temp["shop_id"] = check_shop[0]["id"]
+    # 確認商品(是否存在等等)
     check_product = db.command_excute("""
             SELECT
                 *
@@ -164,6 +167,7 @@ def modify_product():
             info[modify] = check_product[0].get(modify)
             info["time"] = datetime.now().strftime("%Y/%m/%d %H:%M:%S")
             info["shop_id"] = check_shop[0]["id"]
+    # 更新product資料
     db.command_excute("""
                      UPDATE product
                      SET name = %(name)s, price = %(price)s, number = %(number)s, intro = %(intro)s, category = %(category)s, picture_id = %(picture_id)s, status = %(status)s
@@ -209,6 +213,7 @@ def delete_product():
         })
     temp = request.json
     temp["shop_id"] = check_shop[0]["id"]
+    # 確認商品
     check_product = db.command_excute("""
                 SELECT
                     *
@@ -222,6 +227,7 @@ def delete_product():
         return jsonify({
             'cause': 801
         })
+    # 刪除商品
     db.command_excute("""
                          DELETE FROM product
                          WHERE id = %(id)s;
@@ -249,6 +255,7 @@ def get_product():
                 return jsonify({"cause": 1101})
         db = database_utils(current_app.config['config'])
         product_list = []
+        # 拿取從前端過來的product_id array並回傳
         for product_id in request.json["id"]:
             product_list.append(db.command_excute("""
                                SELECT
@@ -268,6 +275,7 @@ def get_product():
             return jsonify({"cause": 1101})
     db = database_utils(current_app.config['config'])
     product_list = []
+    # 拿取從前端過來的product_id array並回傳
     for product_id in request.json["id"]:
         product_list.append(db.command_excute("""
                        SELECT
@@ -297,6 +305,7 @@ def get_product_from_shop():
             if need not in request.json.keys():
                 return jsonify({"cause": 1101})
         db = database_utils(current_app.config['config'])
+        # 拿商品資訊
         product = db.command_excute("""
                            SELECT
                                *
@@ -315,6 +324,7 @@ def get_product_from_shop():
         if need not in request.json.keys():
             return jsonify({"cause": 1101})
     db = database_utils(current_app.config['config'])
+    # 拿商品資訊
     product = db.command_excute("""
                    SELECT
                        *
@@ -368,6 +378,7 @@ def create_order():
         return jsonify({"cause": 1102})
     # 判斷coupon是否存在
     if "coupon_id" in info.keys():
+        # 拿取coupon_type資訊
         coupon = db.command_excute("""
                              SELECT
                                  *
@@ -388,11 +399,13 @@ def create_order():
         else:
             info["free_fee"] = 0
             info["price"] = (total_price * coupon[0]["discount"] / 100) + 150
+        # 插入新的order
         db.command_excute("""
                             INSERT INTO `order` (owner_id, start_time, end_time, payment, status, free_fee, price, address)
                             VALUES (%(owner_id)s, %(start_time)s, %(end_time)s, %(payment)s, %(status)s, %(free_fee)s, %(price)s, %(address)s)
                             """, info)
         info['order_id'] = db.command_excute("""SELECT LAST_INSERT_ID() AS id;""", {})[0]['id']
+        # 同時插入此order的order_detail
         db.command_excute("""
                             INSERT INTO order_detail (order_id, product_id, number)
                             VALUES (%(order_id)s, %(product_id)s, %(num)s)
@@ -409,11 +422,13 @@ def create_order():
     # 沒有折價券拉，總價
     info["price"] = product[0]["price"] * info["num"] + 150
     info["free_fee"] = 0
+    # 插入新的order
     db.command_excute("""
                         INSERT INTO `order` (owner_id, start_time, end_time, payment, status, free_fee, price, address)
                         VALUES (%(owner_id)s, %(start_time)s, %(end_time)s, %(payment)s, %(status)s, %(free_fee)s, %(price)s, %(address)s)
                         """, info)
     info['order_id'] = db.command_excute("""SELECT LAST_INSERT_ID() AS id;""", {})[0]['id']
+    # 同時插入此order的order_detail
     db.command_excute("""
                                 INSERT INTO order_detail (order_id, product_id, number)
                                 VALUES (%(order_id)s, %(product_id)s, %(num)s)
@@ -441,6 +456,7 @@ def get_order():
         if need not in request.json.keys():
             return jsonify({"cause": 1201})
     db = database_utils(current_app.config['config'])
+    # 拿取order
     order = db.command_excute("""
                          SELECT
                              *
@@ -449,6 +465,7 @@ def get_order():
                          WHERE
                              id = %(id)s
                          """, request.json)
+    # 並拿取order_detail
     orderDetail = db.command_excute("""
                              SELECT
                                  *
@@ -487,6 +504,7 @@ def modify_order_state():
         if need not in request.json.keys():
             return jsonify({"cause": 2301})
     db = database_utils(current_app.config['config'])
+    # 拿取order資訊，用於查看有沒有此order
     order = db.command_excute("""
                          SELECT
                              *
@@ -497,6 +515,7 @@ def modify_order_state():
                          """, request.json)
     if len(order) != 1:
         return jsonify({"cause": 2302})
+    # 更新order的status(admin才能修改)
     db.command_excute("""
                         UPDATE `order`
                         SET status = %(status)s
@@ -520,6 +539,7 @@ def delete_order():
     db = database_utils(current_app.config['config'])
     order_info = request.json
     order_info["owner_id"] = user_info["user_id"]
+    # 拿取order資訊
     detail = db.command_excute("""
                          SELECT
                              *
@@ -533,6 +553,7 @@ def delete_order():
         return jsonify({
             'cause': 1302
         })
+    # 刪除order
     db.command_excute("""
                            DELETE FROM `order`
                            WHERE id = %(id)s;
@@ -542,6 +563,7 @@ def delete_order():
     #                         WHERE order_id = %(id)s;
     #                         """, request.json)
     user_info["time"] = datetime.now().strftime("%Y/%m/%d %H:%M:%S")
+    # 更新時間
     db.command_excute("""
                                   UPDATE accounts
                                   SET last_login = %(time)s
@@ -561,6 +583,7 @@ def add_comment():
         return "", 401
     user_info = current_app.config['jwt'].get_token_detail(token)
     db = database_utils(current_app.config['config'])
+    # 拿取order資訊
     check_order = db.command_excute("""
                      SELECT
                          *
@@ -574,6 +597,7 @@ def add_comment():
         return jsonify({
             'cause': 1001
         })
+    # 拿取comment資訊，用於判斷有沒有評論過
     check_comment = db.command_excute("""
                      SELECT
                          *
@@ -593,6 +617,7 @@ def add_comment():
             return jsonify({"cause": 1003})
     comment_info = request.json
     comment_info["time"] = datetime.now().strftime("%Y/%m/%d %H:%M:%S")
+    # 拿取order_detail
     comment_info["product_id"] = db.command_excute("""
                             SELECT
                                 *
@@ -601,11 +626,12 @@ def add_comment():
                             WHERE
                                 order_id = %(order_id)s
                             """, request.json)[0]["product_id"]
+    # 新增一筆comment
     db.command_excute("""
                     INSERT INTO comment (order_id, product_id, star, description, picture, time)
                     VALUES (%(order_id)s, %(product_id)s, %(star)s, %(description)s, %(picture)s, %(time)s)
                     """, comment_info)
-
+    # 算出此商品的平均評分
     average = db.command_excute("""
                      SELECT
                          AVG(star)
@@ -616,6 +642,7 @@ def add_comment():
                      """, comment_info)
     temp = request.json
     temp["average"] = average[0]["AVG(star)"]
+    # 把上面算出來的數值，更新到product上的avg_star
     db.command_excute("""
                          UPDATE product
                          SET avgstar = %(average)s
@@ -641,6 +668,7 @@ def get_comment():
             if need not in request.json.keys():
                 return jsonify({"cause": 1401})
         db = database_utils(current_app.config['config'])
+        # 取的comment資訊
         comments = db.command_excute("""
                                      SELECT
                                          *
@@ -665,6 +693,7 @@ def get_comment():
         if need not in request.json.keys():
             return jsonify({"cause": 1401})
     db = database_utils(current_app.config['config'])
+    # 取的comment資訊
     comments = db.command_excute("""
                              SELECT
                                  *
@@ -701,6 +730,7 @@ def add_productToCart():
     for need in require_field:
         if need not in request.json.keys():
             return jsonify({"cause": 1501})
+    # 拿取該product剩餘數量，來判斷顧客給的數量是否超過
     check_product_num = db.command_excute("""
                                  SELECT
                                      number
@@ -756,6 +786,7 @@ def get_productsToCart():
         return "", 401
     user_info = current_app.config['jwt'].get_token_detail(token)
     db = database_utils(current_app.config['config'])
+    # 取的使用者cart裡面所有商品資訊
     allProduct = db.command_excute("""
                                  SELECT
                                      *
@@ -790,6 +821,7 @@ def delete_productToCart():
     delete_info = request.json
     delete_info["owner_id"] = user_info["user_id"]
     db = database_utils(current_app.config['config'])
+    # 確認使用者cart裡有沒有要刪除的商品
     cartProduct = db.command_excute("""
                                      SELECT
                                          *
@@ -803,6 +835,7 @@ def delete_productToCart():
         return jsonify({
             'cause': 1702
         })
+    # cart刪除product
     db.command_excute("""
                                DELETE FROM cart
                                WHERE owner_id = %(owner_id)s AND product_id = %(product_id)s;
@@ -830,6 +863,7 @@ def create_category():
             return jsonify({"cause": 153})
 
     db = database_utils(current_app.config['config'])
+    # 確認category種類(only admin)
     check_category = db.command_excute("""
                                          SELECT
                                              *
@@ -842,6 +876,7 @@ def create_category():
         return jsonify({
             'cause': 1801
         })
+    # 若前面檢測沒有重複則新增category
     db.command_excute("""
                             INSERT INTO `category_type` (`name`)
                             VALUES (%(name)s)
@@ -860,6 +895,7 @@ def delete_category():
             return jsonify({"cause": 153})
 
     db = database_utils(current_app.config['config'])
+    # 拿取category，判斷是否存在
     check_category = db.command_excute("""
                                              SELECT
                                                  *
@@ -872,6 +908,7 @@ def delete_category():
         return jsonify({
             'cause': 1901
         })
+    # 刪除category
     db.command_excute("""
                                 DELETE FROM category_type
                                 WHERE name = %(name)s
@@ -885,6 +922,7 @@ def get_category():
         return "", 401
     user_info = current_app.config['jwt'].get_token_detail(token)
     db = database_utils(current_app.config['config'])
+    # 取的所有category
     all_category = db.command_excute("""
                                              SELECT
                                                  *
