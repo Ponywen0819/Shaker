@@ -35,7 +35,7 @@ const Main = ()=>{
             FailNotify('請輸入優惠券種類')
             return;
         }
-        upload_data.discount_type = coupon_type
+        upload_data.discount_type = parseInt(coupon_type)
         if(coupon_type === '1'){
             if(per_discount === ''){
                 FailNotify('請輸入折價折數')
