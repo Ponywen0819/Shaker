@@ -377,27 +377,29 @@ def create_order():
         if need not in request.json.keys():
             return jsonify({"cause": 1101})
     info = request.json
-    info["product_id"] = info["product"][0]["product_id"]
-    info["num"] = info["product"][0]["num"]
     info["owner_id"] = user_info["user_id"]
     info["start_time"] = datetime.now().strftime("%Y/%m/%d %H:%M:%S")
     info["end_time"] = (datetime.now() + timedelta(days=7)).strftime("%Y/%m/%d %H:%M:%S")
     info["status"] = 0
-    info.pop("product")
     db = database_utils(current_app.config['config'])
+    total_price = 0
     # 判斷商品是否存在以及數量是否足夠
-    product = db.command_excute("""
-        SELECT
-            *
-        FROM
-            `product`
-        WHERE
-            id = %(product_id)s
-    """, info)
-    if len(product) == 0 or product[0]["number"] < info["num"]:
-        return jsonify({"cause": 1102})
+    for i in range(len(info["product"])):
+        product = db.command_excute("""
+                             SELECT
+                                 *
+                             FROM
+                                 `product`
+                             WHERE
+                                 id = %(product_id)s
+                             """, info['product'][i])
+        if len(product) == 0 or product[0]["number"] < info['product'][i]["num"]:
+            return jsonify({"cause": 1102})
+        total_price += info['product'][i]["num"] * product[0]["price"]
     # 判斷coupon是否存在
     if "coupon_id" in info.keys():
+        product_info = {}
+        product_info["product"] = info.pop("product")
         # 拿取coupon_type資訊
         coupon = db.command_excute("""
                              SELECT
@@ -410,7 +412,6 @@ def create_order():
         if len(coupon) == 0:
             return jsonify({"cause": 1103})
         # 低消拉幹，順便算總價
-        total_price = product[0]["price"] * info["num"]
         if coupon[0]["minimum_consumption"] > total_price:
             return jsonify({"cause": 1104})
         if coupon[0]["discount_type"] == 0:
@@ -426,10 +427,12 @@ def create_order():
                             """, info)
         info['order_id'] = db.command_excute("""SELECT LAST_INSERT_ID() AS id;""", {})[0]['id']
         # 同時插入此order的order_detail
-        db.command_excute("""
-                            INSERT INTO order_detail (order_id, product_id, number)
-                            VALUES (%(order_id)s, %(product_id)s, %(num)s)
-                            """, info)
+        for i in range(len(product_info["product"])):
+            db.command_excute("""
+                                        INSERT INTO order_detail (order_id, product_id, number)
+                                        VALUES (%(order_id)s, %(product_id)s, %(num)s)
+                                        """,
+                              {"order_id": info["order_id"], "product_id": product_info["product"][i]["product_id"], "num": product_info["product"][i]["num"]})
         # 更新時間
         db.command_excute("""
                                UPDATE accounts
@@ -440,8 +443,10 @@ def create_order():
             'cause': 0
         })
     # 沒有折價券拉，總價
-    info["price"] = product[0]["price"] * info["num"] + 150
+    info["price"] = total_price + 150
     info["free_fee"] = 0
+    product_info = {}
+    product_info["product"] = info.pop("product")
     # 插入新的order
     db.command_excute("""
                         INSERT INTO `order` (owner_id, start_time, end_time, payment, status, free_fee, price, address)
@@ -449,10 +454,11 @@ def create_order():
                         """, info)
     info['order_id'] = db.command_excute("""SELECT LAST_INSERT_ID() AS id;""", {})[0]['id']
     # 同時插入此order的order_detail
-    db.command_excute("""
-                                INSERT INTO order_detail (order_id, product_id, number)
-                                VALUES (%(order_id)s, %(product_id)s, %(num)s)
-                                """, info)
+    for i in range(len(product_info['product'])):
+        db.command_excute("""
+                            INSERT INTO order_detail (order_id, product_id, number)
+                            VALUES (%(order_id)s, %(product_id)s, %(num)s)
+                            """, {"order_id": info["order_id"], "product_id": product_info["product"][i]["product_id"], "num": product_info["product"][i]["num"]})
     # 更新時間
     db.command_excute("""
                            UPDATE accounts
@@ -1147,6 +1153,12 @@ def search_product():
          WHERE 
             product.name LIKE %(search_word)s
          """, info)
+        db.command_excute("""
+                                                          UPDATE accounts
+                                                          SET last_login = %(time)s
+                                                          WHERE id = %(user_id)s
+                                                          """,
+                          {"time": datetime.now().strftime("%Y/%m/%d %H:%M:%S"), "user_id": user_info["user_id"]})
         return jsonify(result)
     elif "category" in request.json and "search_word" not in request.json:
         result = db.command_excute("""
@@ -1158,6 +1170,12 @@ def search_product():
                  WHERE 
                     product.category = %(category)s
                  """, info)
+        db.command_excute("""
+                                                          UPDATE accounts
+                                                          SET last_login = %(time)s
+                                                          WHERE id = %(user_id)s
+                                                          """,
+                          {"time": datetime.now().strftime("%Y/%m/%d %H:%M:%S"), "user_id": user_info["user_id"]})
         return jsonify(result)
     else:
         info["search_word"] = "%" + info["search_word"] + "%"
@@ -1171,5 +1189,11 @@ def search_product():
          WHERE 
             product.name LIKE %(search_word)s AND product.id = %(category)s
          """, info)
+        db.command_excute("""
+                                                          UPDATE accounts
+                                                          SET last_login = %(time)s
+                                                          WHERE id = %(user_id)s
+                                                          """,
+                          {"time": datetime.now().strftime("%Y/%m/%d %H:%M:%S"), "user_id": user_info["user_id"]})
         return jsonify(result)
 
