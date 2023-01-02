@@ -44,14 +44,6 @@ const OrderArea =({items})=>{
     )
 }
 
-const CouponArea =()=>{
-    return(
-        <div className={`title h-20 justify-end mb-5`}>
-            <p className={`pr-5`}>{`尚未選擇優惠券`}</p>
-            <button>選擇優惠券</button>
-        </div>
-    )
-}
 
 const Summarize = ({infos})=>{
     let end = 0
@@ -91,6 +83,48 @@ const Summarize = ({infos})=>{
 const Main = ()=>{
     const [OrderItem, setItem] = React.useState([])
     const [total, setTotal] = React.useState(0)
+    const [couponlist, setList] = React.useState([])
+    const [coupon, setcoupon] = React.useState('')
+    const [info, setInfo] = React.useState({"商品總金額：": 0,"運費總金額": 60})
+    const [payment, setPay] = React.useState('')
+    const [addr, setAddr] = React.useState('')
+    const coupon_change = (e)=>{
+        const index = parseInt(e.target.value)
+        setcoupon(e.target.value)
+        const chosen = couponlist[index]
+        console.log(chosen)
+        if(chosen.discount_type === 0){
+            setInfo({
+                "商品總金額：": total,
+                "運費總金額": 60,
+                "運費折抵": -60
+            })
+        }
+        else if(chosen.discount_type === 1){
+            setInfo({
+                "商品總金額：": total,
+                "優惠券折價: ": -parseInt(total * (1 - (parseInt(chosen.discount)/100))),
+                "運費總金額": 60
+            })
+        }else{
+            setInfo({
+                "商品總金額：": total,
+                "優惠券折價: ": -parseInt(chosen.discount),
+                "運費總金額": 60
+            })
+        }
+    }
+
+    const handle_upload = () =>{
+        let data ={}
+        data.product = OrderItem
+        data.address = addr
+        data.payment = payment
+        if(coupon !== ''){
+            data.coupon
+        }
+
+    }
 
 
     React.useEffect(()=>{
@@ -121,6 +155,8 @@ const Main = ()=>{
                     temp += (i.price * i.count)
                 })
                 setTotal(temp)
+                info['商品總金額'] = temp
+                setInfo(info)
                 return(data.data)
             }
         }).then(data=>{
@@ -138,6 +174,7 @@ const Main = ()=>{
                 }
             }).then(data=>{
                 console.log(data)
+                setList(data)
             })
 
         })
@@ -152,8 +189,30 @@ const Main = ()=>{
             <CheckBar></CheckBar>
             <div className={`main mb-10`}>
                 <OrderArea items={OrderItem}></OrderArea>
-                <CouponArea></CouponArea>
-                <Summarize infos={{"商品總金額：": total,"運費總金額": 60, "折價券折扣": -20, "運費折扣": -60}}></Summarize>
+                <div className={`title h-20 justify-end mb-5`}>
+                    {/*<p className={`pr-5`}>{`尚未選擇優惠券`}</p>*/}
+                    {/*<button>選擇優惠券</button>*/}
+                    <select value={coupon} className={`new_name_input w-full px-5 py-1`} onInput={coupon_change}>
+                        <option  value="" disabled selected>請選擇優惠卷</option>
+                        {
+                            couponlist.map((c,i)=>(
+                                <option value={i}>{c.name}</option>
+                            ))
+                        }
+                    </select>
+                </div>
+                <div className={`title h-20 justify-end mb-5`}>
+                    <select value={payment} className={`new_name_input w-full px-5 py-1`} onInput={e=>setPay(e.target.value)}>
+                        <option  value="" disabled selected>請選擇付款方式</option>
+                        <option value={`0`}>貨到付款</option>
+                        <option value={`1`}>信用卡</option>
+                        <option value={`2`}>ATM轉帳</option>
+                    </select>
+                </div>
+                <div className={`title h-20 justify-end mb-5`}>
+                    <input className={`new_name_input w-full px-5 py-1`} value={addr} onInput={(e)=>setAddr(e.target.value) } placeholder={`請輸入地址`}/>
+                </div>
+                <Summarize infos={info}></Summarize>
             </div>
         </div>
     )

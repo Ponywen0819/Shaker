@@ -387,13 +387,13 @@ def create_order():
     db = database_utils(current_app.config['config'])
     # 判斷商品是否存在以及數量是否足夠
     product = db.command_excute("""
-                         SELECT
-                             *
-                         FROM
-                             `product`
-                         WHERE
-                             id = %(product_id)s
-                         """, info)
+        SELECT
+            *
+        FROM
+            `product`
+        WHERE
+            id = %(product_id)s
+    """, info)
     if len(product) == 0 or product[0]["number"] < info["num"]:
         return jsonify({"cause": 1102})
     # 判斷coupon是否存在

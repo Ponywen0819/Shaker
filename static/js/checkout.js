@@ -91,23 +91,6 @@ var OrderArea = function OrderArea(_ref2) {
     );
 };
 
-var CouponArea = function CouponArea() {
-    return React.createElement(
-        "div",
-        { className: "title h-20 justify-end mb-5" },
-        React.createElement(
-            "p",
-            { className: "pr-5" },
-            "\u5C1A\u672A\u9078\u64C7\u512A\u60E0\u5238"
-        ),
-        React.createElement(
-            "button",
-            null,
-            "\u9078\u64C7\u512A\u60E0\u5238"
-        )
-    );
-};
-
 var Summarize = function Summarize(_ref3) {
     var infos = _ref3.infos;
 
@@ -182,6 +165,67 @@ var Main = function Main() {
         total = _React$useState4[0],
         setTotal = _React$useState4[1];
 
+    var _React$useState5 = React.useState([]),
+        _React$useState6 = _slicedToArray(_React$useState5, 2),
+        couponlist = _React$useState6[0],
+        setList = _React$useState6[1];
+
+    var _React$useState7 = React.useState(''),
+        _React$useState8 = _slicedToArray(_React$useState7, 2),
+        coupon = _React$useState8[0],
+        setcoupon = _React$useState8[1];
+
+    var _React$useState9 = React.useState({ "商品總金額：": 0, "運費總金額": 60 }),
+        _React$useState10 = _slicedToArray(_React$useState9, 2),
+        info = _React$useState10[0],
+        setInfo = _React$useState10[1];
+
+    var _React$useState11 = React.useState(''),
+        _React$useState12 = _slicedToArray(_React$useState11, 2),
+        payment = _React$useState12[0],
+        setPay = _React$useState12[1];
+
+    var _React$useState13 = React.useState(''),
+        _React$useState14 = _slicedToArray(_React$useState13, 2),
+        addr = _React$useState14[0],
+        setAddr = _React$useState14[1];
+
+    var coupon_change = function coupon_change(e) {
+        var index = parseInt(e.target.value);
+        setcoupon(e.target.value);
+        var chosen = couponlist[index];
+        console.log(chosen);
+        if (chosen.discount_type === 0) {
+            setInfo({
+                "商品總金額：": total,
+                "運費總金額": 60,
+                "運費折抵": -60
+            });
+        } else if (chosen.discount_type === 1) {
+            setInfo({
+                "商品總金額：": total,
+                "優惠券折價: ": -parseInt(total * (1 - parseInt(chosen.discount) / 100)),
+                "運費總金額": 60
+            });
+        } else {
+            setInfo({
+                "商品總金額：": total,
+                "優惠券折價: ": -parseInt(chosen.discount),
+                "運費總金額": 60
+            });
+        }
+    };
+
+    var handle_upload = function handle_upload() {
+        var data = {};
+        data.product = OrderItem;
+        data.address = addr;
+        data.payment = payment;
+        if (coupon !== '') {
+            data.coupon;
+        }
+    };
+
     React.useEffect(function () {
         var value = "; " + document.cookie;
         var parts = value.split("; orders=");
@@ -210,6 +254,8 @@ var Main = function Main() {
                     temp += i.price * i.count;
                 });
                 setTotal(temp);
+                info['商品總金額'] = temp;
+                setInfo(info);
                 return data.data;
             }
         }).then(function (data) {
@@ -227,6 +273,7 @@ var Main = function Main() {
                 }
             }).then(function (data) {
                 console.log(data);
+                setList(data);
             });
         });
     }, []);
@@ -240,8 +287,64 @@ var Main = function Main() {
             "div",
             { className: "main mb-10" },
             React.createElement(OrderArea, { items: OrderItem }),
-            React.createElement(CouponArea, null),
-            React.createElement(Summarize, { infos: { "商品總金額：": total, "運費總金額": 60, "折價券折扣": -20, "運費折扣": -60 } })
+            React.createElement(
+                "div",
+                { className: "title h-20 justify-end mb-5" },
+                React.createElement(
+                    "select",
+                    { value: coupon, className: "new_name_input w-full px-5 py-1", onInput: coupon_change },
+                    React.createElement(
+                        "option",
+                        { value: "", disabled: true, selected: true },
+                        "\u8ACB\u9078\u64C7\u512A\u60E0\u5377"
+                    ),
+                    couponlist.map(function (c, i) {
+                        return React.createElement(
+                            "option",
+                            { value: i },
+                            c.name
+                        );
+                    })
+                )
+            ),
+            React.createElement(
+                "div",
+                { className: "title h-20 justify-end mb-5" },
+                React.createElement(
+                    "select",
+                    { value: payment, className: "new_name_input w-full px-5 py-1", onInput: function onInput(e) {
+                            return setPay(e.target.value);
+                        } },
+                    React.createElement(
+                        "option",
+                        { value: "", disabled: true, selected: true },
+                        "\u8ACB\u9078\u64C7\u4ED8\u6B3E\u65B9\u5F0F"
+                    ),
+                    React.createElement(
+                        "option",
+                        { value: "0" },
+                        "\u8CA8\u5230\u4ED8\u6B3E"
+                    ),
+                    React.createElement(
+                        "option",
+                        { value: "1" },
+                        "\u4FE1\u7528\u5361"
+                    ),
+                    React.createElement(
+                        "option",
+                        { value: "2" },
+                        "ATM\u8F49\u5E33"
+                    )
+                )
+            ),
+            React.createElement(
+                "div",
+                { className: "title h-20 justify-end mb-5" },
+                React.createElement("input", { className: "new_name_input w-full px-5 py-1", value: addr, onInput: function onInput(e) {
+                        return setAddr(e.target.value);
+                    }, placeholder: "\u8ACB\u8F38\u5165\u5730\u5740" })
+            ),
+            React.createElement(Summarize, { infos: info })
         )
     );
 };
