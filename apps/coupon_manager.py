@@ -8,6 +8,7 @@ from datetime import datetime, timedelta
 from module.data_utils import database_utils
 app = Blueprint('coupon_manager', __name__)
 
+
 @app.route("/PublishFreeCarCoupon", methods=['POST'])
 def publish_coupon_admin():
     token = request.cookies.get("User_Token")
@@ -51,6 +52,7 @@ def publish_coupon_admin():
         {"cause": 0}
     )
 
+
 @app.route("/PublishShopCoupon", methods=['POST'])
 def publish_coupon_shop():
     token = request.cookies.get("User_Token")
@@ -92,6 +94,8 @@ def publish_coupon_shop():
     return jsonify(
         {"cause": 0}
     )
+
+
 @app.route("/GetCoupons", methods=['POST'])
 def get_coupon():
     token = request.cookies.get("User_Token")
@@ -100,19 +104,20 @@ def get_coupon():
         return "", 401
     user_info = current_app.config['jwt'].get_token_detail(token)
     require_field = ['shop_id']
+    print(request.json)
     for need in require_field:
         if need not in request.json.keys():
             return jsonify({"cause": 2301})
     db = database_utils(current_app.config['config'])
     coupons = db.command_excute("""
-                                                    SELECT
-                                                            *
-                                                    FROM
-                                                            coupon
-                                                    JOIN coupon_type ON coupon.type = coupon_type.id
-                                                    WHERE
-                                                    (shop_id = %(shop_id)s OR shop_id is NULL) AND end_time > %(time)s
-                                                    """, {"shop_id": request.json["shop_id"], "time": datetime.now().strftime("%Y/%m/%d %H:%M:%S")})
+        SELECT
+                *
+        FROM
+                coupon
+        JOIN coupon_type ON coupon.type = coupon_type.id
+        WHERE
+            (shop_id = %(shop_id)s OR shop_id is NULL) AND end_time > %(time)s
+    """, {"shop_id": request.json["shop_id"], "time": datetime.now().strftime("%Y/%m/%d %H:%M:%S")})
     if len(coupons) <= 0:
         return jsonify({
             "no coupon": 1

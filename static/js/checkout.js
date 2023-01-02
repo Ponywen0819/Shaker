@@ -29,11 +29,11 @@ var OrderRow = function OrderRow(_ref) {
 
     return React.createElement(
         "div",
-        { className: "title  !h-20" },
+        { className: "title  !h-28" },
         React.createElement(
             "div",
-            { className: "w-[60%]" },
-            React.createElement("div", null),
+            { className: "w-[60%] flex gap-2" },
+            React.createElement("div", { className: "product_img bg_img", style: { backgroundImage: "url(" + (img == null ? '/static/img/logo1.png' : img.slice(1)) + ")" } }),
             React.createElement(
                 "p",
                 null,
@@ -69,7 +69,7 @@ var OrderArea = function OrderArea(_ref2) {
             { className: "title" },
             React.createElement(
                 "p",
-                { className: "w-[60%]" },
+                { className: "w-[60%] text-xl font-extrabold" },
                 "\u8A02\u55AE\u5167\u5BB9"
             ),
             ['單價', '數量'].map(function (i) {
@@ -86,7 +86,7 @@ var OrderArea = function OrderArea(_ref2) {
             )
         ),
         items.map(function (i) {
-            return React.createElement(OrderRow, { name: i.name, img: i.img, num: i.num, price: i.price });
+            return React.createElement(OrderRow, { name: i.name, img: i.photo, num: i.count, price: i.price });
         })
     );
 };
@@ -118,7 +118,7 @@ var Summarize = function Summarize(_ref3) {
 
     return React.createElement(
         "div",
-        { className: "title !h-fit flex justify-end" },
+        { className: "title !h-fit flex justify-end p-5" },
         React.createElement(
             "div",
             { className: "w-[20%]" },
@@ -204,14 +204,31 @@ var Main = function Main() {
         }).then(function (data) {
             if (data.cause === 0) {
                 console.log(data.data);
+                setItem(data.data);
+                var temp = 0;
+                data.data.map(function (i) {
+                    temp += i.price * i.count;
+                });
+                setTotal(temp);
+                return data.data;
             }
+        }).then(function (data) {
+            fetch('/coupon/GetCoupons', {
+                method: 'POST',
+                headers: {
+                    'content-type': 'application/json'
+                },
+                body: JSON.stringify({
+                    shop_id: data[0].shop_id
+                })
+            }).then(function (res) {
+                if (res.status === 200) {
+                    return res.json();
+                }
+            }).then(function (data) {
+                console.log(data);
+            });
         });
-        // setItem(data)
-        // let temp = 0
-        // data.map(i=>{
-        //     temp += (i.price * i.num)
-        // })
-        // setTotal(temp)
     }, []);
 
     return React.createElement(

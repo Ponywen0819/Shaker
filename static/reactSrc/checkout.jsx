@@ -13,9 +13,9 @@ const CheckBar =()=>{
 
 const OrderRow = ({img, name, price, num})=>{
     return(
-        <div className={`title  !h-20`}>
-            <div className={`w-[60%]`}>
-                <div></div>
+        <div className={`title  !h-28`}>
+            <div className={`w-[60%] flex gap-2`}>
+                <div className={`product_img bg_img`} style={{backgroundImage: `url(${(img == null)?'/static/img/logo1.png':img.slice(1)})`}}></div>
                 <p>{name}</p>
             </div>
             <p className={`w-[10%] text-center`}>{`$${price}`}</p>
@@ -29,7 +29,7 @@ const OrderArea =({items})=>{
     return(
         <div className={`order_container`}>
             <div className={`title`}>
-                <p className={`w-[60%]`}>訂單內容</p>
+                <p className={`w-[60%] text-xl font-extrabold`}>訂單內容</p>
                 {
                     ['單價','數量'].map(i=>(
                         <p className={`w-[10%] text-center`}>{i}</p>
@@ -38,7 +38,7 @@ const OrderArea =({items})=>{
                 <p className={`w-[20%] text-right`}>總價</p>
             </div>
             {
-                items.map(i=>(<OrderRow name={i.name} img={i.img} num={i.num} price={i.price}></OrderRow>))
+                items.map(i=>(<OrderRow  name={i.name} img={i.photo} num={i.count} price={i.price} ></OrderRow>))
             }
         </div>
     )
@@ -60,7 +60,7 @@ const Summarize = ({infos})=>{
     })
 
     return(
-        <div className={`title !h-fit flex justify-end`}>
+        <div className={`title !h-fit flex justify-end p-5`}>
             <div className={`w-[20%]`}>
                 <div className={``}>
                     {
@@ -80,7 +80,7 @@ const Summarize = ({infos})=>{
                         <p>{end}</p>
                     </div>
                 </div>
-                <div className={`flex justify-end`}>
+                <   div className={`flex justify-end`}>
                     <button className={`create_order_btn`}>下訂單</button>
                 </div>
             </div>
@@ -115,14 +115,34 @@ const Main = ()=>{
         }).then(data=>{
             if(data.cause === 0){
                 console.log(data.data)
+                setItem(data.data)
+                let temp = 0
+                data.data.map(i=>{
+                    temp += (i.price * i.count)
+                })
+                setTotal(temp)
+                return(data.data)
             }
+        }).then(data=>{
+            fetch('/coupon/GetCoupons',{
+                method: 'POST',
+                headers:{
+                    'content-type': 'application/json'
+                },
+                body: JSON.stringify({
+                    shop_id: data[0].shop_id
+                })
+            }).then(res=>{
+                if(res.status === 200){
+                    return res.json()
+                }
+            }).then(data=>{
+                console.log(data)
+            })
+
         })
-        // setItem(data)
-        // let temp = 0
-        // data.map(i=>{
-        //     temp += (i.price * i.num)
-        // })
-        // setTotal(temp)
+
+
     },[])
 
 

@@ -601,6 +601,10 @@ video {
   height: 2rem !important;
 }
 
+.\!h-28 {
+  height: 7rem !important;
+}
+
 .w-2\/5 {
   width: 40%;
 }
@@ -709,6 +713,10 @@ video {
   padding: 0.5rem;
 }
 
+.p-5 {
+  padding: 1.25rem;
+}
+
 .px-1 {
   padding-left: 0.25rem;
   padding-right: 0.25rem;
@@ -732,6 +740,11 @@ video {
 .px-6 {
   padding-left: 1.5rem;
   padding-right: 1.5rem;
+}
+
+.py-5 {
+  padding-top: 1.25rem;
+  padding-bottom: 1.25rem;
 }
 
 .pr-5 {
@@ -772,6 +785,10 @@ video {
 
 .font-bold {
   font-weight: 700;
+}
+
+.font-extrabold {
+  font-weight: 800;
 }
 
 .text-\[cadetblue\] {

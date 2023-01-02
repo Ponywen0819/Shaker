@@ -780,7 +780,8 @@ def get_productsToCart():
 	        picture.file_path AS photo, 
 	        product.id, 
 	        product.number AS remain,
-	        shop.`name` AS shop_name
+	        shop.`name` AS shop_name,
+	        shop.`id` AS shop_id
         FROM
 	        cart INNER JOIN product
 	        ON cart.product_id = product.id
@@ -822,22 +823,18 @@ def get_cart_products_by_id():
             WHERE id = %(user_id)s
         ''', user_info)
 
-    print(user_count)
 
     if user_count[0]['COUNT(*)'] != 1:
         return '', 500
-    id_str = '('
-    for i in request.json:
-        id_str += (i + ',')
-    id_str[-1:] = ')'
-    print(id_str)
+
 
     record = db.command_excute('''
         SELECT
 	        cart.count, 
 	        product.`name`, 
 	        product.price, 
-	        picture.file_path
+	        picture.file_path AS photo,
+	        product.shop_id
         FROM
 	        cart
 	        LEFT JOIN product
@@ -846,7 +843,7 @@ def get_cart_products_by_id():
 	        ON product.picture_id = picture.id
 	    WHERE cart.owner_id = %(user_id)s AND cart.product_id in %(id_str)s
         ''', {
-        'id_str': id_str,
+        'id_str': request.json,
         'user_id': user_info['user_id'],
     })
 
