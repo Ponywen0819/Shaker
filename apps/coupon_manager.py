@@ -139,5 +139,40 @@ def get_coupon():
         return jsonify({
             "no coupon": 1
         })
-
+    return jsonify(coupons)
+@app.route("/GetShopCoupons", methods=['POST'])
+def get_shop_coupon():
+    token = request.cookies.get("User_Token")
+    if token is None: return "", 401
+    if not current_app.config['jwt'].check_token_valid(token):
+        return "", 401
+    user_info = current_app.config['jwt'].get_token_detail(token)
+    require_field = ['shop_id']
+    for need in require_field:
+        if need not in request.json.keys():
+            return jsonify({"cause": 2301})
+    db = database_utils(current_app.config['config'])
+    # 取的shop的publisher_id
+    shop_publisher_id = db.command_excute("""
+                                                    SELECT
+                                                            publisher_id
+                                                    FROM
+                                                            shop
+                                                    WHERE
+                                                            id = %(shop_id)s
+                                                    """, request.json)
+    # 取的該shop的coupon資訊以及admin所發行的免運勸
+    coupons = db.command_excute("""
+                                                    SELECT
+                                                            *
+                                                    FROM
+                                                            coupon
+                                                    JOIN coupon_type ON coupon.type = coupon_type.id
+                                                    WHERE
+                                                    publisher_id = %(publisher_id)s AND end_time > %(time)s
+                                                    """, {"publisher_id": shop_publisher_id[0]['publisher_id'], "time": datetime.now().strftime("%Y/%m/%d %H:%M:%S")})
+    if len(coupons) <= 0:
+        return jsonify({
+            "no coupon": 1
+        })
     return jsonify(coupons)
