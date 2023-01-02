@@ -32,12 +32,15 @@ const handle_register = () => {
                 return respons.json()
             }
         }).then(function (json){
-            if(json.status === `success`){
-                location.href = '/'
-                console.log('success')
+            if(json.cause === 0){
+                SuccessNotify('註冊成功').then(()=>{
+                    location.href = '/'
+                    console.log('success')
+                })
             }
             else{
                 // 登入失敗通知
+                FailNotify('註冊出現錯誤')
                 console.log(json.cause)
             }
         })
@@ -108,15 +111,15 @@ const MainInterface = () =>(
                         <div>或</div>
                         <div className="or_bar"></div>
                     </div>
-                    <button className="btn auth_btn">
-                        <img src="/static/img/google_logo.svg" alt="" className="sm_logo"/>
-                        Google
-                    </button>
-                    <button className="btn auth_btn">
-                        <img src="/static/img/github_black.svg" alt="" className="sm_logo"/>
-                        Github
-                    </button>
-                    <div className="flex justify-center flex-col">
+                    {/*<button className="btn auth_btn">*/}
+                    {/*    <img src="/static/img/google_logo.svg" alt="" className="sm_logo"/>*/}
+                    {/*    Google*/}
+                    {/*</button>*/}
+                    {/*<button className="btn auth_btn">*/}
+                    {/*    <img src="/static/img/github_black.svg" alt="" className="sm_logo"/>*/}
+                    {/*    Github*/}
+                    {/*</button>*/}
+                    <div className="flex justify-center flex">
                         <p>已經有帳號了嗎?</p>
                         <a className="text-[cadetblue]" href="/login">登入</a>
                     </div>

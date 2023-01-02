@@ -1,86 +1,56 @@
-
-const ProductArea = ()=>{
-    const [product_name, setName] = React.useState('')
-    const [ comment_num, setCommentNum ] = React.useState(0)
-    const [remaining, setRemaining] = React.useState(0)
-    // 價格使用陣列表示，第一個代表原價，如有第二個則是折價後
-    const [price, setprice] = React.useState([0])
-    const [product_photo, setPhoto] = React.useState(null)
-    const [wanna_num,setNum] = React.useState(1)
-
-    React.useEffect(()=>{
-        setName('測試用商品名稱')
-        setCommentNum(3)
-        setRemaining(20)
-        setprice([100, 600])
-        setPhoto('/static/img/logo1.png')
-        //之後會加上神奇的API
-    },[])
-
+const ProductArea = ({info, wanna_num, chang_num, upload})=>{
 
     return(
         <div className={`container`}>
             <div className={`product_show`}>
-                <div className={`product_img bg_img`} style={{backgroundImage: `url(${(product_photo==null)?'/static/img/logo1.png':product_photo})`}}></div>
+                <div className={`product_img bg_img`} style={{backgroundImage: `url(${(info.file_path==null)?'/static/img/logo1.png':info.file_path.slice(1)})`}}></div>
             </div>
             <div className={`product_interface`}>
                 <div className={`product_name_area`}>
-                    <p className={`product_name`}>{ product_name }</p>
+                    <p className={`product_name`}>{ info.name }</p>
                 </div>
                 <div className={`product_info`}>
-                    <div className={'product_info_column col'}></div>
-                    <div className={'product_info_column col'}>
-                        <p className={`product_info_val`}>{comment_num}</p>
-                        <p className={`product_info_title`}>評論數</p>
-                    </div>
                     <div className={'product_info_column'}>
-                        <p className={`product_info_val`}>{remaining}</p>
+                        <p className={`product_info_val`}>{info.number}</p>
                         <p className={`product_info_title`}>剩餘</p>
                     </div>
                 </div>
-                    {
-                        (price.length > 1)?(
-                            <div className={'product_price_area'}>
-                                <p className={`product_discount`}>{ `$${price[0]}` }</p>
-                                <p className={`product_price`}>{ `$${price[1]}` }</p>
-                            </div>
-
-                        ):(
-                            <div className={`product_price_area`}>
-                                <p className={`product_price`}>{ `$${price[0]}` }</p>
-                            </div>
-                        )
-                    }
+                    <div className={`product_price_area`}>
+                        <p className={`product_price`}>{ `$${info.price}` }</p>
+                    </div>
                 <div className={`product_interact`}>
                     <p className={``}>數量</p>
                     <div className={'product_number'}>
-                        <button className={`number_btn`}>-</button>
+                        <button className={`number_btn`} onClick={()=>chang_num(-1)}>-</button>
                         <input  className={`number_input`} type={`text`} value={wanna_num}/>
-                        <button className={`number_btn`}>+</button>
+                        <button className={`number_btn`} onClick={()=>chang_num(1)}>+</button>
                     </div>
                 </div>
                 <div className={`product_cart_area`}>
-                    <button className={`product_cart_btn product_buy_btn`}>直接購買</button>
-                    <button className={`product_cart_btn product_cart_btn`}>加入購物車</button>
+                    <button className={`product_cart_btn product_buy_btn`} onClick={()=>upload(true)}>直接購買</button>
+                    <button className={`product_cart_btn product_cart_btn`} onClick={()=>upload(false)}>加入購物車</button>
                 </div>
             </div>
-
         </div>
     )
 }
 
-const ShopArea = ()=>{
+const ShopArea = ({shop_id})=>{
     const [shop_name, setName] = React.useState('')
     const [star, setStar] = React.useState(0)
     const [shop_img, setImg] = React.useState('/static/img/logo1.png')
     const [last_login, setLast] = React.useState('1922-08-19')
 
     React.useEffect(()=>{
+        if(shop_id !== 0){
+            console.log('shop_asda')
+        }
         setName('測試用商店名')
         setStar(3)
         setImg('/static/img/logo1.png')
-        // 做商店資料取出
-    },[])
+        // 做商店資料取
+
+    },[shop_id])
 
     return(
         <div className={`container`}>
@@ -96,17 +66,11 @@ const ShopArea = ()=>{
     )
 }
 
-const ProductDetail = ()=>{
-    const [detail, setdetail] = React.useState('')
-
-    React.useEffect(()=>{
-        setdetail('rrr\nrrrrr\nr\nrrrr\nrrrrrk')
-    },[])
-
+const ProductDetail = ({intro})=>{
     return(
         <div className={`container flex-col`}>
             <p className={`text-gray-400 text-lg`}>{`商品詳情`}</p>
-            <p className={`product_detail`}>{detail}</p>
+            <p className={`product_detail`}>{intro}</p>
         </div>
     )
 }
@@ -122,7 +86,6 @@ const Comment = ()=>{
             {picture:'/static/img/logo1.png', star:7, description: 'ertyu\nsiop', user: 'qweqwe', user_photo: '/static/img/logo1.png'}
         ])
     },[])
-
 
     return(
         <div className={`container flex-col`}>
@@ -149,12 +112,71 @@ const Comment = ()=>{
 }
 
 const Main = ()=>{
+    const [product_info ,setInfo] = React.useState({shop_id: 0, name: '', price: 0, intro: '', photo: '', avgstar: 0, number: 0})
+    const [wanna_num, setNum] = React.useState(1)
+
+    const handle_wanna = val =>{
+        let a = wanna_num + val
+        if((a>0) && (a<=product_info.number)){
+            setNum(a)
+        }
+    }
+
+    const handle_add_cart = redic =>{
+        fetch('/product/AddProductToCart',{
+            method: 'POST',
+            headers:{
+                'content-type': 'application/json'
+            },
+            body:JSON.stringify({
+                product_id: parseInt(product_info.id),
+                count: wanna_num
+            })
+        }).then(res=>{
+            if(res.status === 200){
+                return res.json()
+            }
+        }).then(data=>{
+            if(data.cause === 0){
+                if(redic){
+                    location.href = '/cart'
+                }
+                else{
+                    SuccessNotify('加入購物車成功')
+                }
+            }
+        })
+    }
+
+    React.useEffect(()=>{
+        fetch('/product/GetProduct',{
+            method: 'POST',
+            body:JSON.stringify({
+                id:[
+                    parseInt(location.pathname.split('/')[2])
+                ]
+            }),
+            headers:{
+                'content-type': 'application/json'
+            }
+        }).then(res=>{
+            if(res.status === 200){
+                return res.json()
+            }
+        }).then(data=>{
+            console.log(data)
+            if(data.cause === 0){
+                setInfo(data.products[0])
+            }
+        })
+    },[])
+
     return(
         <div>
             <ToolBar></ToolBar>
-            <ProductArea></ProductArea>
-            <ShopArea></ShopArea>
-            <ProductDetail></ProductDetail>
+            <ProductArea info={product_info} wanna_num={wanna_num} chang_num={handle_wanna} upload = {handle_add_cart}></ProductArea>
+            <ShopArea shop_id={product_info.shop_id}></ShopArea>
+            <ProductDetail intro={product_info.intro} ></ProductDetail>
             <Comment></Comment>
         </div>
     )

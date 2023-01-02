@@ -117,11 +117,6 @@ var Login = function Login() {
                 "\u5FC5\u9808\u5165\u5E33\u865F\u5BC6\u78BC"
             ) : '',
             React.createElement(
-                "a",
-                { className: "help_text", href: "static/reactSrc/login" },
-                "\u5FD8\u8A18\u5BC6\u78BC"
-            ),
-            React.createElement(
                 "button",
                 { id: "login", className: "login_btn btn", onClick: function onClick() {
                         return CheckForm(setacc, setpas);
@@ -138,18 +133,6 @@ var Login = function Login() {
                     "\u6216"
                 ),
                 React.createElement("div", { className: "or_bar" })
-            ),
-            React.createElement(
-                "button",
-                { className: "btn auth_btn" },
-                React.createElement("img", { src: "/static/img/google_logo.svg", alt: "", className: "sm_logo" }),
-                "Google"
-            ),
-            React.createElement(
-                "button",
-                { className: "btn auth_btn" },
-                React.createElement("img", { src: "/static/img/github_black.svg", alt: "", className: "sm_logo" }),
-                "Github"
             ),
             React.createElement(
                 "div",

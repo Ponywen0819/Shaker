@@ -183,13 +183,35 @@ var Main = function Main() {
         setTotal = _React$useState4[1];
 
     React.useEffect(function () {
-        var data = [{ name: '123', img: '/static/img/logo1.png', price: 100, num: 2 }, { name: '123', img: '/static/img/logo1.png', price: 300, num: 1 }, { name: '123', img: '/static/img/logo1.png', price: 400, num: 2 }, { name: '123', img: '/static/img/logo1.png', price: 500, num: 2 }, { name: '123', img: '/static/img/logo1.png', price: 600, num: 2 }, { name: '123', img: '/static/img/logo1.png', price: 100, num: 2 }, { name: '123', img: '/static/img/logo1.png', price: 10, num: 2 }];
-        setItem(data);
-        var temp = 0;
-        data.map(function (i) {
-            temp += i.price * i.num;
+        var value = "; " + document.cookie;
+        var parts = value.split("; orders=");
+        console.log(parts);
+        var product_ids = '';
+        if (parts.length === 2) {
+            product_ids = parts.pop().split(';').shift();
+        }
+
+        fetch('/product/GetCartProducctsById', {
+            method: 'POST',
+            headers: {
+                'content-type': 'application/json'
+            },
+            body: product_ids
+        }).then(function (res) {
+            if (res.status === 200) {
+                return res.json();
+            }
+        }).then(function (data) {
+            if (data.cause === 0) {
+                console.log(data.data);
+            }
         });
-        setTotal(temp);
+        // setItem(data)
+        // let temp = 0
+        // data.map(i=>{
+        //     temp += (i.price * i.num)
+        // })
+        // setTotal(temp)
     }, []);
 
     return React.createElement(

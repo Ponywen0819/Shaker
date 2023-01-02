@@ -143,17 +143,33 @@ var TypeLink = function TypeLink(_ref3) {
     );
 };
 
-var ItemTypes = ['3C', '周邊', 'NB', '通訊', '數位', '家電', '日用', '食品', '生活', '運動戶外', '美妝', '衣鞋包錶', '品牌旗艦', '書店'];
-
 var ItemTypeSelection = function ItemTypeSelection() {
+    var _React$useState3 = React.useState([]),
+        _React$useState4 = _slicedToArray(_React$useState3, 2),
+        item_types = _React$useState4[0],
+        setTypes = _React$useState4[1];
+
+    React.useEffect(function () {
+        fetch('/product/GetAllCategory', {
+            method: 'GET'
+        }).then(function (res) {
+            if (res.status === 200) {
+                return res.json();
+            }
+        }).then(function (data) {
+            console.log(data);
+            setTypes(data);
+        });
+    }, []);
+
     return React.createElement(
         'div',
         { className: 'type_selection' },
         React.createElement(
             'div',
             { className: 'type_container' },
-            ItemTypes.map(function (i) {
-                return React.createElement(TypeLink, { type: i, first: ItemTypes.indexOf(i) == 0 });
+            item_types.map(function (i) {
+                return React.createElement(TypeLink, { type: i.name, first: i.id === 1 });
             })
         )
     );

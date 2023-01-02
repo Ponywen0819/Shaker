@@ -65,15 +65,28 @@ const TypeLink = ({type, first})=>(
     </div>
 )
 
-const ItemTypes = ['3C', '周邊', 'NB', '通訊', '數位', '家電', '日用', '食品', '生活', '運動戶外', '美妝', '衣鞋包錶', '品牌旗艦', '書店'];
-
 const ItemTypeSelection = ()=>{
+    const [item_types, setTypes] = React.useState([])
+
+    React.useEffect(()=>{
+        fetch('/product/GetAllCategory',{
+            method: 'GET'
+        }).then(res=>{
+            if(res.status === 200){
+                return res.json()
+            }
+        }).then(data=>{
+            console.log(data)
+            setTypes(data)
+        })
+    },[])
+
     return(
         <div className={`type_selection`}>
             <div className={`type_container`}>
                 {
-                 ItemTypes.map(i=>(
-                    <TypeLink type={i} first={ItemTypes.indexOf(i) == 0}></TypeLink>
+                 item_types.map(i=>(
+                    <TypeLink type={i.name} first={i.id === 1}></TypeLink>
                  ))
                 }
             </div>

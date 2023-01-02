@@ -5,7 +5,6 @@ from datetime import datetime
 from flask import Flask, render_template, request, redirect, url_for, Blueprint, jsonify, current_app, make_response
 from module.configs import configure_collection
 from module.picture_utils import get_new_pic
-
 from module.data_utils import database_utils
 
 app = Blueprint('account_manage', __name__)
@@ -65,7 +64,7 @@ def register():
         "cause": 0
     }))
 
-    res.set_cookie("Token", token, expires=time.time() + 60 * 60)
+    res.set_cookie("User_Token", token, expires=time.time() + 60 * 60)
     return res
 
 
@@ -132,11 +131,11 @@ def get_user_detail():
     user_info = current_app.config['jwt'].get_token_detail(request.cookies.get('User_Token'))
     db = database_utils(current_app.config['config'])
     dbreturn = db.command_excute("""
-                                SELECT *
-                                FROM accounts
-                                LEFT JOIN picture ON accounts.photo = picture.id
-                                WHERE accounts.id = %(user_id)s
-                                """, user_info)
+        SELECT *
+        FROM accounts
+        LEFT JOIN picture ON accounts.photo = picture.id
+        WHERE accounts.id = %(user_id)s
+    """, user_info)
 
     if len(dbreturn) == 0:
         return jsonify({"cause": 202})

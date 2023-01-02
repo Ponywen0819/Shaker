@@ -146,6 +146,7 @@
     border:1px solid rgba(0,0,0,0.5);
     border-radius: 3px;
     width: 100px;
+    align-items: center;
 }
 
 .product_number_btn{
@@ -180,4 +181,12 @@
     width: 100px;
     background-color: #fc753e;
     color: white;
+}
+
+.main_content{
+    display: flex;
+    min-height: calc(100vh - 152px);
+    box-sizing: border-box;
+    flex-direction: column;
+    justify-content: space-between;
 }

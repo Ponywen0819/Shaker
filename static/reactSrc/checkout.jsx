@@ -94,21 +94,35 @@ const Main = ()=>{
 
 
     React.useEffect(()=>{
-        let data =[
-            {name:'123', img: '/static/img/logo1.png', price: 100, num: 2},
-            {name:'123', img: '/static/img/logo1.png', price: 300, num: 1},
-            {name:'123', img: '/static/img/logo1.png', price: 400, num: 2},
-            {name:'123', img: '/static/img/logo1.png', price: 500, num: 2},
-            {name:'123', img: '/static/img/logo1.png', price: 600, num: 2},
-            {name:'123', img: '/static/img/logo1.png', price: 100, num: 2},
-            {name:'123', img: '/static/img/logo1.png', price: 10, num: 2},
-        ]
-        setItem(data)
-        let temp = 0
-        data.map(i=>{
-            temp += (i.price * i.num)
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; orders=`);
+        console.log(parts)
+        let product_ids = ''
+        if (parts.length === 2){
+            product_ids = parts.pop().split(';').shift();
+        }
+
+        fetch('/product/GetCartProducctsById',{
+            method: 'POST',
+            headers:{
+                'content-type': 'application/json'
+            },
+            body: product_ids
+        }).then(res=>{
+            if(res.status === 200){
+                return res.json()
+            }
+        }).then(data=>{
+            if(data.cause === 0){
+                console.log(data.data)
+            }
         })
-        setTotal(temp)
+        // setItem(data)
+        // let temp = 0
+        // data.map(i=>{
+        //     temp += (i.price * i.num)
+        // })
+        // setTotal(temp)
     },[])
 
 

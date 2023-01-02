@@ -36,6 +36,7 @@ def get_index_page():
         "title": "這是首頁拉",
         "script": [
             "Toolbar.js",
+            "notification.js",
             "index.js"
         ],
         "css": [
@@ -196,8 +197,8 @@ def get_search_page():
     return render_template('main.html', setting=setting)
 
 
-@app.route('/checkout/<int:checkout>')
-def get_checkout_page(checkout):
+@app.route('/checkout')
+def get_checkout_page():
     setting = {
         "title": "結帳",
         "script": [

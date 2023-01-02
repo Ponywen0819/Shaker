@@ -10,7 +10,13 @@ const User_area = ({img, name})=>{
     }
 
     const handleLogout =()=>{
-        fetch()
+        fetch('/account/Logoff',{
+            method: 'POST'
+        }).then(res=>{
+            if(res.status === 200){
+                SuccessNotify('登出成功').then(()=>location.href = location.href)
+            }
+        })
     }
 
     return(
@@ -23,7 +29,7 @@ const User_area = ({img, name})=>{
                 <div className={`Toolbar_user_section_area`}>
                     <a className={`font-bold Toolbar_user_section`} href={`/user/account/profile`}>我的帳號</a>
                     <a className={`font-bold Toolbar_user_section` } href={`/user/purchase`}>購買清單</a>
-                    <button className={`font-bold Toolbar_user_section`}>登出</button>
+                    <button className={`font-bold Toolbar_user_section`} onClick={handleLogout}>登出</button>
                 </div>
             )}
 
@@ -37,7 +43,6 @@ const UpperBar = ()=>{
     const [userinfo, setinfo] = React.useState({name:'',img:''})
 
     const testLogin = ()=>{
-        if(document.cookie.indexOf('User_Token=') !== -1) {
             fetch('/account/GetUserDetail',{
                 body: JSON.stringify({
                     require:["photo", "name"]
@@ -56,7 +61,7 @@ const UpperBar = ()=>{
                     setinfo(data)
                 }
             })
-        }
+
     }
 
     React.useEffect(()=>{
