@@ -7,6 +7,7 @@ from apps import coupon_manager
 from module.jwt_token_utils import json_web_token_generator
 from module.configs import configure_collection
 from module.crypto_utils import crypto_utils
+from module.seller_center_util import get_shop_id
 
 # from configs import config
 
