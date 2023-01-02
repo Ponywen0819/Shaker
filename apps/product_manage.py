@@ -932,3 +932,6 @@ def get_category():
     if len(all_category) <= 0:
         return jsonify({"no category": 1})
     return jsonify(all_category)
+
+# @app.route("/SearchProduct", methods=["POST"])
+# def search_product():

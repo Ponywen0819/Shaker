@@ -75,7 +75,7 @@ def publish_coupon_shop():
         return jsonify({
                 "casue": 2201
             })
-    require_field = ['name', 'minimum_consumption', 'discount', 'discount_type']
+    require_field = ['name', 'discount', 'discount_type']
     for need in require_field:
         if need not in request.json.keys():
             return jsonify({"cause": 2202})
@@ -85,10 +85,16 @@ def publish_coupon_shop():
     info["start_time"] = datetime.now().strftime("%Y/%m/%d %H:%M:%S")
     info["end_time"] = (datetime.now() + timedelta(days=7)).strftime("%Y/%m/%d %H:%M:%S")
     # 新增一個coupon_type
-    db.command_excute("""
-                                          INSERT INTO `coupon_type` ( minimum_consumption, discount, discount_type)
-                                          VALUES (%(minimum_consumption)s, %(discount)s, %(discount_type)s)
-                                          """, info)
+    if request.json["discount_type"] == 1:
+        db.command_excute("""
+                                              INSERT INTO `coupon_type` ( minimum_consumption, discount, discount_type)
+                                              VALUES (0, %(discount)s, %(discount_type)s)
+                                              """, info)
+    elif request.json["discount_type"] == 2:
+        db.command_excute("""
+                                                  INSERT INTO `coupon_type` ( minimum_consumption, discount, discount_type)
+                                                  VALUES (%(minimum_consumption)s, %(discount)s, %(discount_type)s)
+                                                  """, info)
     info['id'] = db.command_excute("""SELECT LAST_INSERT_ID() AS id;""", {})[0]['id']
     # 接著新增coupon
     db.command_excute("""
