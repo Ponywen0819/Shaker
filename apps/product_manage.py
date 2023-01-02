@@ -262,8 +262,9 @@ def get_product():
                                    *
                                FROM
                                    product
+                               JOIN picture ON picture.id = product.picture_id
                                WHERE
-                                   id = %(id)s
+                                   product.id = %(id)s
                                """, {"id": product_id})[0])
         return jsonify(product_list)
     if not current_app.config['jwt'].check_token_valid(token):
@@ -282,8 +283,9 @@ def get_product():
                            *
                        FROM
                            product
+                       JOIN picture ON picture.id = product.picture_id
                        WHERE
-                           id = %(id)s
+                           product.id = %(id)s
                        """, {"id": product_id})[0])
     account_info = {}
     account_info["time"] = datetime.now().strftime("%Y/%m/%d %H:%M:%S")
@@ -311,6 +313,7 @@ def get_product_from_shop():
                                *
                            FROM
                                product
+                           JOIN picture ON picture.id = product.picture_id
                            WHERE
                                shop_id = %(shop_id)s
                            """, request.json)
@@ -330,6 +333,7 @@ def get_product_from_shop():
                        *
                    FROM
                        product
+                   JOIN picture ON picture.id = product.picture_id
                    WHERE
                        shop_id = %(shop_id)s
                    """, request.json)
@@ -933,5 +937,73 @@ def get_category():
         return jsonify({"no category": 1})
     return jsonify(all_category)
 
-# @app.route("/SearchProduct", methods=["POST"])
-# def search_product():
+@app.route("/SearchProduct", methods=["POST"])
+def search_product():
+    token = request.cookies.get("User_Token")
+    if token is None:
+        db = database_utils(current_app.config['config'])
+        require_field = ["search_word"]
+        for need in require_field:
+            if need not in request.json.keys():
+                return jsonify({"cause": 153})
+        info = request.json
+        info["search_word"] = "%" + info["search_word"] + "%"
+        if "category" not in request.json:
+            # 搜尋商品 -> 沒有選擇category
+            result = db.command_excute("""
+                 SELECT
+                     *
+                 FROM
+                     product 
+                 JOIN picture ON picture.id = product.picture_id
+                 WHERE 
+                    product.name LIKE %(search_word)s
+                 """, info)
+            return jsonify(result)
+        else:
+            # 搜尋商品 -> 有category
+            result = db.command_excute("""
+                 SELECT
+                     *
+                 FROM
+                     product 
+                 JOIN picture ON picture.id = product.picture_id
+                 WHERE 
+                    product.name LIKE %(search_word)s AND product.id = %(category)s
+                 """, info)
+            return jsonify(result)
+    if not current_app.config['jwt'].check_token_valid(token):
+        return "", 401
+    user_info = current_app.config['jwt'].get_token_detail(token)
+    db = database_utils(current_app.config['config'])
+    require_field = ["search_word"]
+    for need in require_field:
+        if need not in request.json.keys():
+            return jsonify({"cause": 153})
+    info = request.json
+    info["search_word"] = "%" + info["search_word"] + "%"
+    if "category" not in request.json:
+        # 搜尋商品 -> 沒有選擇category
+        result = db.command_excute("""
+         SELECT
+             *
+         FROM
+             product 
+         JOIN picture ON picture.id = product.picture_id
+         WHERE 
+            product.name LIKE %(search_word)s
+         """, info)
+        return jsonify(result)
+    else:
+        # 搜尋商品 -> 有category
+        result = db.command_excute("""
+         SELECT
+             *
+         FROM
+             product 
+         JOIN picture ON picture.id = product.picture_id
+         WHERE 
+            product.name LIKE %(search_word)s AND product.id = %(category)s
+         """, info)
+        return jsonify(result)
+
