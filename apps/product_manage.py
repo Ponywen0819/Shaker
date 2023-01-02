@@ -1001,6 +1001,12 @@ def search_product():
          WHERE 
             product.name LIKE %(search_word)s
          """, info)
+        db.command_excute("""
+                                                          UPDATE accounts
+                                                          SET last_login = %(time)s
+                                                          WHERE id = %(user_id)s
+                                                          """,
+                          {"time": datetime.now().strftime("%Y/%m/%d %H:%M:%S"), "user_id": user_info["user_id"]})
         return jsonify(result)
     elif "category" in request.json and "search_word" not in request.json:
         result = db.command_excute("""
@@ -1012,6 +1018,12 @@ def search_product():
                  WHERE 
                     product.category = %(category)s
                  """, info)
+        db.command_excute("""
+                                                          UPDATE accounts
+                                                          SET last_login = %(time)s
+                                                          WHERE id = %(user_id)s
+                                                          """,
+                          {"time": datetime.now().strftime("%Y/%m/%d %H:%M:%S"), "user_id": user_info["user_id"]})
         return jsonify(result)
     else:
         info["search_word"] = "%" + info["search_word"] + "%"
@@ -1025,5 +1037,11 @@ def search_product():
          WHERE 
             product.name LIKE %(search_word)s AND product.id = %(category)s
          """, info)
+        db.command_excute("""
+                                                          UPDATE accounts
+                                                          SET last_login = %(time)s
+                                                          WHERE id = %(user_id)s
+                                                          """,
+                          {"time": datetime.now().strftime("%Y/%m/%d %H:%M:%S"), "user_id": user_info["user_id"]})
         return jsonify(result)
 
