@@ -28,6 +28,7 @@ def register():
     """
     # connect database
     db = database_utils(current_app.config['config'])
+    # 取的是否辦過帳號了
     dbreturn = db.command_excute("""
         SELECT 
             * 
@@ -55,6 +56,7 @@ def register():
 
     account_info = request.json
     account_info['password'] = hashlib.sha256(current_app.config['crypto'].decrypt(request.json['password']).encode("utf-8")).hexdigest()
+    # 插入新的帳號
     db.command_excute("""
             INSERT INTO accounts (account_id, name, email, phone, password) 
             VALUES (%(account_id)s, %(name)s, %(email)s, %(phone)s, %(password)s)
@@ -75,6 +77,7 @@ def login():
 
     auth_info['password'] = hashlib.sha256(current_app.config['crypto'].decrypt(request.json['password']).encode("utf-8")).hexdigest()
     db = database_utils(current_app.config['config'])
+    # 確認有沒有此account
     dbreturn = db.command_excute("""
             SELECT 
                 * 
@@ -84,6 +87,7 @@ def login():
                 email = %(email)s AND password = %(password)s
             """, auth_info)
 
+    # 更新時間
     if len(dbreturn) == 1:
         db.command_excute("""
            UPDATE accounts
@@ -109,6 +113,7 @@ def logoff():
         return "", 401
     user_info = current_app.config['jwt'].get_token_detail(request.cookies.get('User_Token'))
     db = database_utils(current_app.config['config'])
+    # 更新時間
     db.command_excute("""
                UPDATE accounts
                SET last_login = %(date)s
@@ -130,6 +135,7 @@ def get_user_detail():
         return "", 401
     user_info = current_app.config['jwt'].get_token_detail(request.cookies.get('User_Token'))
     db = database_utils(current_app.config['config'])
+    # 取的user的帳號圖片等等資訊
     dbreturn = db.command_excute("""
                                 SELECT *
                                 FROM accounts
@@ -170,6 +176,7 @@ def change_password():
         return jsonify({"cause": 203})
 
     db = database_utils(current_app.config['config'])
+    # 確認帳號是否存在
     dbreturn = db.command_excute("""
                                 SELECT *
                                 FROM accounts
@@ -177,13 +184,13 @@ def change_password():
                                 """, {"user_id": user_info["user_id"]})
     if dbreturn == 0:
         return jsonify({"cause": 204})
-
+    # 更改account密碼
     db.command_excute("""
     UPDATE accounts
     SET password = %(new_password)s
     WHERE accounts.id = %(user_id)s
     """, {"user_id": user_info["user_id"], "new_password": new_password})
-
+    # 更新時間
     db.command_excute("""
                    UPDATE accounts
                    SET last_login = %(date)s
@@ -242,7 +249,7 @@ def change_profile():
 
     print("UPDATE accounts SET " + ','.join(update_str) + " WHERE accounts.id = %(user_id)s")
     db.command_excute("UPDATE accounts SET " + ','.join(update_str) + " WHERE accounts.id = %(user_id)s", user_info)
-
+    # 更新時間
     db.command_excute("""
                    UPDATE accounts
                    SET last_login = %(date)s
@@ -282,11 +289,13 @@ def register_shop():
     shopInfo["time"] = datetime.now().strftime("%Y/%m/%d %H:%M:%S")
     if "logo" not in request.json.keys():
         shopInfo["logo"] = 1
+    # 新增一個publisher_id給此shop使用
     db.command_excute("""
                     INSERT INTO publisher 
                     VALUES(publisher_id)
                     """, {})
     shopInfo['publisher_id'] = db.command_excute("""SELECT LAST_INSERT_ID() AS id;""", {})[0]['id']
+    # 新增一個shop
     db.command_excute("""
                        INSERT INTO shop(owner_id, name, avgstar, intro, last_login, logo, publisher_id) 
                        VALUES (%(owner_id)s, %(name)s, 0, %(intro)s, %(time)s, %(logo)s, %(publisher_id)s)
@@ -305,6 +314,7 @@ def get_shop_info():
             if need not in request.json.keys():
                 return jsonify({"cause": 201})
         db = database_utils(current_app.config['config'])
+        # 取的shop資訊以及圖片
         shop_info = db.command_excute("""
                                                 SELECT name, avgstar, last_login,picture.file_path
                                                 FROM shop
@@ -323,6 +333,7 @@ def get_shop_info():
         if need not in request.json.keys():
             return jsonify({"cause": 201})
     db = database_utils(current_app.config['config'])
+    # 取的shop資訊以及圖片
     shop_info = db.command_excute("""
                                         SELECT name, avgstar, last_login,picture.file_path
                                         FROM shop
