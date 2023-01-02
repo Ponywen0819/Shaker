@@ -90,12 +90,13 @@ def publish_coupon_shop():
                                               INSERT INTO `coupon_type` ( minimum_consumption, discount, discount_type)
                                               VALUES (0, %(discount)s, %(discount_type)s)
                                               """, info)
+        info['id'] = db.command_excute("""SELECT LAST_INSERT_ID() AS id;""", {})[0]['id']
     elif request.json["discount_type"] == 2:
         db.command_excute("""
                                                   INSERT INTO `coupon_type` ( minimum_consumption, discount, discount_type)
                                                   VALUES (%(minimum_consumption)s, %(discount)s, %(discount_type)s)
                                                   """, info)
-    info['id'] = db.command_excute("""SELECT LAST_INSERT_ID() AS id;""", {})[0]['id']
+        info['id'] = db.command_excute("""SELECT LAST_INSERT_ID() AS id;""", {})[0]['id']
     # 接著新增coupon
     db.command_excute("""
                                   INSERT INTO `coupon` (publisher_id, name, type, start_time, end_time)
