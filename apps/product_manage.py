@@ -522,8 +522,13 @@ def get_order():
                                  order_id = %(id)s
                              """, request.json)
     temp = order[0]
-    temp["product_id"] = orderDetail[0]["product_id"]
-    temp["number"] = orderDetail[0]["number"]
+    product = []
+    for i in range(len(orderDetail)):
+        sum = {}
+        sum["product_id"] = orderDetail[i]["product_id"]
+        sum["num"] = orderDetail[i]["number"]
+        product.append(sum)
+    temp["product"] = product
     account_upload_info = {}
     account_upload_info["time"] = datetime.now().strftime("%Y/%m/%d %H:%M:%S")
     account_upload_info["id"] = user_info["user_id"]
@@ -533,7 +538,7 @@ def get_order():
                                SET last_login = %(time)s
                                WHERE id = %(id)s
                                """, account_upload_info)
-    if len(order) != 1 or len(orderDetail) != 1:
+    if len(order) != 1 :
         return jsonify({
             'cause': 1202
         })
