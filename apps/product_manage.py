@@ -417,6 +417,10 @@ def create_order():
                                         VALUES (%(order_id)s, %(product_id)s, %(num)s)
                                         """,
                               {"order_id": info["order_id"], "product_id": product_info["product"][i]["product_id"], "num": product_info["product"][i]["num"]})
+            db.command_excute("""
+                                       DELETE FROM `cart`
+                                       WHERE owner_id = %(id)s AND product_id = %(product_id)s;
+                                      """, {"id": user_info["user_id"],"product_id":product_info["product"][i]["product_id"]})
         # 更新時間
         db.command_excute("""
                                UPDATE accounts
@@ -443,6 +447,11 @@ def create_order():
                             INSERT INTO order_detail (order_id, product_id, number)
                             VALUES (%(order_id)s, %(product_id)s, %(num)s)
                             """, {"order_id": info["order_id"], "product_id": product_info["product"][i]["product_id"], "num": product_info["product"][i]["num"]})
+        db.command_excute("""
+                                               DELETE FROM `cart`
+                                               WHERE owner_id = %(id)s AND product_id = %(product_id)s;
+                                              """,
+                          {"id": user_info["user_id"], "product_id": product_info["product"][i]["product_id"]})
     # 更新時間
     db.command_excute("""
                            UPDATE accounts
