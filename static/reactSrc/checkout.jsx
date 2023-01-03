@@ -45,7 +45,7 @@ const OrderArea =({items})=>{
 }
 
 
-const Summarize = ({infos})=>{
+const Summarize = ({infos, onclick})=>{
     let end = 0
     Object.entries(infos).map(i=>{
         end += i[1]
@@ -73,7 +73,7 @@ const Summarize = ({infos})=>{
                     </div>
                 </div>
                 <   div className={`flex justify-end`}>
-                    <button className={`create_order_btn`}>下訂單</button>
+                    <button className={`create_order_btn`} onClick={onclick}>下訂單</button>
                 </div>
             </div>
         </div>
@@ -121,9 +121,28 @@ const Main = ()=>{
         data.address = addr
         data.payment = payment
         if(coupon !== ''){
-            data.coupon
+            data.coupon_id = couponlist[coupon].id
         }
-
+        fetch('/product/CreateOrder',{
+            method: 'POST',
+            headers:{
+                'content-type': 'application/json'
+            },
+            body:JSON.stringify(data)
+        }).then(res=>{
+            if(res.status === 200){
+                return res.json()
+            }
+        }).then(data=>{
+            if(data.cause === 0){
+                SuccessNotify('上船訂單成功').then(()=>{
+                    location.href = '/'
+                })
+            }
+            else{
+                FailNotify('上船訂單發生錯誤')
+            }
+        })
     }
 
 
@@ -212,7 +231,7 @@ const Main = ()=>{
                 <div className={`title h-20 justify-end mb-5`}>
                     <input className={`new_name_input w-full px-5 py-1`} value={addr} onInput={(e)=>setAddr(e.target.value) } placeholder={`請輸入地址`}/>
                 </div>
-                <Summarize infos={info}></Summarize>
+                <Summarize infos={info} onclick={handle_upload}></Summarize>
             </div>
         </div>
     )

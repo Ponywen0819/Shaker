@@ -393,22 +393,22 @@ def create_order():
                              WHERE
                                  id = %(product_id)s
                              """, info['product'][i])
-        if len(product) == 0 or product[0]["number"] < info['product'][i]["num"]:
+        if len(product) == 0 or product[0]["number"] < info['product'][i]["count"]:
             return jsonify({"cause": 1102})
-        total_price += info['product'][i]["num"] * product[0]["price"]
+        total_price += info['product'][i]["count"] * product[0]["price"]
     # 判斷coupon是否存在
     if "coupon_id" in info.keys():
         product_info = {}
         product_info["product"] = info.pop("product")
         # 拿取coupon_type資訊
         coupon = db.command_excute("""
-                             SELECT
-                                 *
-                             FROM
-                                 `coupon_type`
-                             WHERE
-                                 id = %(coupon_id)s
-                             """, info)
+            SELECT
+                *
+            FROM
+                `coupon_type`
+            WHERE
+                id = %(coupon_id)s
+        """, info)
         if len(coupon) == 0:
             return jsonify({"cause": 1103})
         # 低消拉幹，順便算總價
@@ -422,17 +422,16 @@ def create_order():
             info["price"] = (total_price * coupon[0]["discount"] / 100) + 150
         # 插入新的order
         db.command_excute("""
-                            INSERT INTO `order` (owner_id, start_time, end_time, payment, status, free_fee, price, address)
-                            VALUES (%(owner_id)s, %(start_time)s, %(end_time)s, %(payment)s, %(status)s, %(free_fee)s, %(price)s, %(address)s)
-                            """, info)
+            INSERT INTO `order` (owner_id, start_time, end_time, payment, status, free_fee, price, address)
+            VALUES (%(owner_id)s, %(start_time)s, %(end_time)s, %(payment)s, %(status)s, %(free_fee)s, %(price)s, %(address)s)
+        """, info)
         info['order_id'] = db.command_excute("""SELECT LAST_INSERT_ID() AS id;""", {})[0]['id']
         # 同時插入此order的order_detail
         for i in range(len(product_info["product"])):
             db.command_excute("""
-                                        INSERT INTO order_detail (order_id, product_id, number)
-                                        VALUES (%(order_id)s, %(product_id)s, %(num)s)
-                                        """,
-                              {"order_id": info["order_id"], "product_id": product_info["product"][i]["product_id"], "num": product_info["product"][i]["num"]})
+                INSERT INTO order_detail (order_id, product_id, number)
+                VALUES (%(order_id)s, %(product_id)s, %(num)s)
+            """,{"order_id": info["order_id"], "product_id": product_info["product"][i]["product_id"], "num": product_info["product"][i]["count"]})
         # 更新時間
         db.command_excute("""
                                UPDATE accounts
@@ -882,7 +881,8 @@ def get_cart_products_by_id():
 	        product.`name`, 
 	        product.price, 
 	        picture.file_path AS photo,
-	        product.shop_id
+	        product.shop_id,
+	        product.id AS product_id
         FROM
 	        cart
 	        LEFT JOIN product

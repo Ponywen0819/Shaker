@@ -92,7 +92,8 @@ var OrderArea = function OrderArea(_ref2) {
 };
 
 var Summarize = function Summarize(_ref3) {
-    var infos = _ref3.infos;
+    var infos = _ref3.infos,
+        onclick = _ref3.onclick;
 
     var end = 0;
     Object.entries(infos).map(function (i) {
@@ -146,7 +147,7 @@ var Summarize = function Summarize(_ref3) {
                 { className: "flex justify-end" },
                 React.createElement(
                     "button",
-                    { className: "create_order_btn" },
+                    { className: "create_order_btn", onClick: onclick },
                     "\u4E0B\u8A02\u55AE"
                 )
             )
@@ -222,8 +223,27 @@ var Main = function Main() {
         data.address = addr;
         data.payment = payment;
         if (coupon !== '') {
-            data.coupon;
+            data.coupon_id = couponlist[coupon].id;
         }
+        fetch('/product/CreateOrder', {
+            method: 'POST',
+            headers: {
+                'content-type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        }).then(function (res) {
+            if (res.status === 200) {
+                return res.json();
+            }
+        }).then(function (data) {
+            if (data.cause === 0) {
+                SuccessNotify('上船訂單成功').then(function () {
+                    location.href = '/';
+                });
+            } else {
+                FailNotify('上船訂單發生錯誤');
+            }
+        });
     };
 
     React.useEffect(function () {
@@ -344,7 +364,7 @@ var Main = function Main() {
                         return setAddr(e.target.value);
                     }, placeholder: "\u8ACB\u8F38\u5165\u5730\u5740" })
             ),
-            React.createElement(Summarize, { infos: info })
+            React.createElement(Summarize, { infos: info, onclick: handle_upload })
         )
     );
 };
