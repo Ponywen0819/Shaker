@@ -429,9 +429,35 @@ def create_order():
         # 同時插入此order的order_detail
         for i in range(len(product_info["product"])):
             db.command_excute("""
+<<<<<<< HEAD
                 INSERT INTO order_detail (order_id, product_id, number)
                 VALUES (%(order_id)s, %(product_id)s, %(num)s)
             """,{"order_id": info["order_id"], "product_id": product_info["product"][i]["product_id"], "num": product_info["product"][i]["count"]})
+=======
+                                        INSERT INTO order_detail (order_id, product_id, number)
+                                        VALUES (%(order_id)s, %(product_id)s, %(num)s)
+                                        """,
+                              {"order_id": info["order_id"], "product_id": product_info["product"][i]["product_id"], "num": product_info["product"][i]["num"]})
+            db.command_excute("""
+                                       DELETE FROM `cart`
+                                       WHERE owner_id = %(id)s AND product_id = %(product_id)s;
+                                      """, {"id": user_info["user_id"],"product_id":product_info["product"][i]["product_id"]})
+            product = db.command_excute("""
+                                                 SELECT
+                                                     *
+                                                 FROM
+                                                     product
+                                                 WHERE
+                                                     id = %(product_id)s
+                                                 """, {"product_id": product_info["product"][i]["product_id"]})
+            db.command_excute("""
+                                               UPDATE product
+                                               SET number = %(number)s
+                                               WHERE id = %(product_id)s
+                                               """, {"product_id": product_info["product"][i]["product_id"],
+                                                     "number": product[0]["number"] - product_info["product"][i][
+                                                         "num"]})
+>>>>>>> FlaskShaker
         # 更新時間
         db.command_excute("""
                                UPDATE accounts
@@ -458,6 +484,24 @@ def create_order():
                             INSERT INTO order_detail (order_id, product_id, number)
                             VALUES (%(order_id)s, %(product_id)s, %(num)s)
                             """, {"order_id": info["order_id"], "product_id": product_info["product"][i]["product_id"], "num": product_info["product"][i]["num"]})
+        db.command_excute("""
+                                               DELETE FROM `cart`
+                                               WHERE owner_id = %(id)s AND product_id = %(product_id)s;
+                                              """,
+                          {"id": user_info["user_id"], "product_id": product_info["product"][i]["product_id"]})
+        product = db.command_excute("""
+                                     SELECT
+                                         *
+                                     FROM
+                                         product
+                                     WHERE
+                                         id = %(product_id)s
+                                     """, {"product_id": product_info["product"][i]["product_id"]})
+        db.command_excute("""
+                                   UPDATE product
+                                   SET number = %(number)s
+                                   WHERE id = %(product_id)s
+                                   """, {"product_id": product_info["product"][i]["product_id"], "number": product[0]["number"] - product_info["product"][i]["num"]})
     # 更新時間
     db.command_excute("""
                            UPDATE accounts
