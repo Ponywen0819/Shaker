@@ -421,6 +421,21 @@ def create_order():
                                        DELETE FROM `cart`
                                        WHERE owner_id = %(id)s AND product_id = %(product_id)s;
                                       """, {"id": user_info["user_id"],"product_id":product_info["product"][i]["product_id"]})
+            product = db.command_excute("""
+                                                 SELECT
+                                                     *
+                                                 FROM
+                                                     product
+                                                 WHERE
+                                                     id = %(product_id)s
+                                                 """, {"product_id": product_info["product"][i]["product_id"]})
+            db.command_excute("""
+                                               UPDATE product
+                                               SET number = %(number)s
+                                               WHERE id = %(product_id)s
+                                               """, {"product_id": product_info["product"][i]["product_id"],
+                                                     "number": product[0]["number"] - product_info["product"][i][
+                                                         "num"]})
         # 更新時間
         db.command_excute("""
                                UPDATE accounts
@@ -452,6 +467,19 @@ def create_order():
                                                WHERE owner_id = %(id)s AND product_id = %(product_id)s;
                                               """,
                           {"id": user_info["user_id"], "product_id": product_info["product"][i]["product_id"]})
+        product = db.command_excute("""
+                                     SELECT
+                                         *
+                                     FROM
+                                         product
+                                     WHERE
+                                         id = %(product_id)s
+                                     """, {"product_id": product_info["product"][i]["product_id"]})
+        db.command_excute("""
+                                   UPDATE product
+                                   SET number = %(number)s
+                                   WHERE id = %(product_id)s
+                                   """, {"product_id": product_info["product"][i]["product_id"], "number": product[0]["number"] - product_info["product"][i]["num"]})
     # 更新時間
     db.command_excute("""
                            UPDATE accounts
