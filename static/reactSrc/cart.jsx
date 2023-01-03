@@ -18,7 +18,6 @@ const CartLowerBar = ()=>(
 const ContentTitle = ()=>(
     <div className={`cart_title title`}>
         <div className={`title_btn_area`}>
-            <button className={'title_btn'}></button>
         </div>
         <p className={``} style={{width: '45%'}}>商品</p>
         {
@@ -29,109 +28,275 @@ const ContentTitle = ()=>(
     </div>
 )
 
-const Order_title = ({shop_name})=>{
+const Order_title = ({shop_name, onClick, isChecked})=>{
     return (<div className={`order_title title`}>
                 <div className={'title_btn_area'}>
-                    <button className={`title_btn`}></button>
+                    <input type={'checkbox'} className={`title_btn`} id={shop_name} onClick={()=>onClick(shop_name)} checked={isChecked}/>
                 </div>
                 <div className={`title_text`}>
                     <a href={``}>{shop_name}</a>
                 </div>
-            </div>)
+            </div>
+    )
 }
 
-const Product = ({item}) =>(
-    <div className={`product_container`}>
-        <div className={`title_btn_area`}>
-            <button className={'title_btn'}></button>
-        </div>
-        <div className={`product_info_container`}>
-            <div className={`product_img`} style={{backgroundImage: `url(${item  .img})`}}></div>
-            <p>{item.name}</p>
-        </div>
-        <p className={`w-[12%] flex justify-center`}>${item.origin}</p>
-        <div className={`w-[14%] flex justify-center`}>
-            <div className={`product_number_container`}>
-                <button className={`product_number_btn`}>-</button>
-                <input type={`text`} className={`product_number`} value={item.number}/>
-                <button className={`product_number_btn`}>+</button>
+const Product = ({item, onClick, isChecked, update}) => {
+    const [disable, setable] = React.useState(false)
+
+    const handle_update_num=(val)=>{
+        let next = item.count + val
+        if((next <= 0) || (next > item.remain)){
+            return
+        }
+        else{
+            setable(true)
+            // 後端處理
+            fetch('/product/UploadCartNum',{
+                method: 'POST',
+                headers:{
+                    'content-type': 'application/json'
+                },
+                body:JSON.stringify({
+                    id: item.id,
+                    'new_count': next
+                })
+            }).then(res=>{
+                if(res.status === 200){
+                    return res.json()
+                }
+            }).then(data=>{
+                if(data.cause === 0 ){
+                    return true
+                }
+            }).then(res=>{
+                if(res === true){
+                    update(item.id, next)
+                    setable(false)
+                }
+            })
+
+        }
+    }
+
+    return (
+        <div className={`product_container`}>
+            <div className={`title_btn_area`}>
+                <input type={'checkbox'}
+                       className={`title_btn`}
+                       name={item.id}
+                       onClick={()=>onClick({
+                           id: item.id,
+                           shop_name: item.shop_name,
+                           remain: item.remain
+                       })}
+                       checked={isChecked}
+                />
+            </div>
+            <div className={`product_info_container`}>
+                <div className={`product_img`} style={{backgroundImage: `url(${item.photo})`}}></div>
+                <p>{item.name}</p>
+            </div>
+            <p className={`w-[12%] flex justify-center`}>${item.price}</p>
+            <div className={`w-[14%] flex justify-center`}>
+                <div className={`product_number_container`}>
+                    <button className={`product_number_btn`}
+                            onClick={()=>handle_update_num(-1)}
+                            disabled={disable}
+                    >-</button>
+                    <p className={`product_number`}>{item.count}</p>
+                    <button className={`product_number_btn`}
+                            onClick={()=>handle_update_num(1)}
+                            disabled={disable}
+                    >+</button>
+                </div>
+            </div>
+            <p className={`w-[12%] flex justify-center`}>${item.count * item.price}</p>
+            <div className={`w-[12%] flex justify-center`}>
+                <button>X</button>
             </div>
         </div>
-        <p className={`w-[12%] flex justify-center`}>${item.number * item.origin}</p>
-        <div className={`w-[12%] flex justify-center`}>
-            <button>X</button>
-        </div>
-    </div>
-)
+    )
+}
 
-const Order = ({products})=>{
-    const [orders, setOrder] = React.useState({})
-
-    React.useEffect(()=>{
-        let a ={}
-        for(i of products){
-            let order_keys = Object.keys(a)
-            if(order_keys.includes(i.shop.toString())){
-                console.log(a[i.shop])
-                a[i.shop].push(i)
-                console.log(a[i.shop])
-            }
-            else{
-                a[i.shop] = [i]
-            }
-        }
-        setOrder(a)
-    },[])
-
+const Footer = ({price, num, onClick})=>{
     return(
-        <div className={``}>
-            {
-                Object.entries(orders).map(order=>{
-                    return(
-                        <div className={`order_container`}>
-                            <Order_title shop_name={order[0]}></Order_title>
-                            {
-                                order[1].map(i=>(
-                                    <Product item={i}></Product>
-                                ))
-                            }
-                        </div>
-                    )
-                })
-            }
-
-
+        <div className={`creat_order`}>
+            <p className={`text-lg`}>總金額</p>
+            <p>{`(${num}個商品): `}</p>
+            <p className={`create_order_price px-1`}>{`${price}`}</p>
+            <button className={`create_order_btn`} onClick={onClick}>去買單</button>
         </div>
     )
 }
 
 const Main = ()=>{
-    const products = [
-        { no : 'a124fw', img : '/static/img/logo1.png', name : '我是商品', number:1,origin : 123, shop : 2, },
-        { no : 'a124fw', img : '/static/img/logo1.png', name : '我是商品', number:1,origin : 123, shop : 2,},
-        { no : 'a124fw', img : '/static/img/logo1.png', name : '我是商品', number:1,origin : 123, shop : 2,},
-        { no : 'a124fw', img : '/static/img/logo1.png', name : '我是商品', number:1,origin : 123, shop : 1,},
-        { no : 'a124fw', img : '/static/img/logo1.png', name : '我是商品', number:1,origin : 123, shop : 1,},
-        { no : 'a124fw', img : '/static/img/logo1.png', name : '我是商品', number:1,origin : 123, shop : 1,},
-        { no : 'a124fw', img : '/static/img/logo1.png', name : '我是商品', number:1,origin : 123, shop : 1,},
-        { no : 'a124fw', img : '/static/img/logo1.png', name : '我是商品', number:1,origin : 123, shop : 1,},
-        { no : 'a124fw', img : '/static/img/logo1.png', name : '我是商品', number:1,origin : 123, shop : 1,},
-        { no : 'a124fw', img : '/static/img/logo1.png', name : '我是商品', number:1,origin : 123, shop : 1,},
-        { no : 'a124fw', img : '/static/img/logo1.png', name : '我是商品', number:1,origin : 123, shop : 1,},
-        { no : 'a124fw', img : '/static/img/logo1.png', name : '我是商品', number:1,origin : 123, shop : 1,},
-        { no : 'a124fw', img : '/static/img/logo1.png', name : '我是商品', number:1,origin : 123, shop : 1,}
-    ]
+    const [products, setproduct] = React.useState([])
+    const [selection, setSelection] = React.useState([])
+
+    const select_product = (product)=>{
+        let copy_select = selection.slice(0)    // 複製
+        // 做商品個別檢查
+        // 檢查陣列中是否有重複的值
+
+        let dup = false
+        for(select of selection){
+            if(select.id === product.id){
+                dup = true
+                break;
+            }
+        }
+        if(dup){
+            const index = selection.indexOf(product)
+            copy_select.splice(index, 1)
+        }
+        else{
+            // 若是選擇新的商品要檢查是否為別商片的物品
+            if(selection.length === 0){
+                copy_select.push(product)
+            }
+            else{
+                if(selection[0].shop_name !== product.shop_name){
+                    copy_select = [product]
+                }
+                else{
+                    copy_select.push(product)
+                }
+            }
+        }
+        setSelection(copy_select)
+    }
+
+    const get_title_check = (shop_name)=>{
+        for(product of products[shop_name]){
+            let dup = false
+            for(select of selection){
+                if(select.id === product.id){
+                    dup = true
+                    break;
+                }
+            }
+            if(!dup){
+                return false
+            }
+        }
+        return true
+    }
+
+    const get_item_check = (id) => {
+        for(select of selection){
+            if(select.id === id){
+                return true
+            }
+        }
+        return false
+    }
+
+    const select_shop = (name)=>{
+        for(product of products[name]){
+            if(!selection.includes(product)){
+                setSelection(products[name])
+                return
+            }
+        }
+        setSelection([])
+    }
+
+    const handle_change = (id, val)=>{
+        let new_list = {}
+        for(shop of Object.keys(products)){
+            console.log(shop)
+            let temp = products[shop].slice(0)
+            for (const [i, value] of (products[shop]).entries()) {
+                console.log(value)
+                if(value.id === id){
+                    temp[i].count = val
+                }
+            }
+            console.log(temp)
+            new_list[shop] = temp
+        }
+        setproduct(new_list)
+    }
+
+    const calc_price = ()=>{
+        let total = 0
+        for(items of Object.values(products)){
+            for(item of items){
+                // 檢查是否在列表中
+                for(s of selection){
+                    if(s.id === item.id){
+                        total += (item.count * item.price)
+                        break
+                    }
+                }
+            }
+        }
+        return total
+    }
+
+    const handle_checkout = ()=>{
+        if(selection.length > 0){
+            const id_list = selection.map(item=>(item.id))
+            console.log(id_list)
+            document.cookie = `orders=${JSON.stringify(id_list)}`
+            document.location = '/checkout'
+        }
+        else{
+            FailNotify('請選擇至少一項商品')
+        }
+    }
+
+    React.useEffect(()=>{
+        if(products.length === 0){
+            fetch('/product/GetProductsToCart',{
+                method: 'POST'
+            }).then(res=>{
+                if(res.status === 200){
+                    return res.json()
+                }
+            }).then(data=>{
+                if(data.cause === 0){
+                    let a ={}
+                    for(i of data.products){
+                        let order_keys = Object.keys(a)
+                        if(order_keys.includes(i.shop_name)){
+                            a[i.shop_name].push(i)
+                        }
+                        else{
+                            a[i.shop_name] = [i]
+                        }
+                    }
+                    setproduct(a)
+                }
+            })
+        }
+    },[selection])
 
     return [
         <div className={`mb-8`}>
             <UpperBar></UpperBar>
             <CartLowerBar></CartLowerBar>
         </div>,
-        <div className="main">
-            <ContentTitle></ContentTitle>
-            <Order products={products}></Order>
+        <div className="main main_content">
+            <div>
+                <ContentTitle></ContentTitle>
+                <div className={``}>
+                {
+                    Object.entries(products).map(order=>(
+                    <div className={`order_container`}>
+                        <Order_title shop_name={order[0]} onClick={select_shop} isChecked={get_title_check(order[0])}></Order_title>
+                        {
+                            order[1].map(i=>(
+                                <Product item={i} onClick={select_product} isChecked={get_item_check(i.id)} update={handle_change}></Product>
+                            ))
+                        }
+                        </div>
+                    ))
+                }
+                </div>
+            </div>
+            <Footer num={selection.length} price={calc_price()} onClick={handle_checkout}></Footer>
         </div>
-
     ]
 }
 

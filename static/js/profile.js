@@ -45,7 +45,7 @@ var UserInput = function UserInput(_ref) {
 var UserImgInput = function UserImgInput(_ref2) {
     var orgin = _ref2.orgin;
 
-    var _React$useState3 = React.useState(orgin),
+    var _React$useState3 = React.useState(''),
         _React$useState4 = _slicedToArray(_React$useState3, 2),
         img = _React$useState4[0],
         setImg = _React$useState4[1];
@@ -90,19 +90,22 @@ var UserImgInput = function UserImgInput(_ref2) {
                 FailNotify("上傳圖片出現錯誤");
             }
         }).then(function (data) {
-            if (data.status == 200) {
+            if (data.cause === 0) {
                 SuccessNotify("銅片上傳成功");
             }
         });
     };
 
     React.useEffect(function () {
+        if (img === '') {
+            setImg(orgin);
+        }
         if (orgin !== img) {
             setChange(true);
         } else {
             setChange(false);
         }
-    }, [img]);
+    }, [orgin, img]);
 
     return React.createElement(
         'div',
@@ -143,7 +146,7 @@ var UserImgInput = function UserImgInput(_ref2) {
 };
 
 var Interface = function Interface() {
-    var _React$useState7 = React.useState({ name: "", email: "", phone: "", photo: '' }),
+    var _React$useState7 = React.useState({ name: "", email: "", phone: "", photo: '', file_path: '' }),
         _React$useState8 = _slicedToArray(_React$useState7, 2),
         userinfo = _React$useState8[0],
         setInfo = _React$useState8[1];
@@ -165,7 +168,7 @@ var Interface = function Interface() {
     var getInfo = function getInfo() {
         fetch('/account/GetUserDetail', {
             body: JSON.stringify({
-                require: ["photo", "name", "email", "phone"]
+                require: ["photo", "name", "email", "phone", 'file_path']
             }),
             method: 'POST',
             headers: {
@@ -185,9 +188,9 @@ var Interface = function Interface() {
                     name: data.name,
                     email: data.email,
                     phone: data.phone,
-                    photo: data.photo
+                    photo: data.file_path
                 });
-                setImg(data.photo == null ? "/static/img/logo1.png" : data.photo);
+                setImg(data.file_path == null ? "/static/img/logo1.png" : data.file_path.slice(1));
             } else {
                 FailNotify('請先登入').then(function () {
                     return location.href = '/login';

@@ -10,7 +10,7 @@ var DisplayTitle = function DisplayTitle() {
             React.createElement(
                 'p',
                 { className: 'discount_title' },
-                '\u63A8\u85A6\u5546\u54C1'
+                '\u5176\u4ED6\u5546\u54C1'
             )
         )
     );
@@ -20,12 +20,11 @@ var DiscountCard = function DiscountCard(_ref) {
     var no = _ref.no,
         img = _ref.img,
         name = _ref.name,
-        orgin = _ref.orgin,
-        dis = _ref.dis,
+        price = _ref.price,
         first = _ref.first;
     return React.createElement(
         'a',
-        { href: '' + no, className: 'discount_item_card ' + (first ? '' : 'card_bar') },
+        { href: '/product/' + no, className: 'discount_item_card ' + (first ? '' : 'card_bar') },
         React.createElement('div', { className: 'dis_item_img', style: { backgroundImage: 'url(' + img + ')' } }),
         React.createElement(
             'p',
@@ -40,13 +39,7 @@ var DiscountCard = function DiscountCard(_ref) {
                 'p',
                 { className: 'dis_item_dis' },
                 '$',
-                dis
-            ),
-            React.createElement(
-                'p',
-                { className: 'dis_item_origin pl-1' },
-                '$',
-                orgin
+                price
             )
         )
     );
@@ -88,7 +81,7 @@ var Discount = function Discount(_ref2) {
             React.createElement(
                 'p',
                 { className: 'discount_title' },
-                '\u7279\u50F9\u5546\u54C1'
+                '\u63A8\u85A6\u5546\u54C1'
             ),
             React.createElement(
                 'a',
@@ -121,7 +114,7 @@ var Discount = function Discount(_ref2) {
                     'div',
                     { className: 'discount_warp', style: { transform: 'translateX(-' + 10 * offset + '%)' } },
                     items.map(function (i) {
-                        return React.createElement(DiscountCard, { no: i.no, name: i.name, img: i.img, dis: i.dis, orgin: i.origin, first: items.indexOf(i) == 0 });
+                        return React.createElement(DiscountCard, { no: i.id, name: i.name, img: i.file_path, price: i.price, first: items.indexOf(i) === 0 });
                     })
                 )
             )
@@ -143,17 +136,33 @@ var TypeLink = function TypeLink(_ref3) {
     );
 };
 
-var ItemTypes = ['3C', '周邊', 'NB', '通訊', '數位', '家電', '日用', '食品', '生活', '運動戶外', '美妝', '衣鞋包錶', '品牌旗艦', '書店'];
-
 var ItemTypeSelection = function ItemTypeSelection() {
+    var _React$useState3 = React.useState([]),
+        _React$useState4 = _slicedToArray(_React$useState3, 2),
+        item_types = _React$useState4[0],
+        setTypes = _React$useState4[1];
+
+    React.useEffect(function () {
+        fetch('/product/GetAllCategory', {
+            method: 'GET'
+        }).then(function (res) {
+            if (res.status === 200) {
+                return res.json();
+            }
+        }).then(function (data) {
+            console.log(data);
+            setTypes(data);
+        });
+    }, []);
+
     return React.createElement(
         'div',
         { className: 'type_selection' },
         React.createElement(
             'div',
             { className: 'type_container' },
-            ItemTypes.map(function (i) {
-                return React.createElement(TypeLink, { type: i, first: ItemTypes.indexOf(i) == 0 });
+            item_types.map(function (i) {
+                return React.createElement(TypeLink, { type: i.name, first: i.id === 1 });
             })
         )
     );
@@ -163,11 +172,10 @@ var ItemCard = function ItemCard(_ref4) {
     var no = _ref4.no,
         img = _ref4.img,
         name = _ref4.name,
-        origin = _ref4.origin,
-        dis = _ref4.dis;
+        price = _ref4.price;
     return React.createElement(
         'a',
-        { href: '' + no, className: 'item_card_container' },
+        { href: '/product/' + no, className: 'item_card_container' },
         React.createElement(
             'div',
             { className: 'item_card' },
@@ -184,22 +192,12 @@ var ItemCard = function ItemCard(_ref4) {
                 React.createElement(
                     'div',
                     { className: 'flex items-end' },
-                    dis == null ? [React.createElement(
+                    React.createElement(
                         'p',
                         { className: 'item_price' },
                         '$',
-                        origin
-                    )] : [React.createElement(
-                        'p',
-                        { className: 'item_price' },
-                        '$',
-                        dis
-                    ), React.createElement(
-                        'p',
-                        { className: 'dis_item_origin pl-1' },
-                        '$',
-                        origin
-                    )]
+                        price
+                    )
                 )
             )
         )
@@ -207,9 +205,33 @@ var ItemCard = function ItemCard(_ref4) {
 };
 
 var Main = function Main() {
-    var dis_item = [{ no: 'a124fw', img: '/static/img/logo1.png', name: '我是商品', origin: 123, dis: 100 }, { no: 'a124fw', img: '/static/img/logo1.png', name: '我是商品', origin: 123, dis: 101 }, { no: 'a124fw', img: '/static/img/logo1.png', name: '我是商品', origin: 123, dis: 102 }, { no: 'a124fw', img: '/static/img/logo1.png', name: '我是商品', origin: 123, dis: 103 }, { no: 'a124fw', img: '/static/img/logo1.png', name: '我是商品', origin: 123, dis: 104 }, { no: 'a124fw', img: '/static/img/logo1.png', name: '我是商品', origin: 123, dis: 105 }, { no: 'a124fw', img: '/static/img/logo1.png', name: '我是商品', origin: 123, dis: 106 }, { no: 'a124fw', img: '/static/img/logo1.png', name: '我是商品', origin: 123, dis: 107 }, { no: 'a124fw', img: '/static/img/logo1.png', name: '我是商品', origin: 123, dis: 108 }, { no: 'a124fw', img: '/static/img/logo1.png', name: '我是商品', origin: 123, dis: 109 }];
+    var _React$useState5 = React.useState([]),
+        _React$useState6 = _slicedToArray(_React$useState5, 2),
+        re = _React$useState6[0],
+        setRe = _React$useState6[1];
 
-    var qqqq = [{ no: 'a124fw', img: '/static/img/logo1.png', name: '我是商品', origin: 123, dis: 100 }, { no: 'a124fw', img: '/static/img/logo1.png', name: '我是商品', origin: 123, dis: null }, { no: 'a124fw', img: '/static/img/logo1.png', name: '我是商品', origin: 123, dis: 102 }, { no: 'a124fw', img: '/static/img/logo1.png', name: '我是商品', origin: 123, dis: 102 }, { no: 'a124fw', img: '/static/img/logo1.png', name: '我是商品', origin: 123, dis: 102 }, { no: 'a124fw', img: '/static/img/logo1.png', name: '我是商品', origin: 123, dis: 102 }, { no: 'a124fw', img: '/static/img/logo1.png', name: '我是商品', origin: 123, dis: 102 }, { no: 'a124fw', img: '/static/img/logo1.png', name: '我是商品', origin: 123, dis: 102 }, { no: 'a124fw', img: '/static/img/logo1.png', name: '我是商品', origin: 123, dis: 102 }, { no: 'a124fw', img: '/static/img/logo1.png', name: '我是商品', origin: 123, dis: 102 }, { no: 'a124fw', img: '/static/img/logo1.png', name: '我是商品', origin: 123, dis: 102 }, { no: 'a124fw', img: '/static/img/logo1.png', name: '我是商品', origin: 123, dis: 102 }, { no: 'a124fw', img: '/static/img/logo1.png', name: '我是商品', origin: 123, dis: 102 }];
+    var _React$useState7 = React.useState([]),
+        _React$useState8 = _slicedToArray(_React$useState7, 2),
+        all = _React$useState8[0],
+        setAll = _React$useState8[1];
+
+    React.useEffect(function () {
+        fetch('/product/SearchProduct', {
+            method: 'POST',
+            headers: {
+                'content-type': 'application/json'
+            },
+            body: JSON.stringify({})
+        }).then(function (res) {
+            if (res.status === 200) {
+                return res.json();
+            }
+        }).then(function (data) {
+            console.log(data);
+            setRe(data);
+            setAll(data);
+        });
+    }, []);
 
     return [React.createElement(
         'nav',
@@ -220,13 +242,13 @@ var Main = function Main() {
     ), React.createElement(
         'div',
         { className: 'main' },
-        React.createElement(Discount, { items: dis_item }),
+        React.createElement(Discount, { items: re.slice(0, 10) }),
         React.createElement(DisplayTitle, null),
         React.createElement(
             'div',
             { className: 'item_list mb-8' },
-            qqqq.map(function (i) {
-                return React.createElement(ItemCard, { no: i.no, name: i.name, img: i.img, dis: i.dis, origin: i.origin });
+            all.map(function (i) {
+                return React.createElement(ItemCard, { no: i.id, name: i.name, img: i.file_path, price: i.price });
             })
         ),
         React.createElement(

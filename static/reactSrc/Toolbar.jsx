@@ -10,7 +10,13 @@ const User_area = ({img, name})=>{
     }
 
     const handleLogout =()=>{
-        fetch()
+        fetch('/account/Logoff',{
+            method: 'POST'
+        }).then(res=>{
+            if(res.status === 200){
+                SuccessNotify('登出成功').then(()=>location.href = location.href)
+            }
+        })
     }
 
     return(
@@ -23,7 +29,7 @@ const User_area = ({img, name})=>{
                 <div className={`Toolbar_user_section_area`}>
                     <a className={`font-bold Toolbar_user_section`} href={`/user/account/profile`}>我的帳號</a>
                     <a className={`font-bold Toolbar_user_section` } href={`/user/purchase`}>購買清單</a>
-                    <button className={`font-bold Toolbar_user_section`}>登出</button>
+                    <button className={`font-bold Toolbar_user_section`} onClick={handleLogout}>登出</button>
                 </div>
             )}
 
@@ -37,10 +43,9 @@ const UpperBar = ()=>{
     const [userinfo, setinfo] = React.useState({name:'',img:''})
 
     const testLogin = ()=>{
-        if(document.cookie.indexOf('User_Token=') !== -1) {
             fetch('/account/GetUserDetail',{
                 body: JSON.stringify({
-                    require:["photo", "name"]
+                    require:["file_path", "name"]
                 }),
                 method: 'POST',
                 headers:{
@@ -56,7 +61,7 @@ const UpperBar = ()=>{
                     setinfo(data)
                 }
             })
-        }
+
     }
 
     React.useEffect(()=>{
@@ -67,12 +72,12 @@ const UpperBar = ()=>{
                 <div className="upper_main nav_container">
                     <div className="w-1/5 upper_selction">
                         <div className="upper_nobar">
-                            <a className="Toolbat_text" href="">賣家中心</a>
+                            <a className="Toolbat_text" href="/sellercenter/index">賣家中心</a>
                         </div>
                     </div>
                     {isLogin?
                         (
-                            <User_area name={userinfo.name} img={userinfo.photo}></User_area>
+                            <User_area name={userinfo.name} img={userinfo.file_path.slice(1)}></User_area>
                         ):
                         (<div className="w-1/5 upper_selction justify-end">
                             <div className="upper_nobar">

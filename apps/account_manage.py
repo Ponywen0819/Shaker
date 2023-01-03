@@ -5,7 +5,6 @@ from datetime import datetime
 from flask import Flask, render_template, request, redirect, url_for, Blueprint, jsonify, current_app, make_response
 from module.configs import configure_collection
 from module.picture_utils import get_new_pic
-
 from module.data_utils import database_utils
 
 app = Blueprint('account_manage', __name__)
@@ -28,6 +27,7 @@ def register():
     """
     # connect database
     db = database_utils(current_app.config['config'])
+    # 取的是否辦過帳號了
     dbreturn = db.command_excute("""
         SELECT 
             * 
@@ -51,10 +51,11 @@ def register():
     require_field = ["account_id", "name", "email", "phone", "password"]
     for need in require_field:
         if need not in request.json.keys():
-            return jsonify({"cause": 153 })
+            return jsonify({"cause": 153})
 
     account_info = request.json
     account_info['password'] = hashlib.sha256(current_app.config['crypto'].decrypt(request.json['password']).encode("utf-8")).hexdigest()
+    # 插入新的帳號
     db.command_excute("""
             INSERT INTO accounts (account_id, name, email, phone, password) 
             VALUES (%(account_id)s, %(name)s, %(email)s, %(phone)s, %(password)s)
@@ -65,7 +66,7 @@ def register():
         "cause": 0
     }))
 
-    res.set_cookie("Token", token, expires=time.time() + 60 * 60)
+    res.set_cookie("User_Token", token, expires=time.time() + 60 * 60)
     return res
 
 
@@ -75,6 +76,7 @@ def login():
 
     auth_info['password'] = hashlib.sha256(current_app.config['crypto'].decrypt(request.json['password']).encode("utf-8")).hexdigest()
     db = database_utils(current_app.config['config'])
+    # 確認有沒有此account
     dbreturn = db.command_excute("""
             SELECT 
                 * 
@@ -84,6 +86,7 @@ def login():
                 email = %(email)s AND password = %(password)s
             """, auth_info)
 
+    # 更新時間
     if len(dbreturn) == 1:
         db.command_excute("""
            UPDATE accounts
@@ -110,6 +113,7 @@ def logoff():
         return "", 401
     user_info = current_app.config['jwt'].get_token_detail(request.cookies.get('User_Token'))
     db = database_utils(current_app.config['config'])
+    # 更新時間
     db.command_excute("""
                UPDATE accounts
                SET last_login = %(date)s
@@ -131,12 +135,13 @@ def get_user_detail():
         return "", 401
     user_info = current_app.config['jwt'].get_token_detail(request.cookies.get('User_Token'))
     db = database_utils(current_app.config['config'])
+    # 取的user的帳號圖片等等資訊
     dbreturn = db.command_excute("""
-                                SELECT *
-                                FROM accounts
-                                LEFT JOIN picture ON accounts.photo = picture.id
-                                WHERE accounts.id = %(user_id)s
-                                """, user_info)
+        SELECT *
+        FROM accounts
+        LEFT JOIN picture ON accounts.photo = picture.id
+        WHERE accounts.id = %(user_id)s
+    """, user_info)
 
     if len(dbreturn) == 0:
         return jsonify({"cause": 202})
@@ -172,6 +177,7 @@ def change_password():
         return jsonify({"cause": 203})
 
     db = database_utils(current_app.config['config'])
+    # 確認帳號是否存在
     dbreturn = db.command_excute("""
                                 SELECT *
                                 FROM accounts
@@ -179,13 +185,13 @@ def change_password():
                                 """, {"user_id": user_info["user_id"]})
     if dbreturn == 0:
         return jsonify({"cause": 204})
-
+    # 更改account密碼
     db.command_excute("""
     UPDATE accounts
     SET password = %(new_password)s
     WHERE accounts.id = %(user_id)s
     """, {"user_id": user_info["user_id"], "new_password": new_password})
-
+    # 更新時間
     db.command_excute("""
                    UPDATE accounts
                    SET last_login = %(date)s
@@ -245,7 +251,7 @@ def change_profile():
 
     print("UPDATE accounts SET " + ','.join(update_str) + " WHERE accounts.id = %(user_id)s")
     db.command_excute("UPDATE accounts SET " + ','.join(update_str) + " WHERE accounts.id = %(user_id)s", user_info)
-
+    # 更新時間
     db.command_excute("""
                    UPDATE accounts
                    SET last_login = %(date)s
@@ -253,6 +259,7 @@ def change_profile():
                    """, {"user_id": user_info['user_id'], "date": datetime.now().strftime("%Y/%m/%d %H:%M:%S")})
 
     return jsonify({"cause": 0})
+
 
 @app.route("RegisterShop", methods=['POST'])
 def register_shop():
@@ -285,11 +292,13 @@ def register_shop():
     shopInfo["time"] = datetime.now().strftime("%Y/%m/%d %H:%M:%S")
     if "logo" not in request.json.keys():
         shopInfo["logo"] = 1
+    # 新增一個publisher_id給此shop使用
     db.command_excute("""
                     INSERT INTO publisher 
                     VALUES(publisher_id)
                     """, {})
     shopInfo['publisher_id'] = db.command_excute("""SELECT LAST_INSERT_ID() AS id;""", {})[0]['id']
+    # 新增一個shop
     db.command_excute("""
                        INSERT INTO shop(owner_id, name, avgstar, intro, last_login, logo, publisher_id) 
                        VALUES (%(owner_id)s, %(name)s, 0, %(intro)s, %(time)s, %(logo)s, %(publisher_id)s)
@@ -298,6 +307,56 @@ def register_shop():
     return jsonify({
         'cause': 0
     })
+
+
+@app.route("GetShopInfo", methods=['POST'])
+def get_shop_info():
+    token = request.cookies.get("User_Token")
+    # 無帳號
+    if token is None:
+        require_field = ["shop_id"]
+        for need in require_field:
+            if need not in request.json.keys():
+                return jsonify({"cause": 201})
+        db = database_utils(current_app.config['config'])
+        # 取的shop資訊以及圖片
+        shop_info = db.command_excute("""
+            SELECT name, avgstar, last_login,picture.file_path
+            FROM shop
+            LEFT JOIN picture ON shop.logo = picture.id
+            WHERE shop.id = %(shop_id)s
+        """, request.json)
+        print(shop_info)
+        if len(shop_info) != 1:
+            return jsonify({"cause": 202})
+        return jsonify(shop_info)
+    if not current_app.config['jwt'].check_token_valid(token):
+        return "", 401
+    # 有帳號
+    user_info = current_app.config['jwt'].get_token_detail(token)
+    require_field = ["shop_id"]
+    for need in require_field:
+        if need not in request.json.keys():
+            return jsonify({"cause": 201})
+    db = database_utils(current_app.config['config'])
+    # 取的shop資訊以及圖片
+    shop_info = db.command_excute("""
+                                        SELECT name, avgstar, last_login,picture.file_path
+                                        FROM shop
+                                        LEFT JOIN picture ON shop.logo = picture.id
+                                        WHERE shop.id = %(shop_id)s
+                                        """, request.json)
+    if len(shop_info) != 1:
+        return jsonify({"cause": 202})
+    # 更新時間
+    db.command_excute("""
+                        UPDATE accounts
+                        SET last_login = %(time)s
+                        WHERE id = %(user_id)s
+                        """,
+                      {"time": datetime.now().strftime("%Y/%m/%d %H:%M:%S"), "user_id": user_info["user_id"]})
+    return jsonify(shop_info)
+
 
 @app.route("/PublicKey", methods=['GET'])
 def publickey():

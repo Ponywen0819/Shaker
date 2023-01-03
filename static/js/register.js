@@ -36,11 +36,14 @@ var handle_register = function handle_register() {
                 return respons.json();
             }
         }).then(function (json) {
-            if (json.status === "success") {
-                location.href = '/';
-                console.log('success');
+            if (json.cause === 0) {
+                SuccessNotify('註冊成功').then(function () {
+                    location.href = '/';
+                    console.log('success');
+                });
             } else {
                 // 登入失敗通知
+                FailNotify('註冊出現錯誤');
                 console.log(json.cause);
             }
         });
@@ -134,20 +137,8 @@ var MainInterface = function MainInterface() {
                     React.createElement("div", { className: "or_bar" })
                 ),
                 React.createElement(
-                    "button",
-                    { className: "btn auth_btn" },
-                    React.createElement("img", { src: "/static/img/google_logo.svg", alt: "", className: "sm_logo" }),
-                    "Google"
-                ),
-                React.createElement(
-                    "button",
-                    { className: "btn auth_btn" },
-                    React.createElement("img", { src: "/static/img/github_black.svg", alt: "", className: "sm_logo" }),
-                    "Github"
-                ),
-                React.createElement(
                     "div",
-                    { className: "flex justify-center flex-col" },
+                    { className: "flex justify-center flex" },
                     React.createElement(
                         "p",
                         null,

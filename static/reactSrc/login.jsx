@@ -92,21 +92,21 @@ const Login = () => {
                     {
                         acc_emp || pas_emp? <p style={{color: 'red', 'font-size':'10px'}}>必須入帳號密碼</p>:''
                     }
-                    <a className="help_text" href="static/reactSrc/login">忘記密碼</a>
+                    {/*<a className="help_text" href="static/reactSrc/login">忘記密碼</a>*/}
                     <button id={`login`} className="login_btn btn" onClick={()=>CheckForm(setacc, setpas)}>登入</button>
                     <div className="or_area">
                         <div className="or_bar"></div>
                         <div>或</div>
                         <div className="or_bar"></div>
                     </div>
-                    <button className="btn auth_btn">
-                        <img src="/static/img/google_logo.svg" alt="" className="sm_logo"/>
-                        Google
-                    </button>
-                    <button className="btn auth_btn">
-                        <img src="/static/img/github_black.svg" alt="" className="sm_logo"/>
-                        Github
-                    </button>
+                    {/*<button className="btn auth_btn">*/}
+                    {/*    <img src="/static/img/google_logo.svg" alt="" className="sm_logo"/>*/}
+                    {/*    Google*/}
+                    {/*</button>*/}
+                    {/*<button className="btn auth_btn">*/}
+                    {/*    <img src="/static/img/github_black.svg" alt="" className="sm_logo"/>*/}
+                    {/*    Github*/}
+                    {/*</button>*/}
                     <div className="flex justify-center">
                         <p>尚未擁有帳號?</p>
                         <a className="text-[cadetblue]" href="/register">註冊</a>

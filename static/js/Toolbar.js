@@ -18,7 +18,15 @@ var User_area = function User_area(_ref) {
     };
 
     var handleLogout = function handleLogout() {
-        fetch();
+        fetch('/account/Logoff', {
+            method: 'POST'
+        }).then(function (res) {
+            if (res.status === 200) {
+                SuccessNotify('登出成功').then(function () {
+                    return location.href = location.href;
+                });
+            }
+        });
     };
 
     return React.createElement(
@@ -53,7 +61,7 @@ var User_area = function User_area(_ref) {
             ),
             React.createElement(
                 'button',
-                { className: 'font-bold Toolbar_user_section' },
+                { className: 'font-bold Toolbar_user_section', onClick: handleLogout },
                 '\u767B\u51FA'
             )
         )
@@ -72,26 +80,24 @@ var UpperBar = function UpperBar() {
         setinfo = _React$useState6[1];
 
     var testLogin = function testLogin() {
-        if (document.cookie.indexOf('User_Token=') !== -1) {
-            fetch('/account/GetUserDetail', {
-                body: JSON.stringify({
-                    require: ["photo", "name"]
-                }),
-                method: 'POST',
-                headers: {
-                    'content-type': 'application/json'
-                }
-            }).then(function (response) {
-                if (response.status === 200) {
-                    return response.json();
-                }
-            }).then(function (data) {
-                if (data.cause === 0) {
-                    setLog(true);
-                    setinfo(data);
-                }
-            });
-        }
+        fetch('/account/GetUserDetail', {
+            body: JSON.stringify({
+                require: ["file_path", "name"]
+            }),
+            method: 'POST',
+            headers: {
+                'content-type': 'application/json'
+            }
+        }).then(function (response) {
+            if (response.status === 200) {
+                return response.json();
+            }
+        }).then(function (data) {
+            if (data.cause === 0) {
+                setLog(true);
+                setinfo(data);
+            }
+        });
     };
 
     React.useEffect(function () {
@@ -112,12 +118,12 @@ var UpperBar = function UpperBar() {
                     { className: 'upper_nobar' },
                     React.createElement(
                         'a',
-                        { className: 'Toolbat_text', href: '' },
+                        { className: 'Toolbat_text', href: '/sellercenter/index' },
                         '\u8CE3\u5BB6\u4E2D\u5FC3'
                     )
                 )
             ),
-            isLogin ? React.createElement(User_area, { name: userinfo.name, img: userinfo.photo }) : React.createElement(
+            isLogin ? React.createElement(User_area, { name: userinfo.name, img: userinfo.file_path.slice(1) }) : React.createElement(
                 'div',
                 { className: 'w-1/5 upper_selction justify-end' },
                 React.createElement(

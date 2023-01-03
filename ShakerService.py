@@ -7,6 +7,7 @@ from apps import coupon_manager
 from module.jwt_token_utils import json_web_token_generator
 from module.configs import configure_collection
 from module.crypto_utils import crypto_utils
+from module.seller_center_util import get_shop_id
 
 # from configs import config
 
@@ -30,11 +31,13 @@ Swagger(app)
 # app.config.from_object()
 
 @app.route('/')
+@app.route('/index')
 def get_index_page():
     setting = {
         "title": "這是首頁拉",
         "script": [
             "Toolbar.js",
+            "notification.js",
             "index.js"
         ],
         "css": [
@@ -73,6 +76,7 @@ def get_register_page():
     }
     return render_template('main.html', setting=setting)
 
+
 @app.route('/user/account/profile')
 def get_profile_page():
     setting = {
@@ -89,6 +93,7 @@ def get_profile_page():
         ]
     }
     return render_template('main.html', setting=setting)
+
 
 @app.route('/user/account/password')
 def get_password_page():
@@ -107,6 +112,7 @@ def get_password_page():
     }
     return render_template('main.html', setting=setting)
 
+
 @app.route('/user/purchase')
 def get_purchase_page():
     setting = {
@@ -123,6 +129,7 @@ def get_purchase_page():
         ]
     }
     return render_template('main.html', setting=setting)
+
 
 @app.route('/user/coupon')
 def get_coupon_page():
@@ -141,6 +148,7 @@ def get_coupon_page():
     }
     return render_template('main.html', setting=setting)
 
+
 @app.route('/cart')
 def get_cart_page():
     setting = {
@@ -155,6 +163,7 @@ def get_cart_page():
         ]
     }
     return render_template('main.html', setting=setting)
+
 
 @app.route('/product/<int:product_id>')
 def get_product_page(product_id):
@@ -171,6 +180,7 @@ def get_product_page(product_id):
     }
     return render_template('main.html', setting=setting)
 
+
 @app.route('/search')
 def get_search_page():
     setting = {
@@ -186,6 +196,136 @@ def get_search_page():
         ]
     }
     return render_template('main.html', setting=setting)
+
+
+@app.route('/checkout')
+def get_checkout_page():
+    setting = {
+        "title": "結帳",
+        "script": [
+            'Toolbar.js',
+            "checkout.js"
+        ],
+        "css": [
+            'Toolbar.css',
+            "cart.css"
+        ]
+    }
+    return render_template('main.html', setting=setting)
+
+
+@app.route('/sellercenter/index')
+def get_smc_page():
+    setting = {
+        "title": "賣家中心",
+        "script": [
+            "SMindex.js",
+            "seller_center.js",
+            "sellerContent.js",
+            
+        ],
+        "css": [
+            "Nav.css",
+            "Sidebar.css",
+            'SMC.css',
+            "SMindex.css"
+        ]
+    }
+    return render_template('main.html', setting=setting)
+
+
+@app.route('/sellercenter/finance')
+def get_ms_page():
+    setting = {
+        "title": "賣家中心",
+        "script": [
+            "msindex.js",
+            "myselling.js",
+            "seller_center.js",
+        ],
+        "css": [
+            "Nav.css",
+            "Sidebar.css",
+            "myselling.css",
+            "msindex.css"
+        ]
+    }
+    return render_template('main.html', setting=setting)
+
+
+@app.route('/sellercenter/shipping')
+def get_shipping_page():
+    setting = {
+        "title": "賣家中心",
+        "script": [
+            "seller_center.js",
+            "seller_shipping.js"
+        ],
+        "css": [
+            "Nav.css",
+            "Sidebar.css",
+            'seller_shipping.css',
+            "SMindex.css"
+        ]
+    }
+    return render_template('main.html', setting=setting)
+
+
+@app.route('/sellercenter/marketing')
+def get_finance_page():
+    setting = {
+        "title": "賣家中心|優惠券管理",
+        "script": [
+            "seller_center.js",
+            "finance.js",
+        ],
+        "css": [
+            'coupon.css',
+            "Sidebar.css",
+            "Nav.css",
+            'seller_shipping.css',
+            "SMindex.css"
+        ]
+    }
+    return render_template('main.html', setting=setting)
+
+
+@app.route('/sellercenter/myproduct')
+def get_myproduct_page():
+    setting = {
+        "title": "賣家中心",
+        "script": [
+            "seller_center.js",
+            "myproduct.js"
+        ],
+        "css": [
+            "seller_shipping.js"
+            "Nav.css",
+            "Sidebar.css",
+            'seller_shipping.css',
+            "SMindex.css"
+        ]
+    }
+    return render_template('main.html', setting=setting)
+
+
+@app.route('/sellercenter/newproduct')
+def get_newproduct_page():
+    setting = {
+        "title": "賣家中心",
+        "script": [
+            "seller_center.js",
+            "newproduct.js",
+        ],
+        "css": [
+            "Sidebar.css",
+            "Nav.css",
+            'seller_shipping.css',
+            "SMindex.css"
+        ]
+    }
+    return render_template('main.html', setting=setting)
+
 
 if __name__ == "__main__":
     app.config['config'] = configure_collection()

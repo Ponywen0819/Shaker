@@ -27,7 +27,6 @@ var Standerbar = function Standerbar(_ref2) {
     var isOpened = items ? items.some(function (i) {
         return i.url == window.location.pathname;
     }) : false;
-
     return React.createElement(
         'div',
         { className: 'normal_bar' },
@@ -62,13 +61,13 @@ var UserInfo = function UserInfo() {
     var obj = [{ title: '我的帳戶',
         url: '/user/account/profile',
         img: 'person-square.svg',
-        item: [{ title: "更改個人資訊", url: '/user/account/profile' }, { title: "更改密碼", url: '/user/account/password' }] }, { title: '購買清單', url: '/user/purchase', img: 'card-list.svg' }, { title: '我的優惠券', url: '/user/coupon', img: 'ticket-detailed.svg' }];
+        item: [{ title: "更改個人資訊", url: '/user/account/profile' }, { title: "更改密碼", url: '/user/account/password' }] }, { title: '購買清單', url: '/user/purchase', img: 'card-list.svg' }];
 
     React.useState(function () {
         fetch('/account/GetUserDetail', {
             method: "POST",
             body: JSON.stringify({
-                require: ['photo', 'name']
+                require: ['file_path', 'name']
             }),
             headers: {
                 'content-type': 'application/json'
@@ -86,7 +85,7 @@ var UserInfo = function UserInfo() {
             var return_coode = data.cause;
             if (return_coode === 0) {
                 setusername(data.name);
-                setPhoto(data.photo);
+                setPhoto(data.file_path.slice(1));
             } else {
                 FailNotify('取得使用者資料發生錯誤');
             }
