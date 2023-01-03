@@ -307,7 +307,9 @@ def register_shop():
     return jsonify({
         'cause': 0
     })
-@app.route("GetShopInfo", methods=['GET'])
+
+
+@app.route("GetShopInfo", methods=['POST'])
 def get_shop_info():
     token = request.cookies.get("User_Token")
     # 無帳號
@@ -319,11 +321,12 @@ def get_shop_info():
         db = database_utils(current_app.config['config'])
         # 取的shop資訊以及圖片
         shop_info = db.command_excute("""
-                                                SELECT name, avgstar, last_login,picture.file_path
-                                                FROM shop
-                                                JOIN picture ON shop.logo = picture.id
-                                                WHERE shop.id = %(shop_id)s
-                                                """, request.json)
+            SELECT name, avgstar, last_login,picture.file_path
+            FROM shop
+            LEFT JOIN picture ON shop.logo = picture.id
+            WHERE shop.id = %(shop_id)s
+        """, request.json)
+        print(shop_info)
         if len(shop_info) != 1:
             return jsonify({"cause": 202})
         return jsonify(shop_info)
@@ -340,7 +343,7 @@ def get_shop_info():
     shop_info = db.command_excute("""
                                         SELECT name, avgstar, last_login,picture.file_path
                                         FROM shop
-                                        JOIN picture ON shop.logo = picture.id
+                                        LEFT JOIN picture ON shop.logo = picture.id
                                         WHERE shop.id = %(shop_id)s
                                         """, request.json)
     if len(shop_info) != 1:
@@ -353,6 +356,7 @@ def get_shop_info():
                         """,
                       {"time": datetime.now().strftime("%Y/%m/%d %H:%M:%S"), "user_id": user_info["user_id"]})
     return jsonify(shop_info)
+
 
 @app.route("/PublicKey", methods=['GET'])
 def publickey():

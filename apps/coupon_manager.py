@@ -147,6 +147,8 @@ def get_coupon():
             "no coupon": 1
         })
     return jsonify(coupons)
+
+
 @app.route("/GetShopCoupons", methods=['POST'])
 def get_shop_coupon():
     token = request.cookies.get("User_Token")

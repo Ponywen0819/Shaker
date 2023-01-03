@@ -220,9 +220,8 @@ def get_smc_page():
         "title": "賣家中心",
         "script": [
             "SMindex.js",
-            "sellerNav.js",
+            "seller_center.js",
             "sellerContent.js",
-            "sellerSidebar.js"
             
         ],
         "css": [
@@ -235,15 +234,14 @@ def get_smc_page():
     return render_template('main.html', setting=setting)
 
 
-@app.route('/sellercenter/marketing')
+@app.route('/sellercenter/finance')
 def get_ms_page():
     setting = {
         "title": "賣家中心",
         "script": [
             "msindex.js",
             "myselling.js",
-            "sellerSidebar.js",
-            "sellerNav.js",
+            "seller_center.js",
         ],
         "css": [
             "Nav.css",
@@ -273,7 +271,7 @@ def get_shipping_page():
     return render_template('main.html', setting=setting)
 
 
-@app.route('/sellercenter/finance')
+@app.route('/sellercenter/marketing')
 def get_finance_page():
     setting = {
         "title": "賣家中心|優惠券管理",

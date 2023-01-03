@@ -1,18 +1,17 @@
 const DisplayTitle = () =>(
     <div className={`discount_container`}>
         <div className={'header_container'}>
-            <p className={`discount_title`}>推薦商品</p>
+            <p className={`discount_title`}>其他商品</p>
         </div>
     </div>
 )
 
-const DiscountCard = ({no, img, name, orgin, dis, first}) =>(
-    <a href={`${no}`} className={`discount_item_card ${first? '':'card_bar'}`}>
+const DiscountCard = ({no, img, name, price, first}) =>(
+    <a href={`/product/${no}`} className={`discount_item_card ${first? '':'card_bar'}`}>
         <div className={`dis_item_img`} style={{backgroundImage: `url(${img})`}}></div>
         <p className={`dis_item_name`}> {name}</p>
         <div className={`flex items-end`}>
-            <p className={`dis_item_dis`}>${dis}</p>
-            <p className={`dis_item_origin pl-1`}>${orgin}</p>
+            <p className={`dis_item_dis`}>${price}</p>
         </div>
     </a>
 )
@@ -38,7 +37,7 @@ const Discount = ({items}) => {
     return (
         <div className={`discount_container`}>
             <div className={`header_container header_bar`}>
-                <p className={`discount_title`}>特價商品</p>
+                <p className={`discount_title`}>推薦商品</p>
                 <a className={`discount_link`}>看更多 ></a>
             </div>
             <div className={`discount_main`}>
@@ -48,7 +47,7 @@ const Discount = ({items}) => {
                     <div className={`discount_warp`} style={{transform : `translateX(-${10 * offset}%)`}}>
                         {
                             items.map(i => (
-                                <DiscountCard no={i.no} name={i.name} img={i.img} dis={i.dis} orgin={i.origin} first={items.indexOf(i) == 0}></DiscountCard>
+                                <DiscountCard no={i.id} name={i.name} img={i.file_path} price={i.price} first={items.indexOf(i) === 0}></DiscountCard>
                             ))
                         }
                     </div>
@@ -94,16 +93,14 @@ const ItemTypeSelection = ()=>{
     )
 }
 
-const ItemCard = ({no, img, name, origin, dis,}) =>(
-    <a href={`${no}`} className={`item_card_container`}>
+const ItemCard = ({no, img, name, price}) =>(
+    <a href={`/product/${no}`} className={`item_card_container`}>
         <div className={`item_card`}>
             <div className={`item_img`} style={{backgroundImage: `url(${img})`}}></div>
             <div className={'px-1'}>
                 <p className={`dis_item_name`}> {name}</p>
                 <div className={`flex items-end`}>
-                    {
-                        (dis == null)? [<p className={`item_price`}>${origin}</p>]: [<p className={`item_price`}>${dis}</p>, <p className={`dis_item_origin pl-1`}>${origin}</p>]
-                    }
+                    <p className={`item_price`}>${price}</p>
                 </div>
             </div>
         </div>
@@ -111,36 +108,27 @@ const ItemCard = ({no, img, name, origin, dis,}) =>(
 )
 
 const Main = ()=>{
-        const dis_item = [
-            { no : 'a124fw', img : '/static/img/logo1.png', name : '我是商品', origin : 123, dis : 100,},
-            { no : 'a124fw', img : '/static/img/logo1.png', name : '我是商品', origin : 123, dis : 101,},
-            { no : 'a124fw', img : '/static/img/logo1.png', name : '我是商品', origin : 123, dis : 102,},
-            { no : 'a124fw', img : '/static/img/logo1.png', name : '我是商品', origin : 123, dis : 103,},
-            { no : 'a124fw', img : '/static/img/logo1.png', name : '我是商品', origin : 123, dis : 104,},
-            { no : 'a124fw', img : '/static/img/logo1.png', name : '我是商品', origin : 123, dis : 105,},
-            { no : 'a124fw', img : '/static/img/logo1.png', name : '我是商品', origin : 123, dis : 106,},
-            { no : 'a124fw', img : '/static/img/logo1.png', name : '我是商品', origin : 123, dis : 107,},
-            { no : 'a124fw', img : '/static/img/logo1.png', name : '我是商品', origin : 123, dis : 108,},
-            { no : 'a124fw', img : '/static/img/logo1.png', name : '我是商品', origin : 123, dis : 109,},
-        ]
+        const [re, setRe] = React.useState([])
+        const [all, setAll] = React.useState([])
 
-        const qqqq = [
-            { no : 'a124fw', img : '/static/img/logo1.png', name : '我是商品', origin : 123, dis : 100,},
-            { no : 'a124fw', img : '/static/img/logo1.png', name : '我是商品', origin : 123, dis : null,},
-            { no : 'a124fw', img : '/static/img/logo1.png', name : '我是商品', origin : 123, dis : 102,},
-            { no : 'a124fw', img : '/static/img/logo1.png', name : '我是商品', origin : 123, dis : 102,},
-            { no : 'a124fw', img : '/static/img/logo1.png', name : '我是商品', origin : 123, dis : 102,},
-            { no : 'a124fw', img : '/static/img/logo1.png', name : '我是商品', origin : 123, dis : 102,},
-            { no : 'a124fw', img : '/static/img/logo1.png', name : '我是商品', origin : 123, dis : 102,},
-            { no : 'a124fw', img : '/static/img/logo1.png', name : '我是商品', origin : 123, dis : 102,},
-            { no : 'a124fw', img : '/static/img/logo1.png', name : '我是商品', origin : 123, dis : 102,},
-            { no : 'a124fw', img : '/static/img/logo1.png', name : '我是商品', origin : 123, dis : 102,},
-            { no : 'a124fw', img : '/static/img/logo1.png', name : '我是商品', origin : 123, dis : 102,},
-            { no : 'a124fw', img : '/static/img/logo1.png', name : '我是商品', origin : 123, dis : 102,},
-            { no : 'a124fw', img : '/static/img/logo1.png', name : '我是商品', origin : 123, dis : 102,},
+        React.useEffect(()=>{
+           fetch('/product/SearchProduct',{
+               method: 'POST',
+               headers:{
+                   'content-type': 'application/json'
+               },
+               body:JSON.stringify({})
+           }).then(res=>{
+               if(res.status === 200){
+                   return res.json()
+               }
+           }).then(data=>{
+               console.log(data)
+               setRe(data)
+               setAll(data)
+           })
 
-
-        ]
+        },[])
 
         return [
             <nav className={`mb-8`}>
@@ -149,12 +137,12 @@ const Main = ()=>{
                 <ItemTypeSelection></ItemTypeSelection>
             </nav>,
             <div className={`main`}>
-                <Discount items ={dis_item}></Discount>
+                <Discount items ={re.slice(0,10)}></Discount>
                 <DisplayTitle></DisplayTitle>
                 <div className={`item_list mb-8`}>
                     {
-                        qqqq.map( i => (
-                            <ItemCard no={i.no} name={i.name} img={i.img} dis={i.dis} origin={i.origin}></ItemCard>
+                        all.map( i => (
+                            <ItemCard no={i.id} name={i.name} img={i.file_path} price={i.price}></ItemCard>
                         ))
                     }
                 </div>

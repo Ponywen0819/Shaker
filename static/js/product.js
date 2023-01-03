@@ -107,47 +107,56 @@ var ProductArea = function ProductArea(_ref) {
 var ShopArea = function ShopArea(_ref2) {
     var shop_id = _ref2.shop_id;
 
-    var _React$useState = React.useState(''),
+    var _React$useState = React.useState(new Date()),
         _React$useState2 = _slicedToArray(_React$useState, 2),
-        shop_name = _React$useState2[0],
-        setName = _React$useState2[1];
+        last_login = _React$useState2[0],
+        setLast = _React$useState2[1];
 
-    var _React$useState3 = React.useState(0),
+    var _React$useState3 = React.useState({
+        file_path: '',
+        avgstar: 0,
+        last_login: '',
+        name: ''
+    }),
         _React$useState4 = _slicedToArray(_React$useState3, 2),
-        star = _React$useState4[0],
-        setStar = _React$useState4[1];
-
-    var _React$useState5 = React.useState('/static/img/logo1.png'),
-        _React$useState6 = _slicedToArray(_React$useState5, 2),
-        shop_img = _React$useState6[0],
-        setImg = _React$useState6[1];
-
-    var _React$useState7 = React.useState('1922-08-19'),
-        _React$useState8 = _slicedToArray(_React$useState7, 2),
-        last_login = _React$useState8[0],
-        setLast = _React$useState8[1];
+        shop_info = _React$useState4[0],
+        setInfo = _React$useState4[1];
 
     React.useEffect(function () {
-        if (shop_id !== 0) {
-            console.log('shop_asda');
+        console.log('123');
+        if (shop_id === 0) {
+            return;
         }
-        setName('測試用商店名');
-        setStar(3);
-        setImg('/static/img/logo1.png');
         // 做商店資料取
+        fetch('/account/GetShopInfo', {
+            method: 'POST',
+            headers: {
+                'content-type': 'application/json'
+            },
+            body: JSON.stringify({
+                shop_id: shop_id
+            })
+        }).then(function (res) {
+            if (res.status === 200) {
+                return res.json();
+            }
+        }).then(function (data) {
+            setInfo(data[0]);
+            setLast(new Date(data[0].last_login));
+        });
     }, [shop_id]);
 
     return React.createElement(
         'div',
         { className: 'container' },
-        React.createElement('div', { className: 'shop_img bg_img', style: { backgroundImage: 'url(' + (shop_img == null ? '/static/img/logo1.png' : shop_img) + ')' } }),
+        React.createElement('div', { className: 'shop_img bg_img', style: { backgroundImage: 'url(' + (shop_info.file_path === null ? '/static/img/logo1.png' : shop_info.file_path) + ')' } }),
         React.createElement(
             'div',
             { className: 'flex flex-col justify-center' },
             React.createElement(
                 'p',
                 { className: 'shop_name' },
-                shop_name
+                shop_info.name
             ),
             React.createElement(
                 'div',
@@ -155,12 +164,12 @@ var ShopArea = function ShopArea(_ref2) {
                 React.createElement(
                     'p',
                     null,
-                    '\u4E0A\u6B21\u767B\u5165: ' + last_login
+                    '\u4E0A\u6B21\u767B\u5165: ' + last_login.getFullYear() + '/' + last_login.getMonth() + '/' + last_login.getDay()
                 ),
                 React.createElement(
                     'p',
                     null,
-                    '\u8A55\u50F9: ' + star
+                    '\u8A55\u50F9: ' + shop_info.avgstar
                 )
             )
         )
@@ -187,10 +196,10 @@ var ProductDetail = function ProductDetail(_ref3) {
 };
 
 var Comment = function Comment() {
-    var _React$useState9 = React.useState([]),
-        _React$useState10 = _slicedToArray(_React$useState9, 2),
-        comments = _React$useState10[0],
-        setComments = _React$useState10[1];
+    var _React$useState5 = React.useState([]),
+        _React$useState6 = _slicedToArray(_React$useState5, 2),
+        comments = _React$useState6[0],
+        setComments = _React$useState6[1];
 
     React.useEffect(function () {
         setComments([{ picture: '/static/img/logo1.png', star: 3, description: 'ertyuiop', user: 'qweqwe', user_photo: '/static/img/logo1.png' }, { picture: '/static/img/logo1.png', star: 1, description: 'erty', user: 'qweqwe', user_photo: '/static/img/logo1.png' }, { picture: '/static/img/logo1.png', star: 4, description: 'ertqwe\nqwe\nuiop', user: 'qweqwe', user_photo: '/static/img/logo1.png' }, { picture: '/static/img/logo1.png', star: 6, description: 'ertyuioqwe\np', user: 'qweqwe', user_photo: '/static/img/logo1.png' }, { picture: '/static/img/logo1.png', star: 7, description: 'ertyu\nsiop', user: 'qweqwe', user_photo: '/static/img/logo1.png' }]);
@@ -243,15 +252,15 @@ var Comment = function Comment() {
 };
 
 var Main = function Main() {
-    var _React$useState11 = React.useState({ shop_id: 0, name: '', price: 0, intro: '', photo: '', avgstar: 0, number: 0 }),
-        _React$useState12 = _slicedToArray(_React$useState11, 2),
-        product_info = _React$useState12[0],
-        setInfo = _React$useState12[1];
+    var _React$useState7 = React.useState({ shop_id: 0, name: '', price: 0, intro: '', photo: '', avgstar: 0, number: 0 }),
+        _React$useState8 = _slicedToArray(_React$useState7, 2),
+        product_info = _React$useState8[0],
+        setInfo = _React$useState8[1];
 
-    var _React$useState13 = React.useState(1),
-        _React$useState14 = _slicedToArray(_React$useState13, 2),
-        wanna_num = _React$useState14[0],
-        setNum = _React$useState14[1];
+    var _React$useState9 = React.useState(1),
+        _React$useState10 = _slicedToArray(_React$useState9, 2),
+        wanna_num = _React$useState10[0],
+        setNum = _React$useState10[1];
 
     var handle_wanna = function handle_wanna(val) {
         var a = wanna_num + val;
@@ -312,8 +321,7 @@ var Main = function Main() {
         React.createElement(ToolBar, null),
         React.createElement(ProductArea, { info: product_info, wanna_num: wanna_num, chang_num: handle_wanna, upload: handle_add_cart }),
         React.createElement(ShopArea, { shop_id: product_info.shop_id }),
-        React.createElement(ProductDetail, { intro: product_info.intro }),
-        React.createElement(Comment, null)
+        React.createElement(ProductDetail, { intro: product_info.intro })
     );
 };
 

@@ -17,7 +17,7 @@ const Coupon = ({info})=>{
                                 <p className={`item_name`}>{`打${info.discount}折`}</p>
                             ):[
                                 <p className={`item_name`}>{`折$${info.discount}`}</p>,
-                                <p className={`item_num`}> {`低消$${info.minimum_consumptio}`}</p>
+                                <p className={`item_num`}> {`低消$${info.minimum_consumption}`}</p>
                             ]
                         }
 

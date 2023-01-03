@@ -30,7 +30,7 @@ const UserInput = ({type, orgin, change, title}) =>{
 }
 
 const UserImgInput = ({orgin}) =>{
-    const [img, setImg] = React.useState(orgin)
+    const [img, setImg] = React.useState('')
     const [img_change, setChange] = React.useState(false)
 
     const triggerImageChange = () =>{
@@ -69,20 +69,23 @@ const UserImgInput = ({orgin}) =>{
                 FailNotify("上傳圖片出現錯誤")
             }
         }).then(data=>{
-            if(data.status === 200){
+            if(data.cause === 0){
                 SuccessNotify("銅片上傳成功")
             }
         })
     }
 
     React.useEffect(()=>{
+        if(img === ''){
+            setImg(orgin)
+        }
         if(orgin !== img){
             setChange(true)
         }
         else{
             setChange(false)
         }
-    },[img])
+    },[orgin,img])
 
     return(
         <div className="img_form_container">
@@ -105,7 +108,7 @@ const UserImgInput = ({orgin}) =>{
 }
 
 const Interface = () => {
-    const [userinfo,setInfo] = React.useState({name: "", email: "", phone: "", photo: ''})
+    const [userinfo,setInfo] = React.useState({name: "", email: "", phone: "", photo: '', file_path: ''})
 
     const [user_img, setImg] = React.useState('')
 
@@ -116,7 +119,7 @@ const Interface = () => {
     const getInfo = ()=>{
         fetch('/account/GetUserDetail',{
             body: JSON.stringify({
-                require:["photo", "name", "email", "phone"]
+                require:["photo", "name", "email", "phone", 'file_path']
             }),
             method: 'POST',
             headers:{
@@ -137,9 +140,9 @@ const Interface = () => {
                     name: data.name,
                     email: data.email,
                     phone: data.phone,
-                    photo: data.photo
+                    photo: data.file_path,
                 })
-                setImg((data.photo == null)?"/static/img/logo1.png":data.photo)
+                setImg((data.file_path == null)?"/static/img/logo1.png":data.file_path.slice(1))
             }
             else {
                 FailNotify('請先登入').then(()=>(

@@ -40,15 +40,14 @@ const UserInfo = ()=>{
                 {title: "更改個人資訊",url: '/user/account/profile'},
                 {title: "更改密碼", url: '/user/account/password'}
             ]},
-        { title: '購買清單', url: '/user/purchase', img: 'card-list.svg'},
-        { title: '我的優惠券', url: '/user/coupon', img: 'ticket-detailed.svg'}
+        { title: '購買清單', url: '/user/purchase', img: 'card-list.svg'}
     ]
 
     React.useState(()=>{
         fetch('/account/GetUserDetail',{
             method:"POST",
             body:JSON.stringify({
-                require:['photo', 'name']
+                require:['file_path', 'name']
             }),
             headers:{
                 'content-type': 'application/json'
@@ -65,7 +64,7 @@ const UserInfo = ()=>{
             const return_coode = data.cause
             if(return_coode === 0){
                 setusername(data.name)
-                setPhoto(data.photo)
+                setPhoto(data.file_path.slice(1))
             }
             else{
                 FailNotify('取得使用者資料發生錯誤')

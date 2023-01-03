@@ -517,22 +517,22 @@ def get_order():
     db = database_utils(current_app.config['config'])
     # 拿取order
     order = db.command_excute("""
-                         SELECT
-                             *
-                         FROM
-                             `order`
-                         WHERE
-                             id = %(id)s
-                         """, request.json)
+        SELECT
+            *
+        FROM
+            `order`
+        WHERE
+            id = %(id)s
+    """, request.json)
     # 並拿取order_detail
     orderDetail = db.command_excute("""
-                             SELECT
-                                 *
-                             FROM
-                                 order_detail
-                             WHERE
-                                 order_id = %(id)s
-                             """, request.json)
+        SELECT
+            *
+        FROM
+            order_detail
+        WHERE
+            order_id = %(id)s
+    """, request.json)
     temp = order[0]
     temp["product_id"] = orderDetail[0]["product_id"]
     temp["number"] = orderDetail[0]["number"]
@@ -541,10 +541,10 @@ def get_order():
     account_upload_info["id"] = user_info["user_id"]
     # 更新時間
     db.command_excute("""
-                               UPDATE accounts
-                               SET last_login = %(time)s
-                               WHERE id = %(id)s
-                               """, account_upload_info)
+        UPDATE accounts
+        SET last_login = %(time)s
+        WHERE id = %(id)s
+    """, account_upload_info)
     if len(order) != 1 or len(orderDetail) != 1:
         return jsonify({
             'cause': 1202
@@ -567,13 +567,13 @@ def modify_order_state():
     db = database_utils(current_app.config['config'])
     # 拿取order資訊，用於查看有沒有此order
     order = db.command_excute("""
-                         SELECT
-                             *
-                         FROM
-                             `order`
-                         WHERE
-                             id = %(order_id)s
-                         """, request.json)
+        SELECT
+            *
+        FROM
+            `order`
+        WHERE
+            id = %(order_id)s
+    """, request.json)
     if len(order) != 1:
         return jsonify({"cause": 2302})
     # 更新order的status(admin才能修改)

@@ -39,7 +39,7 @@ var Coupon = function Coupon(_ref) {
                         'p',
                         { className: 'item_num' },
                         ' ',
-                        '\u4F4E\u6D88$' + info.minimum_consumptio
+                        '\u4F4E\u6D88$' + info.minimum_consumption
                     )]
                 ),
                 React.createElement(

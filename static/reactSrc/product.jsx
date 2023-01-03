@@ -36,30 +36,46 @@ const ProductArea = ({info, wanna_num, chang_num, upload})=>{
 }
 
 const ShopArea = ({shop_id})=>{
-    const [shop_name, setName] = React.useState('')
-    const [star, setStar] = React.useState(0)
-    const [shop_img, setImg] = React.useState('/static/img/logo1.png')
-    const [last_login, setLast] = React.useState('1922-08-19')
+    const [last_login, setLast] = React.useState(new Date())
+    const [shop_info, setInfo] = React.useState({
+        file_path: '',
+        avgstar: 0,
+        last_login: '',
+        name: ''
+    })
 
     React.useEffect(()=>{
-        if(shop_id !== 0){
-            console.log('shop_asda')
+        console.log('123')
+        if(shop_id === 0){
+            return
         }
-        setName('測試用商店名')
-        setStar(3)
-        setImg('/static/img/logo1.png')
         // 做商店資料取
-
+        fetch('/account/GetShopInfo',{
+            method: 'POST',
+            headers:{
+                'content-type': 'application/json'
+            },
+            body:JSON.stringify({
+                shop_id: shop_id
+            })
+        }).then(res=>{
+            if(res.status === 200){
+                return res.json()
+            }
+        }).then(data=>{
+            setInfo(data[0])
+            setLast(new Date(data[0].last_login))
+        })
     },[shop_id])
 
     return(
         <div className={`container`}>
-                <div className={`shop_img bg_img`} style={{backgroundImage: `url(${(shop_img==null)?'/static/img/logo1.png':shop_img})`}}></div>
+                <div className={`shop_img bg_img`} style={{backgroundImage: `url(${(shop_info.file_path === null)?'/static/img/logo1.png':shop_info.file_path})`}}></div>
                 <div className={`flex flex-col justify-center`}>
-                    <p className={`shop_name`}>{shop_name}</p>
+                    <p className={`shop_name`}>{shop_info.name}</p>
                     <div className={`flex gap-5`}>
-                        <p>{`上次登入: ${last_login}`}</p>
-                        <p>{`評價: ${star}`}</p>
+                        <p>{`上次登入: ${last_login.getFullYear()}/${last_login.getMonth()}/${last_login.getDay()}`}</p>
+                        <p>{`評價: ${shop_info.avgstar}`}</p>
                     </div>
                 </div>
         </div>
@@ -177,7 +193,7 @@ const Main = ()=>{
             <ProductArea info={product_info} wanna_num={wanna_num} chang_num={handle_wanna} upload = {handle_add_cart}></ProductArea>
             <ShopArea shop_id={product_info.shop_id}></ShopArea>
             <ProductDetail intro={product_info.intro} ></ProductDetail>
-            <Comment></Comment>
+            {/*<Comment></Comment>*/}
         </div>
     )
 }

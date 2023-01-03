@@ -45,7 +45,7 @@ const UpperBar = ()=>{
     const testLogin = ()=>{
             fetch('/account/GetUserDetail',{
                 body: JSON.stringify({
-                    require:["photo", "name"]
+                    require:["file_path", "name"]
                 }),
                 method: 'POST',
                 headers:{
@@ -77,7 +77,7 @@ const UpperBar = ()=>{
                     </div>
                     {isLogin?
                         (
-                            <User_area name={userinfo.name} img={userinfo.photo}></User_area>
+                            <User_area name={userinfo.name} img={userinfo.file_path.slice(1)}></User_area>
                         ):
                         (<div className="w-1/5 upper_selction justify-end">
                             <div className="upper_nobar">

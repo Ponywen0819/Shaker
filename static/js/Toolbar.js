@@ -82,7 +82,7 @@ var UpperBar = function UpperBar() {
     var testLogin = function testLogin() {
         fetch('/account/GetUserDetail', {
             body: JSON.stringify({
-                require: ["photo", "name"]
+                require: ["file_path", "name"]
             }),
             method: 'POST',
             headers: {
@@ -123,7 +123,7 @@ var UpperBar = function UpperBar() {
                     )
                 )
             ),
-            isLogin ? React.createElement(User_area, { name: userinfo.name, img: userinfo.photo }) : React.createElement(
+            isLogin ? React.createElement(User_area, { name: userinfo.name, img: userinfo.file_path.slice(1) }) : React.createElement(
                 'div',
                 { className: 'w-1/5 upper_selction justify-end' },
                 React.createElement(
