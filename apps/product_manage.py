@@ -535,12 +535,31 @@ def get_order():
     """, request.json)
     temp = order[0]
     product = []
+    temp['product'] = []
     for i in range(len(orderDetail)):
         sum = {}
         sum["product_id"] = orderDetail[i]["product_id"]
         sum["num"] = orderDetail[i]["number"]
-        product.append(sum)
-    temp["product"] = product
+        product = db.command_excute("""
+                             SELECT
+                                 picture_id, price, name
+                             FROM
+                                 product
+                             WHERE
+                                 id = %(product_id)s
+                             """, sum)
+        picture = db.command_excute("""
+                                     SELECT
+                                         *
+                                     FROM
+                                         picture
+                                     WHERE
+                                         id = %(picture_id)s
+                                     """, {"picture_id": product[0]["picture_id"]})
+        sum["picture"] = picture[0]["file_path"]
+        sum['product_name'] = product[0]["name"]
+        sum['price'] = sum["num"] * product[0]["price"]
+        temp["product"].append(sum)
     account_upload_info = {}
     account_upload_info["time"] = datetime.now().strftime("%Y/%m/%d %H:%M:%S")
     account_upload_info["id"] = user_info["user_id"]
