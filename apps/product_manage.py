@@ -247,11 +247,6 @@ def delete_product():
     })
 
 
-#@app.route('/GetProducctDetail', methods=['GET'])
-#def get_product_detail():
-#    # 認證使用者
-#    token = request.cookies.get("User_Token")
-
 @app.route("/GetProduct", methods=["POST"])
 def get_product():
     # 確認token(account)
@@ -429,15 +424,10 @@ def create_order():
         # 同時插入此order的order_detail
         for i in range(len(product_info["product"])):
             db.command_excute("""
-<<<<<<< HEAD
-                INSERT INTO order_detail (order_id, product_id, number)
-                VALUES (%(order_id)s, %(product_id)s, %(num)s)
-            """,{"order_id": info["order_id"], "product_id": product_info["product"][i]["product_id"], "num": product_info["product"][i]["count"]})
-=======
                                         INSERT INTO order_detail (order_id, product_id, number)
                                         VALUES (%(order_id)s, %(product_id)s, %(num)s)
                                         """,
-                              {"order_id": info["order_id"], "product_id": product_info["product"][i]["product_id"], "num": product_info["product"][i]["num"]})
+                              {"order_id": info["order_id"], "product_id": product_info["product"][i]["product_id"], "num": product_info["product"][i]["count"]})
             db.command_excute("""
                                        DELETE FROM `cart`
                                        WHERE owner_id = %(id)s AND product_id = %(product_id)s;
@@ -456,8 +446,7 @@ def create_order():
                                                WHERE id = %(product_id)s
                                                """, {"product_id": product_info["product"][i]["product_id"],
                                                      "number": product[0]["number"] - product_info["product"][i][
-                                                         "num"]})
->>>>>>> FlaskShaker
+                                                         "count"]})
         # 更新時間
         db.command_excute("""
                                UPDATE accounts
@@ -483,7 +472,7 @@ def create_order():
         db.command_excute("""
                             INSERT INTO order_detail (order_id, product_id, number)
                             VALUES (%(order_id)s, %(product_id)s, %(num)s)
-                            """, {"order_id": info["order_id"], "product_id": product_info["product"][i]["product_id"], "num": product_info["product"][i]["num"]})
+                            """, {"order_id": info["order_id"], "product_id": product_info["product"][i]["product_id"], "num": product_info["product"][i]["count"]})
         db.command_excute("""
                                                DELETE FROM `cart`
                                                WHERE owner_id = %(id)s AND product_id = %(product_id)s;
@@ -501,7 +490,7 @@ def create_order():
                                    UPDATE product
                                    SET number = %(number)s
                                    WHERE id = %(product_id)s
-                                   """, {"product_id": product_info["product"][i]["product_id"], "number": product[0]["number"] - product_info["product"][i]["num"]})
+                                   """, {"product_id": product_info["product"][i]["product_id"], "number": product[0]["number"] - product_info["product"][i]["count"]})
     # 更新時間
     db.command_excute("""
                            UPDATE accounts
@@ -561,6 +550,8 @@ def get_order():
             'cause': 1202
         })
     return jsonify(temp)
+
+
 @app.route("/ModifyOrderState", methods = ["POST"])
 def modify_order_state():
     # 確認token(account)
@@ -897,6 +888,7 @@ def get_productsToCart():
         }
     )
 
+
 @app.route("/GetCartProducctsById", methods = ["POST"])
 def get_cart_products_by_id():
     token = request.cookies.get("User_Token")
@@ -1132,6 +1124,7 @@ def get_category():
         return jsonify({"no category": 1})
 
     return jsonify(all_category)
+
 
 @app.route("/SearchProduct", methods=["POST"])
 def search_product():
