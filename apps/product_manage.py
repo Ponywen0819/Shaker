@@ -985,8 +985,6 @@ def search_product():
     token = request.cookies.get("User_Token")
     if token is None:
         db = database_utils(current_app.config['config'])
-        if ("search_word" not in request.json) and ("category" not in request.json):
-            return jsonify({"cause": 153})
         info = request.json
         if "category" not in request.json and "search_word" in request.json:
             info["search_word"] = "%" + info["search_word"] + "%"
@@ -1012,7 +1010,7 @@ def search_product():
                             product.category = %(category)s
                          """, info)
             return jsonify(result)
-        else:
+        elif "category" in request.json and "search_word" not in request.json:
             info["search_word"] = "%" + info["search_word"] + "%"
             # 搜尋商品 -> 有category
             result = db.command_excute("""
@@ -1025,12 +1023,21 @@ def search_product():
                     product.name LIKE %(search_word)s AND product.id = %(category)s
                  """, info)
             return jsonify(result)
+
+        else:
+            result = db.command_excute("""
+                         SELECT
+                             *
+                         FROM
+                             product 
+                         JOIN picture ON picture.id = product.picture_id
+                         LIMIT 20;
+                         """, info)
+            return jsonify(result)
     if not current_app.config['jwt'].check_token_valid(token):
         return "", 401
     user_info = current_app.config['jwt'].get_token_detail(token)
     db = database_utils(current_app.config['config'])
-    if ("search_word" not in request.json) and ("category" not in request.json):
-        return jsonify({"cause": 153})
     info = request.json
     if "category" not in request.json and "search_word" in request.json:
         info["search_word"] = "%" + info["search_word"] + "%"
@@ -1068,7 +1075,7 @@ def search_product():
                                                           """,
                           {"time": datetime.now().strftime("%Y/%m/%d %H:%M:%S"), "user_id": user_info["user_id"]})
         return jsonify(result)
-    else:
+    elif "category" in request.json and "search_word" not in request.json:
         info["search_word"] = "%" + info["search_word"] + "%"
         # 搜尋商品 -> 有category
         result = db.command_excute("""
@@ -1085,6 +1092,23 @@ def search_product():
                                                           SET last_login = %(time)s
                                                           WHERE id = %(user_id)s
                                                           """,
+                          {"time": datetime.now().strftime("%Y/%m/%d %H:%M:%S"), "user_id": user_info["user_id"]})
+        return jsonify(result)
+
+    else:
+        result = db.command_excute("""
+                 SELECT
+                     *
+                 FROM
+                     product 
+                 JOIN picture ON picture.id = product.picture_id
+                 LIMIT 20;
+                 """, info)
+        db.command_excute("""
+                                                                  UPDATE accounts
+                                                                  SET last_login = %(time)s
+                                                                  WHERE id = %(user_id)s
+                                                                  """,
                           {"time": datetime.now().strftime("%Y/%m/%d %H:%M:%S"), "user_id": user_info["user_id"]})
         return jsonify(result)
 
