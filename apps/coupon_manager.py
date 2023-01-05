@@ -186,6 +186,9 @@ def get_shop_coupon():
                                                     """, {"publisher_id": shop_publisher_id[0]['publisher_id'], "time": datetime.now().strftime("%Y/%m/%d %H:%M:%S")})
     if len(coupons) <= 0:
         return jsonify({
-            "no coupon": 1
+            'cause': 1
         })
-    return jsonify(coupons)
+    return jsonify({
+        'cause': 0,
+        'data': coupons
+    })

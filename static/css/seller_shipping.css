@@ -26,10 +26,11 @@
 }
 
 .item_img{
-    height: 30px;
-    width: 30px;
+    height: 100px;
+    width: 100px;
     background-position: center;
     background-size: cover;
+    margin-right: 10px;
 }
 
 .interface_title{

@@ -217,7 +217,7 @@ def get_checkout_page():
 @app.route('/sellercenter/index')
 def get_smc_page():
     setting = {
-        "title": "賣家中心",
+        "title": "賣家中心｜首頁",
         "script": [
             "SMindex.js",
             "seller_center.js",
@@ -237,7 +237,7 @@ def get_smc_page():
 @app.route('/sellercenter/finance')
 def get_ms_page():
     setting = {
-        "title": "賣家中心",
+        "title": "賣家中心|金融中心",
         "script": [
             "msindex.js",
             "myselling.js",
@@ -256,7 +256,7 @@ def get_ms_page():
 @app.route('/sellercenter/shipping')
 def get_shipping_page():
     setting = {
-        "title": "賣家中心",
+        "title": "賣家中心|貨運中心",
         "script": [
             "seller_center.js",
             "seller_shipping.js"
@@ -291,7 +291,7 @@ def get_finance_page():
 
 
 @app.route('/sellercenter/myproduct')
-def get_myproduct_page():
+def get_my_product_page():
     setting = {
         "title": "賣家中心",
         "script": [
@@ -299,7 +299,7 @@ def get_myproduct_page():
             "myproduct.js"
         ],
         "css": [
-            "seller_shipping.js"
+            "seller_shipping.js",
             "Nav.css",
             "Sidebar.css",
             'seller_shipping.css',
@@ -310,7 +310,7 @@ def get_myproduct_page():
 
 
 @app.route('/sellercenter/newproduct')
-def get_newproduct_page():
+def get_new_product_page():
     setting = {
         "title": "賣家中心",
         "script": [

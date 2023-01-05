@@ -131,20 +131,17 @@ def modify_product():
     db = database_utils(current_app.config['config'])
     # 確認是否有這個shop
     check_shop = db.command_excute("""
-           SELECT
-               id
-           FROM
-               shop
-           WHERE
-               owner_id = %(user_id)s
-           """, user_info)
+        SELECT id
+        FROM shop
+        WHERE owner_id = %(user_id)s
+    """, user_info)
     if len(check_shop) != 1:
         return jsonify({
             'cause': 602
         })
     # 不能更改shop_id以及更改的時候一定要有product_id
-    if "shop_id" in request.json.keys():
-        return jsonify({"cause": 701})
+    # if "shop_id" in request.json.keys():
+    #     return jsonify({"cause": 701})
     temp = request.json
     temp["shop_id"] = check_shop[0]["id"]
     # 確認商品(是否存在等等)
@@ -169,6 +166,7 @@ def modify_product():
             info[modify] = check_product[0].get(modify)
             info["time"] = datetime.now().strftime("%Y/%m/%d %H:%M:%S")
             info["shop_id"] = check_shop[0]["id"]
+    info["time"] = datetime.now().strftime("%Y/%m/%d %H:%M:%S")
     # 更新product資料
     db.command_excute("""
                      UPDATE product
@@ -177,10 +175,10 @@ def modify_product():
                     """, info)
     # 更新時間
     db.command_excute("""
-                           UPDATE shop
-                           SET last_login = %(time)s
-                           WHERE id = %(shop_id)s
-                           """, info)
+        UPDATE shop
+        SET last_login = %(time)s
+        WHERE id = %(shop_id)s
+    """, info)
     return jsonify({
         'cause': 0
     })
@@ -269,7 +267,7 @@ def get_product():
                                WHERE
                                    product.id = %(id)s
                                """, {"id": product_id})[0])
-        return jsonify(product_list)
+        return jsonify({'cause': 0, 'data': product_list})
     if not current_app.config['jwt'].check_token_valid(token):
         return "", 601
 
@@ -303,10 +301,10 @@ def get_product():
         SET last_login = %(time)s
         WHERE id = %(shop_id)s
     """, account_info)
-    return jsonify({'cause':0,'products':product_list})
+    return jsonify({'cause': 0, 'data': product_list})
 
 
-@app.route("/GetProductFromShop", methods = ["GET"])
+@app.route("/GetProductFromShop", methods = ["POST"])
 def get_product_from_shop():
     # 確認token(account)
     token = request.cookies.get("User_Token")
@@ -325,9 +323,12 @@ def get_product_from_shop():
                                product
                            JOIN picture ON picture.id = product.picture_id
                            WHERE
-                               shop_id = %(shop_id)s
+                               shop_id = %(shop_id)s AND status = 1
                            """, request.json)
-        return jsonify(product)
+        return jsonify({
+            'cause': 0,
+            'data': product
+        })
 
     if not current_app.config['jwt'].check_token_valid(token):
         return "", 401
@@ -342,10 +343,12 @@ def get_product_from_shop():
                        *
                    FROM
                        product
-                   JOIN picture ON picture.id = product.picture_id
+                   LEFT JOIN picture ON picture.id = product.picture_id
                    WHERE
                        shop_id = %(shop_id)s
-                   """, request.json)
+                   """, {
+        'shop_id': shop_id
+    })
     account_info = {}
     account_info["time"] = datetime.now().strftime("%Y/%m/%d %H:%M:%S")
     account_info["shop_id"] = user_info["user_id"]
@@ -355,7 +358,10 @@ def get_product_from_shop():
         SET last_login = %(time)s
         WHERE id = %(shop_id)s
     """, account_info)
-    return jsonify(product)
+    return jsonify({
+        'cause': 0,
+        'data': product
+    })
 
 
 @app.route("/CreateOrder", methods = ["POST"])
@@ -501,6 +507,79 @@ def create_order():
         'cause': 0
     })
 
+
+@app.route('/GetOrderList', methods=['POST'])
+def get_order_list():
+    token = request.cookies.get("User_Token")
+    if token is None:
+        return '', 401
+    user_info = current_app.config['jwt'].get_token_detail(token)
+    db = database_utils(current_app.config['config'])
+    order_ids = db.command_excute('''
+        SELECT *
+        FROM `order`
+        WHERE owner_id = %(user_id)s
+    ''', user_info)
+    order_list = order_ids
+    for index, order in enumerate(order_ids):
+        products = db.command_excute('''
+            SELECT 
+                order_detail.number,
+                product.name,
+                product.price,
+                picture.file_path AS photo
+            FROM order_detail
+            LEFT JOIN product on order_detail.product_id = product.id
+            LEFT JOIN picture on product.picture_id = picture.id
+            WHERE order_detail.order_id = %(order_id)s
+        ''', {
+            'order_id': order['id']
+        })
+
+        order_list[index]['products'] = products
+
+    return jsonify({
+        'cause': 0,
+        'data': order_list
+    })
+
+@app.route('/GetShopOrders', methods=["POST"])
+def get_shop_orders():
+    token = request.cookies.get("User_Token")
+    if token is None:
+        return '', 401
+    user_info = current_app.config['jwt'].get_token_detail(token)
+    db = database_utils(current_app.config['config'])
+    order_ids = db.command_excute('''
+            SELECT `order`.*
+            FROM `order`
+                LEFT JOIN order_detail ON `order`.id = order_detail.order_id
+	            LEFT JOIN product ON order_detail.product_id = product.id
+	            LEFT JOIN shop ON product.shop_id = shop.id
+            WHERE `shop`.owner_id = %(user_id)s
+        ''', user_info)
+    order_list = order_ids
+    for index, order in enumerate(order_ids):
+        products = db.command_excute('''
+                SELECT 
+                    order_detail.number,
+                    product.name,
+                    product.price,
+                    picture.file_path AS photo
+                FROM order_detail
+                LEFT JOIN product on order_detail.product_id = product.id
+                LEFT JOIN picture on product.picture_id = picture.id
+                WHERE order_detail.order_id = %(order_id)s
+            ''', {
+            'order_id': order['id']
+        })
+        print(products)
+        order_list[index]['products'] = products
+
+    return jsonify({
+        'cause': 0,
+        'data': order_list
+    })
 
 @app.route("/GetOrder", methods=["POST"])
 def get_order():

@@ -6,7 +6,6 @@ var ProductArea = function ProductArea(_ref) {
         chang_num = _ref.chang_num,
         upload = _ref.upload;
 
-
     return React.createElement(
         'div',
         { className: 'container' },
@@ -252,7 +251,15 @@ var Comment = function Comment() {
 };
 
 var Main = function Main() {
-    var _React$useState7 = React.useState({ shop_id: 0, name: '', price: 0, intro: '', photo: '', avgstar: 0, number: 0 }),
+    var _React$useState7 = React.useState({
+        shop_id: 0,
+        name: '',
+        price: 0,
+        intro: '',
+        photo: '',
+        avgstar: 0,
+        number: 0
+    }),
         _React$useState8 = _slicedToArray(_React$useState7, 2),
         product_info = _React$useState8[0],
         setInfo = _React$useState8[1];
@@ -310,7 +317,7 @@ var Main = function Main() {
         }).then(function (data) {
             console.log(data);
             if (data.cause === 0) {
-                setInfo(data.products[0]);
+                setInfo(data.data[0]);
             }
         });
     }, []);

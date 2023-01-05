@@ -39,7 +39,7 @@ var User_area = function User_area(_ref) {
         React.createElement(
             'a',
             { className: 'user_title' },
-            React.createElement('div', { className: 'Toolbar_user_img', style: { backgroundImage: 'url(' + (img == null ? '/static/img/logo1.png' : img) + ')' } }),
+            React.createElement('div', { className: 'Toolbar_user_img', style: { backgroundImage: 'url(' + (img == null ? '/static/img/logo1.png' : img.slice(1)) + ')' } }),
             React.createElement(
                 'p',
                 { className: 'text-white' },
@@ -123,7 +123,7 @@ var UpperBar = function UpperBar() {
                     )
                 )
             ),
-            isLogin ? React.createElement(User_area, { name: userinfo.name, img: userinfo.file_path.slice(1) }) : React.createElement(
+            isLogin ? React.createElement(User_area, { name: userinfo.name, img: userinfo.file_path }) : React.createElement(
                 'div',
                 { className: 'w-1/5 upper_selction justify-end' },
                 React.createElement(

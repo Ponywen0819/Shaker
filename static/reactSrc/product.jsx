@@ -1,5 +1,4 @@
 const ProductArea = ({info, wanna_num, chang_num, upload})=>{
-
     return(
         <div className={`container`}>
             <div className={`product_show`}>
@@ -128,7 +127,15 @@ const Comment = ()=>{
 }
 
 const Main = ()=>{
-    const [product_info ,setInfo] = React.useState({shop_id: 0, name: '', price: 0, intro: '', photo: '', avgstar: 0, number: 0})
+    const [product_info ,setInfo] = React.useState({
+        shop_id: 0,
+        name: '',
+        price: 0,
+        intro: '',
+        photo: '',
+        avgstar: 0,
+        number: 0
+    })
     const [wanna_num, setNum] = React.useState(1)
 
     const handle_wanna = val =>{
@@ -182,7 +189,7 @@ const Main = ()=>{
         }).then(data=>{
             console.log(data)
             if(data.cause === 0){
-                setInfo(data.products[0])
+                setInfo(data.data[0])
             }
         })
     },[])

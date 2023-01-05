@@ -22,7 +22,7 @@ const User_area = ({img, name})=>{
     return(
         <div className={`user_area`} onMouseEnter={()=>showappend()} onMouseLeave={()=>hideappend()} >
             <a className={`user_title`}>
-                <div className={`Toolbar_user_img`} style={{backgroundImage: `url(${(img==null)?'/static/img/logo1.png':img})`}}></div>
+                <div className={`Toolbar_user_img`} style={{backgroundImage: `url(${(img==null)?'/static/img/logo1.png':img.slice(1)})`}}></div>
                 <p className={`text-white`}>{name}</p>
             </a>
             {append && (
@@ -77,7 +77,7 @@ const UpperBar = ()=>{
                     </div>
                     {isLogin?
                         (
-                            <User_area name={userinfo.name} img={userinfo.file_path.slice(1)}></User_area>
+                            <User_area name={userinfo.name} img={userinfo.file_path}></User_area>
                         ):
                         (<div className="w-1/5 upper_selction justify-end">
                             <div className="upper_nobar">
