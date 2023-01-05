@@ -164,11 +164,13 @@ var Sidebar = function Sidebar() {
     }, {
         title: '商品管理',
         subtitles: [{ title: '我的商品', href: '/sellercenter/myproduct' }, { title: '新增商品', href: '/sellercenter/newproduct' }]
-    }, {
-        title: '財務管理',
-        href: '/sellercenter/finance',
-        subtitles: []
-    }, {
+    },
+    // {
+    //     title: '財務管理',
+    //     href: '/sellercenter/finance',
+    //     subtitles: []
+    // },
+    {
         title: '行銷活動',
         href: '/sellercenter/marketing',
         subtitles: []

@@ -81,7 +81,15 @@ var ProductArea = function ProductArea(_ref) {
                     )
                 )
             ),
-            React.createElement(
+            info.number === 0 ? React.createElement(
+                'div',
+                { className: 'product_cart_area' },
+                React.createElement(
+                    'span',
+                    { className: 'text-2xl' },
+                    '!\u5DF2\u552E\u5B8C'
+                )
+            ) : React.createElement(
                 'div',
                 { className: 'product_cart_area' },
                 React.createElement(
@@ -163,7 +171,7 @@ var ShopArea = function ShopArea(_ref2) {
                 React.createElement(
                     'p',
                     null,
-                    '\u4E0A\u6B21\u767B\u5165: ' + last_login.getFullYear() + '/' + last_login.getMonth() + '/' + last_login.getDay()
+                    '\u4E0A\u6B21\u767B\u5165: ' + last_login.getFullYear() + '/' + (last_login.getMonth() + 1) + '/' + last_login.getDay()
                 ),
                 React.createElement(
                     'p',

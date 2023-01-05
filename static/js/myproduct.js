@@ -210,7 +210,7 @@ var MainContent = function MainContent() {
 
     return React.createElement(
         'div',
-        { className: 'grow w-1/2 mt-5' },
+        { className: 'grow mt-5' },
         React.createElement(
             'div',
             { className: 'max-w-3xl mx-auto py-3' },
@@ -225,10 +225,10 @@ var Main = function Main() {
         'div',
         null,
         React.createElement(SellerBar, null),
+        React.createElement(Sidebar, null),
         React.createElement(
             'div',
-            { className: 'flex' },
-            React.createElement(Sidebar, null),
+            { className: 'ml-[220px]' },
             React.createElement(MainContent, null)
         )
     );

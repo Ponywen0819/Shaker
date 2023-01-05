@@ -114,7 +114,7 @@ const MainContent = ()=>{
     },[])
 
     return(
-        <div className={`grow w-1/2 mt-5`}>
+        <div className={`grow mt-5`}>
             <div className={`max-w-3xl mx-auto py-3`}>
                 <ContentType Type={type} onClick={setType}></ContentType>
                 <ItemList item_list={products} now_on={type}></ItemList>
@@ -127,8 +127,8 @@ const Main = ()=>{
     return(
         <div>
             <SellerBar></SellerBar>
-            <div className={`flex`}>
-                <Sidebar></Sidebar>
+            <Sidebar></Sidebar>
+            <div className={`ml-[220px]`}>
                 <MainContent></MainContent>
             </div>
         </div>

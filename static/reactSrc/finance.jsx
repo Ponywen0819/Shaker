@@ -127,8 +127,8 @@ const Main = () => {
     return (
         <div>
             <SellerBar></SellerBar>
-            <div className={`flex`}>
-                <Sidebar></Sidebar>
+            <Sidebar></Sidebar>
+            <div className={`ml-[220px]`}>
                 <div className={`shipping_container grow px-10 py-3`}>
                     <p className={`interface_title`}>新增優惠券</p>
                     <div className={`flex px-10 flex-wrap`}>

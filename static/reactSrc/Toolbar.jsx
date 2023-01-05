@@ -92,26 +92,35 @@ const UpperBar = ()=>{
             </div>)
 }
 
-const LowerBar = ()=>(
-    <div className=" lower_container">
-        <div className="nav_container lower_main">
-            <a className="w-1/5 lower_img_area" href={`/`}>
-                <img className={`lower_img`} src="/static/img/logobar_orange.png" alt="" />
-            </a>
-            <div className="search_bar">
-                <input type="text" name="" id="" className="search_text"/>
-                <button className="search_btn">
-                    <img src="/static/img/search.svg" alt=""  className=""/>
-                </button>
-            </div>
-            <div className="cart_aera">
-                <a  className="cart_link" href="/cart">
-                    <img src="/static/img/cart.svg" alt="" className="cart_icon"/>
+const LowerBar = ()=>{
+    const [search, setText] = React.useState('')
+    const handle_search = ()=>{
+        let qur = new URLSearchParams({search_word : search})
+        console.log(qur.toString())
+        document.location = `/search?${qur.toString()}`
+    }
+
+    return(
+        <div className=" lower_container">
+            <div className="nav_container lower_main">
+                <a className="w-1/5 lower_img_area" href={`/`}>
+                    <img className={`lower_img`} src="/static/img/logobar_orange.png" alt="" />
                 </a>
+                <div className="search_bar">
+                    <input type="text" name="" id="" className="search_text" value={search} onInput={(e)=>setText(e.target.value)}/>
+                    <button className="search_btn" onClick={()=>handle_search()}>
+                        <img src="/static/img/search.svg" alt=""  className=""/>
+                    </button>
+                </div>
+                <div className="cart_aera">
+                    <a  className="cart_link" href="/cart">
+                        <img src="/static/img/cart.svg" alt="" className="cart_icon"/>
+                    </a>
+                </div>
             </div>
         </div>
-    </div>
-)
+    )
+}
 
 const ToolBar = ()=>(
     <nav>

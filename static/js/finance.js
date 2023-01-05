@@ -174,10 +174,10 @@ var Main = function Main() {
         'div',
         null,
         React.createElement(SellerBar, null),
+        React.createElement(Sidebar, null),
         React.createElement(
             'div',
-            { className: 'flex' },
-            React.createElement(Sidebar, null),
+            { className: 'ml-[220px]' },
             React.createElement(
                 'div',
                 { className: 'shipping_container grow px-10 py-3' },

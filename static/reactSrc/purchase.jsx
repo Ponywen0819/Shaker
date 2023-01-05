@@ -110,7 +110,8 @@ const Main = () => {
             <div className="main_area">
                 <UserInfo></UserInfo>
                 <Interface></Interface>
-            </div>)
+            </div>
+        )
     ]
 }
 
