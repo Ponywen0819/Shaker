@@ -38,7 +38,7 @@ const Discount = ({items}) => {
         <div className={`discount_container`}>
             <div className={`header_container header_bar`}>
                 <p className={`discount_title`}>推薦商品</p>
-                <a className={`discount_link`}>看更多 ></a>
+                <a className={`discount_link`} href={`/search`}>看更多 ></a>
             </div>
             <div className={`discount_main`}>
                 <button className={`discount_course left_course`} id={`btn_backward`} onClick={ ()=>(handle_click(false)) }>{`<`}</button>
@@ -58,11 +58,20 @@ const Discount = ({items}) => {
 
 }
 
-const TypeLink = ({type, first})=>(
-    <div className={`type_link ${first? '':'type_bar'}`}>
-        <a href={``} className={`type_text`}>{type}</a>
-    </div>
-)
+const TypeLink = ({type, first, id})=>{
+    const handle_search = (val)=>{
+        // console.log(JSON.stringify({search_word : parseInt(val)}))
+        let qur = new URLSearchParams({category : val})
+        console.log(qur.toString())
+        document.location = `/search?${qur.toString()}`
+    }
+
+    return(
+        <button className={`type_link ${first? '':'type_bar'}`} onClick={()=>handle_search(id)}>
+            <span className={`type_text`}>{type}</span>
+        </button>
+    )
+}
 
 const ItemTypeSelection = ()=>{
     const [item_types, setTypes] = React.useState([])
@@ -80,12 +89,14 @@ const ItemTypeSelection = ()=>{
         })
     },[])
 
+
+
     return(
         <div className={`type_selection`}>
             <div className={`type_container`}>
                 {
                  item_types.map(i=>(
-                    <TypeLink type={i.name} first={i.id === 1}></TypeLink>
+                    <TypeLink type={i.name} first={i.id === 1} id={i.id}></TypeLink>
                  ))
                 }
             </div>
@@ -124,8 +135,10 @@ const Main = ()=>{
                }
            }).then(data=>{
                console.log(data)
-               setRe(data)
-               setAll(data)
+               if(data.cause === 0){
+                   setRe(data.data)
+                   setAll(data.data)
+               }
            })
 
         },[])
@@ -147,7 +160,7 @@ const Main = ()=>{
                     }
                 </div>
                 <div className={`flex justify-center mb-8`}>
-                    <a className={`more_link`} href={``}> <p>更多推薦</p></a>
+                    <a className={`more_link`} href={`/search`}> <p>更多推薦</p></a>
                 </div>
             </div>
         ]

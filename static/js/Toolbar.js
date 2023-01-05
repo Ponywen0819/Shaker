@@ -39,7 +39,7 @@ var User_area = function User_area(_ref) {
         React.createElement(
             'a',
             { className: 'user_title' },
-            React.createElement('div', { className: 'Toolbar_user_img', style: { backgroundImage: 'url(' + (img == null ? '/static/img/logo1.png' : img) + ')' } }),
+            React.createElement('div', { className: 'Toolbar_user_img', style: { backgroundImage: 'url(' + (img == null ? '/static/img/logo1.png' : img.slice(1)) + ')' } }),
             React.createElement(
                 'p',
                 { className: 'text-white' },
@@ -123,7 +123,7 @@ var UpperBar = function UpperBar() {
                     )
                 )
             ),
-            isLogin ? React.createElement(User_area, { name: userinfo.name, img: userinfo.file_path.slice(1) }) : React.createElement(
+            isLogin ? React.createElement(User_area, { name: userinfo.name, img: userinfo.file_path }) : React.createElement(
                 'div',
                 { className: 'w-1/5 upper_selction justify-end' },
                 React.createElement(
@@ -150,6 +150,17 @@ var UpperBar = function UpperBar() {
 };
 
 var LowerBar = function LowerBar() {
+    var _React$useState7 = React.useState(''),
+        _React$useState8 = _slicedToArray(_React$useState7, 2),
+        search = _React$useState8[0],
+        setText = _React$useState8[1];
+
+    var handle_search = function handle_search() {
+        var qur = new URLSearchParams({ search_word: search });
+        console.log(qur.toString());
+        document.location = '/search?' + qur.toString();
+    };
+
     return React.createElement(
         'div',
         { className: ' lower_container' },
@@ -164,10 +175,14 @@ var LowerBar = function LowerBar() {
             React.createElement(
                 'div',
                 { className: 'search_bar' },
-                React.createElement('input', { type: 'text', name: '', id: '', className: 'search_text' }),
+                React.createElement('input', { type: 'text', name: '', id: '', className: 'search_text', value: search, onInput: function onInput(e) {
+                        return setText(e.target.value);
+                    } }),
                 React.createElement(
                     'button',
-                    { className: 'search_btn' },
+                    { className: 'search_btn', onClick: function onClick() {
+                            return handle_search();
+                        } },
                     React.createElement('img', { src: '/static/img/search.svg', alt: '', className: '' })
                 )
             ),

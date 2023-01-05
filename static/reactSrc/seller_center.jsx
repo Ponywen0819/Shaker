@@ -101,11 +101,11 @@ const Sidebar = () => {
                 {title: '新增商品', href: '/sellercenter/newproduct'}
             ]
         },
-        {
-            title: '財務管理',
-            href: '/sellercenter/finance',
-            subtitles: []
-        },
+        // {
+        //     title: '財務管理',
+        //     href: '/sellercenter/finance',
+        //     subtitles: []
+        // },
         {
             title: '行銷活動',
             href: '/sellercenter/marketing',

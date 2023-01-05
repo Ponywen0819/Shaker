@@ -1,22 +1,24 @@
-const SelectionItem = ({typename, activate, onclick})=>{
+const SelectionItem = ({typename, activate, onclick}) => {
     return (
-        <button className={`section_btn ${activate? 'selection_btn_on':''}`} onClick={ ()=> onclick(typename)}>
+        <button className={`section_btn ${activate ? 'selection_btn_on' : ''}`} onClick={() => onclick(typename)}>
             <p>{typename}</p>
         </button>
     )
 }
 
-const Selection = ({items, state, handleClick})=> (
+
+const Selection = ({items, state, handleClick}) => (
     <div className={`section`}>{items.map(i => (
-        <SelectionItem typename={i} activate={(state == i)} onclick={handleClick}></SelectionItem>
+        <SelectionItem typename={i} activate={(state === i)} onclick={handleClick}></SelectionItem>
     ))}
     </div>
 )
 
-const Item = ({name, img, num, price})=>(
+
+const Item = ({name, img, num, price}) => (
     <div className={`item`}>
         <div className={`item_info`}>
-            <div className={`item_img`} style={{'background-image': `url(${img})`}}></div>
+            <div className={`item_img`} style={{'backgroundImage': `url(${img})`}}></div>
             <div className={`item_text`}>
                 <p className={`item_name`}>{name}</p>
                 <p className={`item_num`}> {`x ${num}`}</p>
@@ -26,13 +28,11 @@ const Item = ({name, img, num, price})=>(
     </div>
 )
 
-const ItemTail = ()=>{
 
-}
-
-
-const ItemList = ({state, price,  products, start, end})=>{
+const ItemList = ({state, price, products, start, end}) => {
     const stateName = ['已成立', '運送中', '已完成'];
+
+    console.log(products)
     return (
         <div className={`order`}>
             <div className={`order_nav`}>
@@ -40,14 +40,19 @@ const ItemList = ({state, price,  products, start, end})=>{
             </div>
             <div className={``}></div>
             {
-                products.map(p=>(
-                    <Item name={p.name} img={p.img} price={p.price} num={p.num}></Item>
+                (products !== undefined) &&
+                products.map(p => (
+                    <Item name={p.name} img={p.photo.slice(1)} price={p.price} num={p.number}></Item>
                 ))
             }
             <div className={`order_tail`}>
                 <div>
-                    <p className={`order_time`}>{`start time : ${start}`}</p>
-                    <p className={`order_time`}>{`end time : ${end}`}</p>
+                    <p className={`order_time`}>{`start time : ${start.getFullYear()}/${start.getMonth() + 1}/${start.getDate()}`}</p>
+                    {
+                        (end > new Date()) ?
+                            <p className={`order_time`}>{`end time : ${end.getFullYear()}/${end.getMonth() + 1}/${end.getDate()} (maybe)`}</p> :
+                            <p className={`order_time`}>{`end time : ${end.getFullYear()}/${end.getMonth() + 1}/${end.getDate()} `}</p>
+                    }
                 </div>
                 <div className={`order_price_area`}>
                     <p>訂單金額:</p>
@@ -58,82 +63,55 @@ const ItemList = ({state, price,  products, start, end})=>{
     )
 }
 
-const Interface = ()=>{
-    const [state,setState] = React.useState("全部");
 
-    const handleClick = (i) => {setState(i)}
+const Interface = () => {
+    const [state, setState] = React.useState("全部");
+    const [orders, setOrders] = React.useState([])
 
-    const items=[
-        {
-            state: 0,
-            price: 100,
-            start: '22-08-19',
-            end:'23-05-28',
-            product:[
-                {
-                    img: '/static/img/logo2.png',
-                    name: 'RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR',
-                    price: 130,
-                    num: 1
-                }
-            ]
-        },
-        {
-            state: 1,
-            price: 100,
-            start: '22-08-19',
-            end:'23-05-28',
-            product:[
-                {
-                    img: '/static/img/logo1.png',
-                    name: '123123123',
-                    price: 11111,
-                    num: 1
-                },
-                {
-                    img: '/static/img/logo1.png',
-                    name: '33',
-                    price: 222,
-                    num: 3
-                }
-            ]
-        },
-        {
-            state: 2,
-            price: 100,
-            start: '22-08-19',
-            end:'23-05-28',
-            product:[
-                {
-                    img: '/static/img/logo1.png',
-                    name: 'qweqw',
-                    price: 1123,
-                    num: 3
-                }
-            ]
-        }
-    ]
+    const handleClick = (i) => {
+        setState(i)
+    }
+
+    React.useEffect(() => {
+        fetch('/product/GetOrderList', {
+            method: 'POST'
+        }).then(res => {
+            if (res.status === 200) {
+                return res.json()
+            }
+        }).then(data => {
+            console.log(data)
+            if (data.cause === 0) {
+                setOrders(data.data)
+            }
+        })
+    }, [])
 
     return (
         <div className={`interface`}>
-            <Selection items={["全部", '已成立', '運送中', '已完成',] } state={state} handleClick={handleClick}></Selection>
+            <Selection items={["全部", '已成立', '運送中', '已完成',]} state={state}
+                       handleClick={handleClick}></Selection>
             {
-                items.map( i =>{
-                    const showing = ["全部", '已成立', '運送中', '已完成',].indexOf(state) -1;
-                    if((showing < 0)  || (showing == i.state)) return <ItemList state={i.state} price={i.price} products={i.product} start={i.start} end={i.end}></ItemList>;
+                orders.map(i => {
+                    const showing = ["全部", '已成立', '運送中', '已完成',].indexOf(state) - 1;
+                    if ((showing < 0) || (showing === i.status))
+                        return <ItemList state={i.status} price={i.price} products={i.products}
+                                         start={new Date(i.start_time)} end={new Date(i.end_time)}></ItemList>;
                 })
             }
         </div>
     )
 }
 
-const Main = ()=>{
+
+const Main = () => {
     return [
-        <ToolBar></ToolBar>,(
-        <div className="main_area">
-            <UserInfo></UserInfo>
-            <Interface></Interface>
-        </div>)
+        <ToolBar></ToolBar>, (
+            <div className="main_area">
+                <UserInfo></UserInfo>
+                <Interface></Interface>
+            </div>
+        )
     ]
 }
 

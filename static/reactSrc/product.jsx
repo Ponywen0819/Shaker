@@ -1,5 +1,4 @@
 const ProductArea = ({info, wanna_num, chang_num, upload})=>{
-
     return(
         <div className={`container`}>
             <div className={`product_show`}>
@@ -26,10 +25,14 @@ const ProductArea = ({info, wanna_num, chang_num, upload})=>{
                         <button className={`number_btn`} onClick={()=>chang_num(1)}>+</button>
                     </div>
                 </div>
-                <div className={`product_cart_area`}>
-                    <button className={`product_cart_btn product_buy_btn`} onClick={()=>upload(true)}>直接購買</button>
-                    <button className={`product_cart_btn product_cart_btn`} onClick={()=>upload(false)}>加入購物車</button>
-                </div>
+                {
+                    (info.number === 0)?
+                        (<div className={`product_cart_area`}><span className={`text-2xl`}>!已售完</span></div>):
+                        (<div className={`product_cart_area`}>
+                                <button className={`product_cart_btn product_buy_btn`} onClick={()=>upload(true)}>直接購買</button>
+                                <button className={`product_cart_btn product_cart_btn`} onClick={()=>upload(false)}>加入購物車</button>
+                        </div>)
+                }
             </div>
         </div>
     )
@@ -74,7 +77,7 @@ const ShopArea = ({shop_id})=>{
                 <div className={`flex flex-col justify-center`}>
                     <p className={`shop_name`}>{shop_info.name}</p>
                     <div className={`flex gap-5`}>
-                        <p>{`上次登入: ${last_login.getFullYear()}/${last_login.getMonth()}/${last_login.getDay()}`}</p>
+                        <p>{`上次登入: ${last_login.getFullYear()}/${last_login.getMonth() + 1}/${last_login.getDay()}`}</p>
                         <p>{`評價: ${shop_info.avgstar}`}</p>
                     </div>
                 </div>
@@ -128,7 +131,15 @@ const Comment = ()=>{
 }
 
 const Main = ()=>{
-    const [product_info ,setInfo] = React.useState({shop_id: 0, name: '', price: 0, intro: '', photo: '', avgstar: 0, number: 0})
+    const [product_info ,setInfo] = React.useState({
+        shop_id: 0,
+        name: '',
+        price: 0,
+        intro: '',
+        photo: '',
+        avgstar: 0,
+        number: 0
+    })
     const [wanna_num, setNum] = React.useState(1)
 
     const handle_wanna = val =>{
@@ -182,7 +193,7 @@ const Main = ()=>{
         }).then(data=>{
             console.log(data)
             if(data.cause === 0){
-                setInfo(data.products[0])
+                setInfo(data.data[0])
             }
         })
     },[])

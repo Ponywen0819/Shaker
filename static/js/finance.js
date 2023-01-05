@@ -160,8 +160,9 @@ var Main = function Main() {
                 return res.json();
             }
         }).then(function (data) {
-            console.log(data);
-            setCoupons(data);
+            if (data.cause === 0) {
+                setCoupons(data.data);
+            }
         });
     };
 
@@ -173,10 +174,10 @@ var Main = function Main() {
         'div',
         null,
         React.createElement(SellerBar, null),
+        React.createElement(Sidebar, null),
         React.createElement(
             'div',
-            { className: 'flex' },
-            React.createElement(Sidebar, null),
+            { className: 'ml-[220px]' },
             React.createElement(
                 'div',
                 { className: 'shipping_container grow px-10 py-3' },
@@ -196,7 +197,8 @@ var Main = function Main() {
                             null,
                             '\u6298\u50F9\u5238\u540D\u7A31'
                         ),
-                        React.createElement('input', { type: 'text', className: 'new_name_input w-full', value: coupon_name, placeholder: '\u8ACB\u8F38\u5165\u512A\u60E0\u5238\u540D\u7A31', onInput: function onInput(e) {
+                        React.createElement('input', { type: 'text', className: 'new_name_input w-full', value: coupon_name,
+                            placeholder: '\u8ACB\u8F38\u5165\u512A\u60E0\u5238\u540D\u7A31', onInput: function onInput(e) {
                                 return setName(e.target.value);
                             } })
                     ),
@@ -210,7 +212,8 @@ var Main = function Main() {
                         ),
                         React.createElement(
                             'select',
-                            { value: coupon_type, className: 'new_name_input w-full', onInput: function onInput(e) {
+                            { value: coupon_type, className: 'new_name_input w-full',
+                                onInput: function onInput(e) {
                                     return setType(e.target.value);
                                 } },
                             React.createElement(
@@ -238,7 +241,8 @@ var Main = function Main() {
                             null,
                             '\u6253\u6298\u6298\u6578'
                         ),
-                        React.createElement('input', { value: per_discount, className: 'new_name_input w-full', onInput: function onInput(e) {
+                        React.createElement('input', { value: per_discount, className: 'new_name_input w-full',
+                            onInput: function onInput(e) {
                                 return handle_number(e, setPer);
                             }, placeholder: '\u8ACB\u8F38\u5165\u6253\u6298\u6298\u6578' })
                     ) : [React.createElement(
@@ -249,9 +253,11 @@ var Main = function Main() {
                             null,
                             '\u6700\u4F4E\u6D88\u8CBB'
                         ),
-                        React.createElement('input', { type: 'text', value: min, className: 'new_name_input w-full', onInput: function onInput(e) {
+                        React.createElement('input', { type: 'text', value: min, className: 'new_name_input w-full',
+                            onInput: function onInput(e) {
                                 return handle_number(e, setMin);
-                            }, placeholder: '\u8ACB\u8F38\u5165\u6700\u4F4E\u6D88\u8CBB\u91D1\u984D' })
+                            },
+                            placeholder: '\u8ACB\u8F38\u5165\u6700\u4F4E\u6D88\u8CBB\u91D1\u984D' })
                     ), React.createElement(
                         'div',
                         { className: 'w-1/2 p-3' },
@@ -260,7 +266,8 @@ var Main = function Main() {
                             null,
                             '\u6298\u50F9\u91D1\u984D'
                         ),
-                        React.createElement('input', { value: fix_discount, className: 'new_name_input w-full', onInput: function onInput(e) {
+                        React.createElement('input', { value: fix_discount, className: 'new_name_input w-full',
+                            onInput: function onInput(e) {
                                 return handle_number(e, setFix);
                             }, placeholder: '\u8ACB\u8F38\u5165\u6298\u50F9\u91D1\u984D' })
                     )]
@@ -284,7 +291,8 @@ var Main = function Main() {
                     { className: 'h-36 flex justify-center items-center' },
                     React.createElement(
                         'p',
-                        { className: 'text-2xl font-extrabold ' },
+                        {
+                            className: 'text-2xl font-extrabold ' },
                         '\u73FE\u7121\u767C\u884C\u4E4B\u512A\u60E0\u5238'
                     )
                 ) : coupons.map(function (coupon) {

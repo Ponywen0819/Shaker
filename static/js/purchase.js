@@ -26,7 +26,7 @@ var Selection = function Selection(_ref2) {
         'div',
         { className: 'section' },
         items.map(function (i) {
-            return React.createElement(SelectionItem, { typename: i, activate: state == i, onclick: handleClick });
+            return React.createElement(SelectionItem, { typename: i, activate: state === i, onclick: handleClick });
         })
     );
 };
@@ -42,7 +42,7 @@ var Item = function Item(_ref3) {
         React.createElement(
             'div',
             { className: 'item_info' },
-            React.createElement('div', { className: 'item_img', style: { 'background-image': 'url(' + img + ')' } }),
+            React.createElement('div', { className: 'item_img', style: { 'backgroundImage': 'url(' + img + ')' } }),
             React.createElement(
                 'div',
                 { className: 'item_text' },
@@ -67,8 +67,6 @@ var Item = function Item(_ref3) {
     );
 };
 
-var ItemTail = function ItemTail() {};
-
 var ItemList = function ItemList(_ref4) {
     var state = _ref4.state,
         price = _ref4.price,
@@ -77,6 +75,8 @@ var ItemList = function ItemList(_ref4) {
         end = _ref4.end;
 
     var stateName = ['已成立', '運送中', '已完成'];
+
+    console.log(products);
     return React.createElement(
         'div',
         { className: 'order' },
@@ -90,8 +90,8 @@ var ItemList = function ItemList(_ref4) {
             )
         ),
         React.createElement('div', { className: '' }),
-        products.map(function (p) {
-            return React.createElement(Item, { name: p.name, img: p.img, price: p.price, num: p.num });
+        products !== undefined && products.map(function (p) {
+            return React.createElement(Item, { name: p.name, img: p.photo.slice(1), price: p.price, num: p.number });
         }),
         React.createElement(
             'div',
@@ -102,12 +102,16 @@ var ItemList = function ItemList(_ref4) {
                 React.createElement(
                     'p',
                     { className: 'order_time' },
-                    'start time : ' + start
+                    'start time : ' + start.getFullYear() + '/' + (start.getMonth() + 1) + '/' + start.getDate()
                 ),
-                React.createElement(
+                end > new Date() ? React.createElement(
                     'p',
                     { className: 'order_time' },
-                    'end time : ' + end
+                    'end time : ' + end.getFullYear() + '/' + (end.getMonth() + 1) + '/' + end.getDate() + ' (maybe)'
+                ) : React.createElement(
+                    'p',
+                    { className: 'order_time' },
+                    'end time : ' + end.getFullYear() + '/' + (end.getMonth() + 1) + '/' + end.getDate() + ' '
                 )
             ),
             React.createElement(
@@ -135,57 +139,39 @@ var Interface = function Interface() {
         state = _React$useState2[0],
         setState = _React$useState2[1];
 
+    var _React$useState3 = React.useState([]),
+        _React$useState4 = _slicedToArray(_React$useState3, 2),
+        orders = _React$useState4[0],
+        setOrders = _React$useState4[1];
+
     var handleClick = function handleClick(i) {
         setState(i);
     };
 
-    var items = [{
-        state: 0,
-        price: 100,
-        start: '22-08-19',
-        end: '23-05-28',
-        product: [{
-            img: '/static/img/logo2.png',
-            name: 'RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR',
-            price: 130,
-            num: 1
-        }]
-    }, {
-        state: 1,
-        price: 100,
-        start: '22-08-19',
-        end: '23-05-28',
-        product: [{
-            img: '/static/img/logo1.png',
-            name: '123123123',
-            price: 11111,
-            num: 1
-        }, {
-            img: '/static/img/logo1.png',
-            name: '33',
-            price: 222,
-            num: 3
-        }]
-    }, {
-        state: 2,
-        price: 100,
-        start: '22-08-19',
-        end: '23-05-28',
-        product: [{
-            img: '/static/img/logo1.png',
-            name: 'qweqw',
-            price: 1123,
-            num: 3
-        }]
-    }];
+    React.useEffect(function () {
+        fetch('/product/GetOrderList', {
+            method: 'POST'
+        }).then(function (res) {
+            if (res.status === 200) {
+                return res.json();
+            }
+        }).then(function (data) {
+            console.log(data);
+            if (data.cause === 0) {
+                setOrders(data.data);
+            }
+        });
+    }, []);
 
     return React.createElement(
         'div',
         { className: 'interface' },
-        React.createElement(Selection, { items: ["全部", '已成立', '運送中', '已完成'], state: state, handleClick: handleClick }),
-        items.map(function (i) {
+        React.createElement(Selection, { items: ["全部", '已成立', '運送中', '已完成'], state: state,
+            handleClick: handleClick }),
+        orders.map(function (i) {
             var showing = ["全部", '已成立', '運送中', '已完成'].indexOf(state) - 1;
-            if (showing < 0 || showing == i.state) return React.createElement(ItemList, { state: i.state, price: i.price, products: i.product, start: i.start, end: i.end });
+            if (showing < 0 || showing === i.status) return React.createElement(ItemList, { state: i.status, price: i.price, products: i.products,
+                start: new Date(i.start_time), end: new Date(i.end_time) });
         })
     );
 };

@@ -6,7 +6,6 @@ var ProductArea = function ProductArea(_ref) {
         chang_num = _ref.chang_num,
         upload = _ref.upload;
 
-
     return React.createElement(
         'div',
         { className: 'container' },
@@ -82,7 +81,15 @@ var ProductArea = function ProductArea(_ref) {
                     )
                 )
             ),
-            React.createElement(
+            info.number === 0 ? React.createElement(
+                'div',
+                { className: 'product_cart_area' },
+                React.createElement(
+                    'span',
+                    { className: 'text-2xl' },
+                    '!\u5DF2\u552E\u5B8C'
+                )
+            ) : React.createElement(
                 'div',
                 { className: 'product_cart_area' },
                 React.createElement(
@@ -164,7 +171,7 @@ var ShopArea = function ShopArea(_ref2) {
                 React.createElement(
                     'p',
                     null,
-                    '\u4E0A\u6B21\u767B\u5165: ' + last_login.getFullYear() + '/' + last_login.getMonth() + '/' + last_login.getDay()
+                    '\u4E0A\u6B21\u767B\u5165: ' + last_login.getFullYear() + '/' + (last_login.getMonth() + 1) + '/' + last_login.getDay()
                 ),
                 React.createElement(
                     'p',
@@ -252,7 +259,15 @@ var Comment = function Comment() {
 };
 
 var Main = function Main() {
-    var _React$useState7 = React.useState({ shop_id: 0, name: '', price: 0, intro: '', photo: '', avgstar: 0, number: 0 }),
+    var _React$useState7 = React.useState({
+        shop_id: 0,
+        name: '',
+        price: 0,
+        intro: '',
+        photo: '',
+        avgstar: 0,
+        number: 0
+    }),
         _React$useState8 = _slicedToArray(_React$useState7, 2),
         product_info = _React$useState8[0],
         setInfo = _React$useState8[1];
@@ -310,7 +325,7 @@ var Main = function Main() {
         }).then(function (data) {
             console.log(data);
             if (data.cause === 0) {
-                setInfo(data.products[0]);
+                setInfo(data.data[0]);
             }
         });
     }, []);

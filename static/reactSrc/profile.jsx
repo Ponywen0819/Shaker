@@ -65,12 +65,11 @@ const UserImgInput = ({orgin}) =>{
                 FailNotify("上傳圖片出現錯誤")
             }
         }).then(data=>{
-            if(data.status !== 200){
+            if(data.cause !== 0){
                 FailNotify("上傳圖片出現錯誤")
             }
-        }).then(data=>{
-            if(data.cause === 0){
-                SuccessNotify("銅片上傳成功")
+            else{
+                SuccessNotify('圖片上傳成功').then(()=>location.href = location.href)
             }
         })
     }

@@ -7,10 +7,14 @@
 }
 
 .sidebar-container{
-    border: 1px solid blueviolet;
+    box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.2);
     width: 220px;
+    height: calc(100vh - 56px);
     overflow-y: hidden;
     overflow-x: hidden;
+    position: fixed;
+    top:56px;
+    left: 0px;
     z-index: 10;
     background-color: #fff;
 }

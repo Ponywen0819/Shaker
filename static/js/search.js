@@ -8,7 +8,7 @@ var ItemCard = function ItemCard(_ref) {
         dis = _ref.dis;
     return React.createElement(
         'a',
-        { href: '' + no, className: 'item_card_container' },
+        { href: '/product/' + no, className: 'item_card_container' },
         React.createElement(
             'div',
             { className: 'item_card' },
@@ -54,7 +54,28 @@ var Main = function Main() {
         setitems = _React$useState2[1];
 
     React.useEffect(function () {
-        setitems([{ no: '', photo: '/static/img/logo1.png', name: 'rrrrrr', price: 12 }, { no: '', photo: '/static/img/logo1.png', name: 'rrrrrr', price: 12 }, { no: '', photo: '/static/img/logo1.png', name: 'rrrrrr', price: 12 }, { no: '', photo: '/static/img/logo1.png', name: 'rrrrrr', price: 12 }, { no: '', photo: '/static/img/logo1.png', name: 'rrrrrr', price: 12 }, { no: '', photo: '/static/img/logo1.png', name: 'rrrrrr', price: 12 }, { no: '', photo: '/static/img/logo1.png', name: 'rrrrrr', price: 12 }, { no: '', photo: '/static/img/logo1.png', name: 'rrrrrr', price: 12 }, { no: '', photo: '/static/img/logo1.png', name: 'rrrrrr', price: 12 }, { no: '', photo: '/static/img/logo1.png', name: 'rrrrrr', price: 12 }, { no: '', photo: '/static/img/logo1.png', name: 'rrrrrr', price: 12 }, { no: '', photo: '/static/img/logo1.png', name: 'rrrrrr', price: 12 }, { no: '', photo: '/static/img/logo1.png', name: 'rrrrrr', price: 12 }, { no: '', photo: '/static/img/logo1.png', name: 'rrrrrr', price: 12 }, { no: '', photo: '/static/img/logo1.png', name: 'rrrrrr', price: 12 }, { no: '', photo: '/static/img/logo1.png', name: 'rrrrrr', price: 12 }, { no: '', photo: '/static/img/logo1.png', name: 'rrrrrr', price: 12 }, { no: '', photo: '/static/img/logo1.png', name: 'rrrrrr', price: 12 }, { no: '', photo: '/static/img/logo1.png', name: 'rrrrrr', price: 12 }, { no: '', photo: '/static/img/logo1.png', name: 'rrrrrr', price: 12 }, { no: '', photo: '/static/img/logo1.png', name: 'rrrrrr', price: 12 }, { no: '', photo: '/static/img/logo1.png', name: 'rrrrrr', price: 12 }, { no: '', photo: '/static/img/logo1.png', name: 'rrrrrr', price: 12 }, { no: '', photo: '/static/img/logo1.png', name: 'rrrrrr', price: 12 }]);
+        var search_data = {};
+        var urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('search_word') !== null) search_data.search_word = urlParams.get('search_word');
+        if (urlParams.get('category') !== null) search_data.category = parseInt(urlParams.get('category'));
+
+        console.log(search_data);
+        fetch('/product/SearchProduct', {
+            method: 'POST',
+            headers: {
+                'content-type': 'application/json'
+            },
+            body: JSON.stringify(search_data)
+        }).then(function (res) {
+            if (res.status === 200) {
+                return res.json();
+            }
+        }).then(function (data) {
+            console.log(data);
+            if (data.cause === 0) {
+                setitems(data.data);
+            }
+        });
     }, []);
 
     return React.createElement(
@@ -68,7 +89,7 @@ var Main = function Main() {
                 'div',
                 { className: 'item_list mb-8' },
                 item_list.map(function (i) {
-                    return React.createElement(ItemCard, { no: i.no, name: i.name, img: i.photo, origin: i.price, dis: null });
+                    return React.createElement(ItemCard, { no: i.id, name: i.name, img: i.file_path, origin: i.price });
                 })
             )
         )

@@ -86,12 +86,12 @@ var UserImgInput = function UserImgInput(_ref2) {
                 FailNotify("上傳圖片出現錯誤");
             }
         }).then(function (data) {
-            if (data.status !== 200) {
+            if (data.cause !== 0) {
                 FailNotify("上傳圖片出現錯誤");
-            }
-        }).then(function (data) {
-            if (data.cause === 0) {
-                SuccessNotify("銅片上傳成功");
+            } else {
+                SuccessNotify('圖片上傳成功').then(function () {
+                    return location.href = location.href;
+                });
             }
         });
     };

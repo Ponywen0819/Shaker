@@ -85,7 +85,7 @@ var Discount = function Discount(_ref2) {
             ),
             React.createElement(
                 'a',
-                { className: 'discount_link' },
+                { className: 'discount_link', href: '/search' },
                 '\u770B\u66F4\u591A >'
             )
         ),
@@ -124,13 +124,24 @@ var Discount = function Discount(_ref2) {
 
 var TypeLink = function TypeLink(_ref3) {
     var type = _ref3.type,
-        first = _ref3.first;
+        first = _ref3.first,
+        id = _ref3.id;
+
+    var handle_search = function handle_search(val) {
+        // console.log(JSON.stringify({search_word : parseInt(val)}))
+        var qur = new URLSearchParams({ category: val });
+        console.log(qur.toString());
+        document.location = '/search?' + qur.toString();
+    };
+
     return React.createElement(
-        'div',
-        { className: 'type_link ' + (first ? '' : 'type_bar') },
+        'button',
+        { className: 'type_link ' + (first ? '' : 'type_bar'), onClick: function onClick() {
+                return handle_search(id);
+            } },
         React.createElement(
-            'a',
-            { href: '', className: 'type_text' },
+            'span',
+            { className: 'type_text' },
             type
         )
     );
@@ -162,7 +173,7 @@ var ItemTypeSelection = function ItemTypeSelection() {
             'div',
             { className: 'type_container' },
             item_types.map(function (i) {
-                return React.createElement(TypeLink, { type: i.name, first: i.id === 1 });
+                return React.createElement(TypeLink, { type: i.name, first: i.id === 1, id: i.id });
             })
         )
     );
@@ -228,8 +239,10 @@ var Main = function Main() {
             }
         }).then(function (data) {
             console.log(data);
-            setRe(data);
-            setAll(data);
+            if (data.cause === 0) {
+                setRe(data.data);
+                setAll(data.data);
+            }
         });
     }, []);
 
@@ -256,7 +269,7 @@ var Main = function Main() {
             { className: 'flex justify-center mb-8' },
             React.createElement(
                 'a',
-                { className: 'more_link', href: '' },
+                { className: 'more_link', href: '/search' },
                 ' ',
                 React.createElement(
                     'p',
