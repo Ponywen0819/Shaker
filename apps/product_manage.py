@@ -1099,7 +1099,7 @@ def search_product():
                                                           """,
                           {"time": datetime.now().strftime("%Y/%m/%d %H:%M:%S"), "user_id": user_info["user_id"]})
         return jsonify(result)
-    elif "category" in request.json and "search_word" not in request.json:
+    elif "category" in request.json and "search_word"  in request.json:
         info["search_word"] = "%" + info["search_word"] + "%"
         # 搜尋商品 -> 有category
         result = db.command_excute("""
