@@ -26,12 +26,10 @@ var handle_login = function handle_login() {
         fetch('/account/Login', {
             method: 'POST',
             body: JSON.stringify({
-                email: account,
+                account: account,
                 password: encode_password
             }),
-            headers: {
-                'content-type': 'application/json'
-            }
+            headers: { 'content-type': 'application/json' }
         }).then(function (respons) {
             if (respons.status === 200) {
                 return respons.json();
@@ -42,7 +40,27 @@ var handle_login = function handle_login() {
                     location.href = '/';
                 });
             } else {
-                FailNotify("帳號密碼錯誤");
+                // FailNotify("帳號密碼錯誤")
+                fetch('/admin/Login', {
+                    method: 'POST',
+                    headers: { 'content-type': 'application/json' },
+                    body: JSON.stringify({
+                        account: account,
+                        password: encode_password
+                    })
+                }).then(function (res) {
+                    if (res.status === 200) {
+                        return res.json();
+                    }
+                }).then(function (data) {
+                    if (data.cause === 0) {
+                        SuccessNotify('管理員登入成功').then(function () {
+                            location.href = '/admin/shipping';
+                        });
+                    } else {
+                        FailNotify('帳號或密碼錯誤');
+                    }
+                });
             }
         });
     });

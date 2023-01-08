@@ -543,6 +543,7 @@ def get_order_list():
         'data': order_list
     })
 
+
 @app.route('/GetShopOrders', methods=["POST"])
 def get_shop_orders():
     token = request.cookies.get("User_Token")
@@ -579,6 +580,39 @@ def get_shop_orders():
     return jsonify({
         'cause': 0,
         'data': order_list
+    })
+
+@app.route('getOrders', methods=["POST"])
+def get_orders():
+    token = request.cookies.get("User_Token")
+    if token is None:
+        return '', 401
+    user_info = current_app.config['jwt'].get_token_detail(token)
+    db = database_utils(current_app.config['config'])
+
+    print(user_info)
+    # 確認管理員身份
+    admin_info = db.command_excute('''
+        SELECT COUNT(*)
+        FROM admin
+        WHERE id = %(admin_id)s
+    ''', user_info)
+
+    if len(admin_info) != 1:
+        return '', 401
+
+    order_ids = db.command_excute('''
+        SELECT DISTINCT `order`.id AS id,`shop`.name AS shop_name, `order`.status AS status
+        FROM `order`
+            LEFT JOIN order_detail ON `order`.id = order_detail.order_id
+    	    LEFT JOIN product ON order_detail.product_id = product.id
+    	    LEFT JOIN shop ON product.shop_id = shop.id
+    	ORDER BY `order`.status 
+    ''')
+
+    return jsonify({
+        'cause': 0,
+        'data': order_ids
     })
 
 @app.route("/GetOrder", methods=["POST"])
@@ -655,7 +689,7 @@ def get_order():
     return jsonify(temp)
 
 
-@app.route("/ModifyOrderState", methods = ["POST"])
+@app.route("/ModifyOrderState", methods=["POST"])
 def modify_order_state():
     # 確認token(account)
     token = request.cookies.get("User_Token")
@@ -668,23 +702,29 @@ def modify_order_state():
         if need not in request.json.keys():
             return jsonify({"cause": 2301})
     db = database_utils(current_app.config['config'])
+    admin_info = db.command_excute('''
+        SELECT COUNT(*)
+        FROM admin
+        WHERE id = %(admin_id)s
+    ''', admin_info)
+
+    if len(admin_info) != 1:
+        return '', 401
+
     # 拿取order資訊，用於查看有沒有此order
     order = db.command_excute("""
-        SELECT
-            *
-        FROM
-            `order`
-        WHERE
-            id = %(order_id)s
+        SELECT *
+        FROM `order`
+        WHERE id = %(order_id)s
     """, request.json)
     if len(order) != 1:
         return jsonify({"cause": 2302})
     # 更新order的status(admin才能修改)
     db.command_excute("""
-                        UPDATE `order`
-                        SET status = %(status)s
-                        WHERE id = %(order_id)s
-                    """, request.json)
+        UPDATE `order`
+        SET status = %(status)s
+        WHERE id = %(order_id)s
+    """, request.json)
     return jsonify({"cause": 0})
 
 

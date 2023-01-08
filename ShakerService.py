@@ -326,6 +326,34 @@ def get_new_product_page():
     }
     return render_template('main.html', setting=setting)
 
+@app.route('/admin/shipping')
+def get_admin_apge():
+    setting = {
+        "title": "管理員中心",
+        "script": [
+            'admin_shipping.js',
+            'admin_index.js'
+        ],
+        "css": [
+            'admin.css'
+        ]
+    }
+    return render_template('main.html', setting=setting)
+
+@app.route('/admin/coupon')
+def get_admin_coupon_apge():
+    setting = {
+        "title": "管理員中心",
+        "script": [
+
+            'admin_index.js',
+        ],
+        "css": [
+            'admin.css'
+        ]
+    }
+    return render_template('main.html', setting=setting)
+
 
 if __name__ == "__main__":
     app.config['config'] = configure_collection()
