@@ -15,13 +15,16 @@ def login():
     db = database_utils(current_app.config['config'])
     # 確認admin有沒有重複
     dbreturn = db.command_excute("""
-    SELECT *
-    FROM admin
-    WHERE account = %(account)s AND password = %(password)s
+        SELECT *
+        FROM admin
+        WHERE account = %(account)s AND password = %(password)s
     """, auth_info)
 
     if len(dbreturn) == 1:
-        token = current_app.config['jwt'].generate_token({"admin_id": dbreturn[0]['id'], "admin": 1})
+        token = current_app.config['jwt'].generate_token({
+            "admin_id": dbreturn[0]['id'],
+            "admin": 1
+        })
         res = make_response(json.dumps({"cause": 0}))
 
         res.set_cookie("User_Token", token, expires=time.time() + 6 * 60*60)
@@ -31,6 +34,29 @@ def login():
     else:
         return jsonify({"cause": 101})
 
+@app.route('/getAdminInfo', methods=['GET'])
+def get_admin_info():
+    if request.cookies.get('User_Token') is None:
+        return "", 401
+    if not current_app.config['jwt'].check_token_valid(request.cookies.get('User_Token')):
+        return "", 401
+    user_info = current_app.config['jwt'].get_token_detail(request.cookies.get('User_Token'))
+    db = database_utils(current_app.config['config'])
+
+    # 驗證是否有這位管理員
+    dbreturn = db.command_excute("""
+           SELECT name
+           FROM admin
+           WHERE admin.id = %(admin_id)s
+       """, user_info)
+
+    if len(dbreturn) != 1:
+        return jsonify({'cause': 101})
+    else:
+        return jsonify({
+            'cause': 0,
+            'data': dbreturn[0]
+        })
 
 @app.route("/CreateAdmin", methods=['POST'])
 def register():

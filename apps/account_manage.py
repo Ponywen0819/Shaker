@@ -83,7 +83,7 @@ def login():
             FROM 
                 accounts 
             WHERE 
-                email = %(email)s AND password = %(password)s
+                email = %(account)s AND password = %(password)s
             """, auth_info)
 
     # 更新時間
@@ -114,11 +114,12 @@ def logoff():
     user_info = current_app.config['jwt'].get_token_detail(request.cookies.get('User_Token'))
     db = database_utils(current_app.config['config'])
     # 更新時間
-    db.command_excute("""
-               UPDATE accounts
-               SET last_login = %(date)s
-               WHERE accounts.id = %(user_id)s
-               """, {"user_id": user_info['user_id'], "date": datetime.now().strftime("%Y/%m/%d %H:%M:%S")})
+    if user_info['user_id'] is not None:
+        db.command_excute("""
+            UPDATE accounts
+            SET last_login = %(date)s
+            WHERE accounts.id = %(user_id)s
+        """, {"user_id": user_info['user_id'], "date": datetime.now().strftime("%Y/%m/%d %H:%M:%S")})
     res = make_response(json.dumps({
         "cause": 0
     }))

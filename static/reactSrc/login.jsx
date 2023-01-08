@@ -23,12 +23,10 @@ const handle_login = () =>{
         fetch('/account/Login',{
             method: 'POST',
             body: JSON.stringify({
-                email: account,
+                account: account,
                 password: encode_password
             }),
-            headers:{
-                'content-type': 'application/json'
-            }
+            headers:{'content-type': 'application/json'}
         }).then(function(respons) {
             if(respons.status === 200){
                 return respons.json()
@@ -40,7 +38,28 @@ const handle_login = () =>{
                 })
             }
             else{
-                FailNotify("帳號密碼錯誤")
+                // FailNotify("帳號密碼錯誤")
+                fetch('/admin/Login',{
+                    method: 'POST',
+                    headers:{'content-type': 'application/json'},
+                    body: JSON.stringify({
+                        account: account,
+                        password: encode_password
+                    })
+                }).then((res)=>{
+                    if(res.status === 200){
+                        return res.json()
+                    }
+                }).then((data)=>{
+                    if(data.cause === 0){
+                        SuccessNotify('管理員登入成功').then(()=>{
+                            location.href = '/admin/shipping'
+                        })
+                    }
+                    else {
+                        FailNotify('帳號或密碼錯誤')
+                    }
+                })
             }
         })
     })
@@ -92,21 +111,12 @@ const Login = () => {
                     {
                         acc_emp || pas_emp? <p style={{color: 'red', 'font-size':'10px'}}>必須入帳號密碼</p>:''
                     }
-                    {/*<a className="help_text" href="static/reactSrc/login">忘記密碼</a>*/}
                     <button id={`login`} className="login_btn btn" onClick={()=>CheckForm(setacc, setpas)}>登入</button>
                     <div className="or_area">
                         <div className="or_bar"></div>
                         <div>或</div>
                         <div className="or_bar"></div>
                     </div>
-                    {/*<button className="btn auth_btn">*/}
-                    {/*    <img src="/static/img/google_logo.svg" alt="" className="sm_logo"/>*/}
-                    {/*    Google*/}
-                    {/*</button>*/}
-                    {/*<button className="btn auth_btn">*/}
-                    {/*    <img src="/static/img/github_black.svg" alt="" className="sm_logo"/>*/}
-                    {/*    Github*/}
-                    {/*</button>*/}
                     <div className="flex justify-center">
                         <p>尚未擁有帳號?</p>
                         <a className="text-[cadetblue]" href="/register">註冊</a>

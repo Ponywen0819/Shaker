@@ -146,7 +146,10 @@ def get_coupon():
         return jsonify({
             "no coupon": 1
         })
-    return jsonify(coupons)
+    return jsonify({
+        'cause': 0,
+        'data': coupons
+    })
 
 
 @app.route("/GetShopCoupons", methods=['POST'])
