@@ -69,8 +69,8 @@ var AdminASide = function AdminASide(_ref2) {
             { className: 'aside-column' },
             options.map(function (option) {
                 return React.createElement(
-                    'button',
-                    { key: option.name, className: 'aside-nav' },
+                    'a',
+                    { key: option.name, className: 'aside-nav', href: option.href },
                     React.createElement(
                         'div',
                         { className: 'nav-img-container' },
@@ -93,7 +93,7 @@ var Main = function Main() {
         admin_name = _React$useState2[0],
         setName = _React$useState2[1];
 
-    var aside_options = [{ name: '貨物管理' }, { name: '優惠券管理' }];
+    var aside_options = [{ name: '貨物管理', href: '/admin/shipping' }, { name: '優惠券管理', href: '/admin/coupon' }];
 
     React.useEffect(function () {
         fetch('/admin/getAdminInfo', {
@@ -101,6 +101,9 @@ var Main = function Main() {
         }).then(function (res) {
             if (res.status === 200) {
                 return res.json();
+            }
+            if (res.status === 401) {
+                location.href = '/login';
             }
         }).then(function (data) {
             console.log(data);
@@ -115,6 +118,8 @@ var Main = function Main() {
         console.log(contentType);
         if (contentType === 'shipping') {
             return React.createElement(Shipping, null);
+        } else if (contentType === 'coupon') {
+            return React.createElement(Coupon, null);
         }
     };
 

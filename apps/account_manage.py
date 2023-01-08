@@ -114,7 +114,7 @@ def logoff():
     user_info = current_app.config['jwt'].get_token_detail(request.cookies.get('User_Token'))
     db = database_utils(current_app.config['config'])
     # 更新時間
-    if user_info['user_id'] is not None:
+    if 'user_id' in user_info.keys():
         db.command_excute("""
             UPDATE accounts
             SET last_login = %(date)s

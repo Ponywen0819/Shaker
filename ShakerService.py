@@ -345,11 +345,12 @@ def get_admin_coupon_apge():
     setting = {
         "title": "管理員中心",
         "script": [
-
+            'admin_coupon.js',
             'admin_index.js',
         ],
         "css": [
-            'admin.css'
+            'admin.css',
+            'coupon.css',
         ]
     }
     return render_template('main.html', setting=setting)

@@ -16,6 +16,9 @@ var Shipping = function Shipping() {
             if (res.status === 200) {
                 return res.json();
             }
+            if (res.status === 401) {
+                location.href = '/login';
+            }
         }).then(function (data) {
             console.log(data);
             if (data.cause === 0) {
@@ -73,10 +76,10 @@ var Shipping = function Shipping() {
             React.createElement(
                 'div',
                 { className: 'table-body' },
-                order_list.map(function (order) {
+                order_list.map(function (order, index) {
                     return React.createElement(
                         'div',
-                        { className: 'table-body-row', key: order.id },
+                        { className: 'table-body-row ' + (index !== order_list.length - 1 ? 'table-row-border' : ''), key: order.id },
                         React.createElement(
                             'span',
                             { className: 'w-1/4' },
