@@ -32,12 +32,12 @@ const AdminASide = ({options})=>{
             <div className={`aside-column`}>
             {
                 options.map(option=>(
-                    <button key={option.name} className={`aside-nav`}>
+                    <a key={option.name} className={`aside-nav`} href={option.href}>
                         <div className={`nav-img-container`}>
                             <img className={`header-user-photo`} src={`/static/img/box.png`} />
                         </div>
                         <span className={`nav-text`}>{option.name}</span>
-                    </button>
+                    </a>
                 ))
             }
             </div>
@@ -50,8 +50,8 @@ const Main = ()=>{
     const [admin_name, setName] = React.useState('測試用名稱')
 
     const aside_options = [
-        {name: '貨物管理'},
-        {name: '優惠券管理'},
+        {name: '貨物管理', href:'/admin/shipping'},
+        {name: '優惠券管理', href: '/admin/coupon'},
     ]
 
     React.useEffect(()=>{
@@ -60,6 +60,9 @@ const Main = ()=>{
         }).then((res)=>{
             if(res.status === 200){
                 return res.json()
+            }
+            if(res.status === 401){
+                location.href = '/login'
             }
         }).then((data)=>{
             console.log(data)
@@ -74,6 +77,9 @@ const Main = ()=>{
         console.log(contentType)
         if(contentType === 'shipping'){
             return <Shipping></Shipping>
+        }
+        else if(contentType === 'coupon'){
+            return <Coupon></Coupon>
         }
     }
 

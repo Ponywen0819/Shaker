@@ -133,10 +133,12 @@
     margin-left: auto;
     margin-right: auto;
     width: 100%;
+    box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.4);
+    background-color: white;
 }
 
 .table-header{
-    box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.3);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.2);
     height: 50px;
     background-color: white;
     padding: 5px 15px;
@@ -152,8 +154,8 @@
 
 .table-body{
     width: 100%;
-    box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.2);
     background-color: white;
+    padding: 10px 10px;
 
 }
 
@@ -162,6 +164,9 @@
     align-items: center;
     padding: 10px 0px;
     margin: 0px 15px;
+}
+
+.table-row-border{
     border-bottom: 1px solid rgba(0, 0, 0, 0.2);
 }
 
@@ -170,4 +175,59 @@
     color: white;
     background-color: #ED7D31;
     padding: 10px 15px;
+}
+
+.coupon-form{
+    width: 100%;
+    padding: 10px 15px;
+}
+
+.coupon-form-title{
+    font-size: x-large;
+    font-weight: bolder;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+}
+
+.coupon-form-body{
+    padding: 10px 15px;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.coupon-form-area{
+    width: 50%;
+    padding: 10px 10px;
+}
+
+.coupon-form-subtitle{
+    font-size: medium;
+    font-weight: bold;
+    color: #474747;
+    margin-bottom: 5px;
+}
+
+.coupon-form-input{
+    width: 100%;
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    padding: 5px 5px;
+    border-radius: 5px;
+}
+
+.coupon-form-footer{
+    display: flex;
+    justify-content: end;
+    flex-grow: 1;
+    padding: 10px 10px;
+}
+
+.notification{
+    height: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.notification-text{
+    font-weight: bolder;
+    font-size: xx-large;
 }
