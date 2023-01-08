@@ -10,6 +10,9 @@ const Shipping = ()=>{
            if(res.status === 200){
                return res.json()
            }
+           if(res.status === 401){
+               location.href = '/login'
+           }
        }).then((data)=>{
            console.log(data)
            if(data.cause === 0){
@@ -55,8 +58,8 @@ const Shipping = ()=>{
                 </div>
                 <div className={`table-body`}>
                 {
-                    order_list.map(order=>(
-                        <div className={`table-body-row`} key={order.id}>
+                    order_list.map((order,index)=>(
+                        <div className={`table-body-row ${(index !== order_list.length - 1)?'table-row-border':''}`} key={order.id}>
                             <span  className={`w-1/4`}>{order.id}</span>
                             <span className={`w-1/4`}>{order.shop_name}</span>
                             <span className={`w-1/4`}>{order_state[order.status]}</span>
