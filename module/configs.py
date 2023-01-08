@@ -1,4 +1,5 @@
 import json
+import time
 import os
 
 
@@ -15,10 +16,10 @@ class configure_collection(dict):
                     "Enable": "false"
                 },
                 'SQL': {
-                    'Host': '127.0.0.1',
+                    'Host': 'host.docker.internal',
                     'User': 'root',
-                    'Password': 'peter0830',
-                    'Database': 'Shaker'
+                    'Password': 'Shaker8787',
+                    'Database': 'shaker'
                 },
                 'Encrypt': {
                     'PublicKeyPath': './public.pem',
@@ -26,6 +27,8 @@ class configure_collection(dict):
                 },
                 'UploadFolder': "./static/picture/",
             }
+            time.sleep(5)
+            os.system("mysql -u root -h host.docker.internal --password=Shaker8787 < /shaker/shaker.sql")
             self.commit_change()
 
     def commit_change(self) -> None:
