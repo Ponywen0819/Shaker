@@ -1,0 +1,63 @@
+.main_area{
+    display: flex;
+    padding: 3vh 0px;
+    max-width: 1200px;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+
+.side_bar{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-right: auto;
+}
+
+.info_area{
+    /*height: 50px;*/
+    width: auto;
+    display: flex;
+    padding: 10px;
+    border-bottom: 1px solid rgba(0, 0, 0, 25%);
+}
+
+.user_img{
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 10px;
+    background-position: center;
+    background-size: cover;
+}
+
+.user_name{
+    font-weight: bolder;
+
+}
+
+.edit_btn{
+    color: #9ca3af;
+    display: flex;
+    gap: 5px;
+    font-size: small;
+}
+
+
+.now_on{
+    color: orange;
+}
+
+.normal_bar{
+    padding: 0px 10px;
+}
+
+.header{
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.submenu{
+    padding-left: 30px
+}
