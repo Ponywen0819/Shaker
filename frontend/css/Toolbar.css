@@ -1,0 +1,159 @@
+.toolbar{
+    /*width: 100vw;*/
+    /*background: linear-gradient(red,rgb(255, 101, 40));*/
+}
+
+.upper_container{
+    width: 100%;
+    height: 35px;
+    background-color: rgb(255, 101, 40);
+}
+
+.nav_container{
+    display: flex;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    height: inherit;
+}
+
+.upper_main{
+    justify-content: space-between;
+}
+
+.upper_selction{
+    display: flex;
+    align-items: center;
+}
+
+.upper_nobar{
+    padding: 3px;
+}
+
+.upper_bar{ 
+    padding: 3px;
+    margin-left: 8px;
+    position: relative;
+}
+
+.upper_bar::after{
+    content: "";
+    border-left: 1px solid white;
+    border-right: 1px solid white;
+    position: absolute;
+    left: -5px;
+    top: calc( 50% - 8px);
+    height: 16px;
+}
+
+.lower_container{
+    width: 100%;
+    height: 65px;
+    background-color: rgb(255, 101, 40);
+}
+
+.lower_img_area{
+    height: 100%;
+}
+
+.lower_img{
+    /*height: 100%;*/
+    width: 100%;
+}
+
+.lower_main{
+    align-items: center;
+    padding-bottom: 5px;
+
+}
+
+.search_bar{
+    width: 60%;
+    height: 40px;
+    padding: 5px;
+    background-color: white;
+    border-radius: 5px;
+    align-items: center;
+    display: flex;
+}
+
+.search_text{
+    width: 90%;
+    /* position: relative; */
+    padding: 7px 5px;
+    margin: 0 10px 0 0;
+}
+
+.search_btn{
+    width: 10%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px;
+    background-color: rgb(255, 101, 40);
+}
+
+.cart_aera{
+    display: flex;
+    justify-content: flex-end;
+    width: 20%;
+}
+
+.cart_link{
+    width: 30px;
+    height: 30px;
+}
+
+.cart_icon{
+    color: white;
+    width: inherit;
+    height: inherit;
+}
+
+.Toolbat_text{
+    color: white;
+}
+
+.user_area{
+    position: relative;
+    margin-top: auto;
+    margin-bottom: auto;
+    width: 150px;
+}
+
+.user_title{
+    display: flex;
+    justify-content: flex-end;
+}
+
+.Toolbar_user_img{
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    margin-right: 10px;
+    background-position: center;
+    background-size: cover;
+}
+
+.Toolbar_user_section_area{
+    position: absolute;
+    top: 25px;
+    right: 0px;
+    background-color: white;
+    width: 100px;
+    display: flex;
+    flex-direction: column;
+    border-radius: 5px;
+    align-items: center;
+    border: 1px solid rgba(0,0,0,0.3);
+}
+.Toolbar_user_section{
+    width: 100%;
+    padding: 7px 0;
+    text-align: center;
+}
+.Toolbar_user_section:hover{
+    background: rgba(0,0,0,0.1);
+    color: cadetblue;
+}

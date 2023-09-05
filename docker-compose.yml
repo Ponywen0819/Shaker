@@ -1,7 +1,7 @@
-version: '1.0'
+version: "1.0"
 services:
   shaker:
-    build: 
+    build:
       context: ./dockerfiles
       dockerfile: shaker.Dockerfile
     depends_on:
@@ -10,9 +10,11 @@ services:
       - "8000:5000"
     volumes:
       - .:/shaker
-  
+
   db:
-    image: mariadb
+    build:
+      context: ./dockerfiles
+      dockerfile: db.Dockerfile
     restart: always
     environment:
       MARIADB_ROOT_PASSWORD: Shaker8787
