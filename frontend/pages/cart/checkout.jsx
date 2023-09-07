@@ -21,7 +21,7 @@ const CheckBar = () => {
 
 const OrderRow = ({ img, name, price, num }) => {
   return (
-    <div className={`title  !h-28`}>
+    <div className={`title !h-fit`}>
       <div className={`w-[60%] flex gap-2`}>
         <div
           className={`product_img bg_img`}

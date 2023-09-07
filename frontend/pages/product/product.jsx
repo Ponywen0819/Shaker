@@ -7,16 +7,14 @@ const ProductArea = ({ info, wanna_num, chang_num, upload }) => {
   return (
     <div className={`container`}>
       <div className={`product_show`}>
-        <div
-          className={`product_img bg_img`}
-          style={{
-            backgroundImage: `url(${
-              info.file_path == null
-                ? "/static/img/logo1.png"
-                : `${info.file_path.slice(1)}`
-            })`,
-          }}
-        ></div>
+        <img
+          className={"w-[400px] h-[400px] object-cover object-center"}
+          src={
+            info.file_path == null
+              ? "/static/img/logo1.png"
+              : `${info.file_path.slice(1)}`
+          }
+        />
       </div>
       <div className={`product_interface`}>
         <div className={`product_name_area`}>
@@ -33,12 +31,18 @@ const ProductArea = ({ info, wanna_num, chang_num, upload }) => {
         </div>
         <div className={`product_interact`}>
           <p className={``}>數量</p>
-          <div className={"product_number"}>
-            <button className={`number_btn`} onClick={() => chang_num(-1)}>
+          <div className={"flex bm-5"}>
+            <button
+              className={`w-[40px] h-[40px] text-center border-[1px] border-gray-200`}
+              onClick={() => chang_num(-1)}
+            >
               -
             </button>
             <input className={`number_input`} type={`text`} value={wanna_num} />
-            <button className={`number_btn`} onClick={() => chang_num(1)}>
+            <button
+              className={`w-[40px] h-[40px] text-center border-[1px] border-gray-200`}
+              onClick={() => chang_num(1)}
+            >
               +
             </button>
           </div>
@@ -219,7 +223,7 @@ export const Component = () => {
         wanna_num={wanna_num}
         chang_num={handle_wanna}
         upload={handle_add_cart}
-      ></ProductArea>
+      />
       <ShopArea shop_id={product_info.shop_id}></ShopArea>
       <ProductDetail intro={product_info.intro}></ProductDetail>
     </div>

@@ -19,7 +19,7 @@ export const SellerBar = () => {
           className="nav-logo-content"
           onMouseEnter={accInfoIsTouched ? pullDownMenu : () => {}}
         >
-          <Link to="/sellercenter" className="nav-text">
+          <Link to="/seller" className="nav-text">
             賣家中心
           </Link>
         </div>

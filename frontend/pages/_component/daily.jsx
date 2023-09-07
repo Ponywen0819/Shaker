@@ -23,7 +23,7 @@ export const DailyProduct = () => {
   useEffect(() => {
     getDailyProduct().then((info) => {
       console.log(info);
-      setProduct(info.data);
+      setProduct(info.data.slice(0, 20));
     });
   }, []);
 

@@ -26,7 +26,7 @@ const testLogin = async () => {
   return json;
 };
 
-const User_area = ({ img, name }) => {
+const User_area = ({ img, name, logOut }) => {
   const [append, setappend] = React.useState(false);
   const navigation = useNavigate();
 
@@ -43,7 +43,10 @@ const User_area = ({ img, name }) => {
       method: "POST",
     }).then((res) => {
       if (res.status === 200) {
-        SuccessNotify("登出成功").then(() => navigation("/"));
+        SuccessNotify("登出成功").then(() => {
+          logOut();
+          navigation("/");
+        });
       }
     });
   };
@@ -113,7 +116,13 @@ export const UpperBar = () => {
           </Link>
         </div>
         {userinfo ? (
-          <User_area name={userinfo.name} img={userinfo.file_path} />
+          <User_area
+            name={userinfo.name}
+            img={userinfo.file_path}
+            logOut={() => {
+              setInfo(null);
+            }}
+          />
         ) : (
           <div className="">
             <Link to={"/auth/login"} className="text-white">

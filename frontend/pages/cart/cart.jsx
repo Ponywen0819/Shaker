@@ -117,7 +117,7 @@ const Product = ({ item, onClick, isChecked, update }) => {
       </div>
       <div className={`product_info_container`}>
         <div
-          className={`product_img`}
+          className={`product_img !w-[100px] !h-[100px]`}
           style={{ backgroundImage: `url(${item.photo.slice(1)})` }}
         ></div>
         <p>{item.name}</p>
@@ -132,7 +132,7 @@ const Product = ({ item, onClick, isChecked, update }) => {
           >
             -
           </button>
-          <p className={`product_number`}>{item.count}</p>
+          <p className={`product_number !text-center`}>{item.count}</p>
           <button
             className={`product_number_btn`}
             onClick={() => handle_update_num(1)}
