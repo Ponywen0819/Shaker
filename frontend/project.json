@@ -1,0 +1,24 @@
+{
+  "name": "frontend",
+  "$schema": "../node_modules/nx/schemas/project-schema.json",
+  "root": "frontend",
+  "sourceRoot": "frontend/src",
+  "projectType": "application",
+  "targets": {
+    "dev": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npm run dev",
+        "cwd": "frontend"
+      }
+    },
+    "build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npm run build",
+        "cwd": "frontend"
+      },
+      "outputs": ["{workspaceRoot}/frontend/dist"]
+    }
+  }
+}

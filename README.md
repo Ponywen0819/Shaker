@@ -5,10 +5,9 @@
 2. `python ShakerService.py`
 
 ### Frontend
-The React SPA is located in `frontend-vite` and uses Vite.
+The project now uses **Nx** to manage multiple front-end apps.
 
-1. `cd frontend-vite`
-2. `npm install`
-3. `npm run dev`
+1. Run `npm install` from the repository root. This installs dependencies and the Nx CLI.
+2. Start a frontend with `npx nx run frontend:dev` or `npx nx run frontend-vite:dev`.
 
-The application will be available at `http://localhost:5173` and communicates with the Flask API running on port `5000`.
+The Vite application is available at `http://localhost:5173` and communicates with the Flask API on port `5000`.

@@ -1,0 +1,15 @@
+{
+  "name": "shaker-monorepo",
+  "private": true,
+  "workspaces": [
+    "frontend",
+    "frontend-vite"
+  ],
+  "scripts": {
+    "dev": "npm --workspaces run dev",
+    "nx": "nx"
+  },
+  "devDependencies": {
+    "nx": "latest"
+  }
+}
