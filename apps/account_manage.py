@@ -294,10 +294,13 @@ def register_shop():
     if "logo" not in request.json.keys():
         shopInfo["logo"] = 1
     # 新增一個publisher_id給此shop使用
-    db.command_excute("""
-                    INSERT INTO publisher 
-                    VALUES(publisher_id)
-                    """, {})
+    db.command_excute(
+        """
+                    INSERT INTO publisher (publisher_id)
+                    VALUES (0)
+                    """,
+        {}
+    )
     shopInfo['publisher_id'] = db.command_excute("""SELECT LAST_INSERT_ID() AS id;""", {})[0]['id']
     # 新增一個shop
     db.command_excute("""
