@@ -1,0 +1,31 @@
+{
+  "name": "frontend-vite",
+  "$schema": "../node_modules/nx/schemas/project-schema.json",
+  "root": "frontend-vite",
+  "sourceRoot": "frontend-vite/src",
+  "projectType": "application",
+  "targets": {
+    "dev": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npm run dev",
+        "cwd": "frontend-vite"
+      }
+    },
+    "build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npm run build",
+        "cwd": "frontend-vite"
+      },
+      "outputs": ["{workspaceRoot}/frontend-vite/dist"]
+    },
+    "lint": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npm run lint",
+        "cwd": "frontend-vite"
+      }
+    }
+  }
+}
