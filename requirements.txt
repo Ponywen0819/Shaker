@@ -4,3 +4,4 @@ flasgger
 PyMySQL
 PyJWT
 pycryptodome
+flask-cors

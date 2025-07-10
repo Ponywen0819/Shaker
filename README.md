@@ -1,11 +1,14 @@
-## 執行專案四步驟
+## Development Setup
 
-### step 0 : 使用 vscode 開啟兩個 Terminal 
+### Backend
+1. `pip install -r requirements.txt`
+2. `python ShakerService.py`
 
-### step 1 : pip install -r .\requirements.txt (請進入專案的根目錄)
+### Frontend
+The React SPA is located in `frontend-vite` and uses Vite.
 
-### step 2 : 先在一個 Terminal 中輸入 npm run bable 
+1. `cd frontend-vite`
+2. `npm install`
+3. `npm run dev`
 
-### step 3 : 完成 step 2 後，到另一個 Terminal 輸入  python.exe .\ShakerService.py
-
-### 若無法成功執行，請左轉蕭詠之組長，謝謝配合
+The application will be available at `http://localhost:5173` and communicates with the Flask API running on port `5000`.

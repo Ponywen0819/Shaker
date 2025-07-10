@@ -10,10 +10,13 @@ from module.data_utils import database_utils
 def register_shop(user_id):
     db = database_utils(current_app.config['config'])
 
-    db.command_excute("""
-        INSERT INTO publisher 
-        VALUES(publisher_id)
-    """, {})
+    db.command_excute(
+        """
+        INSERT INTO publisher (publisher_id)
+        VALUES (0)
+    """,
+        {}
+    )
 
     user_info = db.command_excute('''
         SELECT id,name,photo
