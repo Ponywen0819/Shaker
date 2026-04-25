@@ -14,10 +14,3 @@ The actively maintained frontend is **frontend-vite**.
 3. Build production assets with `npm run build` or `npx nx run frontend-vite:build`.
 
 The Vite application is available at `http://localhost:5173` and communicates with the Flask API on port `5000`.
-
-### Legacy frontend (unmaintained)
-`frontend/` remains in the repository for reference only and is **not** installed as part of root workspaces.
-If you need to run it temporarily, use:
-
-- `npm --prefix frontend install`
-- `npm run dev:legacy`
