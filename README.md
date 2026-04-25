@@ -5,9 +5,17 @@
 2. `python ShakerService.py`
 
 ### Frontend
-The project now uses **Nx** to manage multiple front-end apps.
+The actively maintained frontend is **frontend-vite**.
 
-1. Run `npm install` from the repository root. This installs dependencies and the Nx CLI.
-2. Start a frontend with `npx nx run frontend:dev` or `npx nx run frontend-vite:dev`.
+1. Run `npm install` from the repository root (installs only the maintained workspace dependencies).
+2. Start the current frontend with `npm run dev` or `npx nx run frontend-vite:dev`.
+3. Build production assets with `npm run build` or `npx nx run frontend-vite:build`.
 
 The Vite application is available at `http://localhost:5173` and communicates with the Flask API on port `5000`.
+
+### Legacy frontend (unmaintained)
+`frontend/` remains in the repository for reference only and is **not** installed as part of root workspaces.
+If you need to run it temporarily, use:
+
+- `npm --prefix frontend install`
+- `npm run dev:legacy`
