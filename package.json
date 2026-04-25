@@ -2,14 +2,15 @@
   "name": "shaker-monorepo",
   "private": true,
   "workspaces": [
-    "frontend",
     "frontend-vite"
   ],
   "scripts": {
-    "dev": "npm --workspaces run dev",
+    "dev": "npm --workspace frontend-vite run dev",
+    "dev:legacy": "npm --prefix frontend run dev",
+    "build": "npm --workspace frontend-vite run build",
     "nx": "nx"
   },
   "devDependencies": {
-    "nx": "latest"
+    "nx": "^22.7.0"
   }
 }
