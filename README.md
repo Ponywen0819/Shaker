@@ -1,8 +1,10 @@
 ## Development Setup
 
 ### Backend
+Backend Python 程式碼已集中在 **backend-python/**。
+
 1. `pip install -r requirements.txt`
-2. `python ShakerService.py`
+2. `python backend-python/ShakerService.py`
 
 ### Frontend
 The actively maintained frontend is **frontend-vite**.
