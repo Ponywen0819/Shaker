@@ -6,7 +6,6 @@
   ],
   "scripts": {
     "dev": "npm --workspace frontend-vite run dev",
-    "dev:legacy": "npm --prefix frontend run dev",
     "build": "npm --workspace frontend-vite run build",
     "nx": "nx"
   },
