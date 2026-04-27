@@ -1,4 +1,4 @@
-from flask import Flask, render_template, make_response, Blueprint
+from flask import Flask
 from flask_cors import CORS
 from flasgger import Swagger
 from apps import account_manage
@@ -8,11 +8,6 @@ from apps import coupon_manager
 from module.jwt_token_utils import json_web_token_generator
 from module.configs import configure_collection
 from module.crypto_utils import crypto_utils
-from module.seller_center_util import get_shop_id
-
-# from configs import config
-
-# from .configs import config
 
 app = Flask(__name__)
 CORS(app)
@@ -29,8 +24,6 @@ app.config['SWAGGER'] = {
         "hide_top_bar": True
     }
 Swagger(app)
-
-# app.config.from_object()
 
 @app.route("/")
 def index():

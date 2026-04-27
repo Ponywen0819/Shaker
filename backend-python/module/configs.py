@@ -25,10 +25,10 @@ class configure_collection(dict):
                     'PublicKeyPath': './public.pem',
                     'PrivateKeyPath': './private.pem'
                 },
-                'UploadFolder': "./static/picture/",
+                'UploadFolder': "./backend-python/static/picture/",
             }
             time.sleep(5)
-            os.system("mysql -u root -h host.docker.internal --password=Shaker8787 < /shaker/shaker.sql")
+            os.system("mysql -u root -h host.docker.internal --password=Shaker8787 < /shaker/backend-python/sql/shaker.sql")
             self.commit_change()
 
     def commit_change(self) -> None:
