@@ -3,6 +3,10 @@
 ### Backend
 Backend Python 程式碼已集中在 **backend-python/**。
 
+- Backend templates: `backend-python/templates/`
+- Backend static files: `backend-python/static/`
+- Backend SQL files: `backend-python/sql/`
+
 1. `pip install -r requirements.txt`
 2. `python backend-python/ShakerService.py`
 

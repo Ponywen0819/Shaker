@@ -2,8 +2,8 @@ version: "1.0"
 services:
   shaker:
     build:
-      context: ./dockerfiles
-      dockerfile: shaker.Dockerfile
+      context: .
+      dockerfile: Dockerfiles/shaker.Dockerfile
     depends_on:
       - db
     ports:
@@ -13,8 +13,8 @@ services:
 
   db:
     build:
-      context: ./dockerfiles
-      dockerfile: db.Dockerfile
+      context: .
+      dockerfile: Dockerfiles/db.Dockerfile
     restart: always
     environment:
       MARIADB_ROOT_PASSWORD: Shaker8787
